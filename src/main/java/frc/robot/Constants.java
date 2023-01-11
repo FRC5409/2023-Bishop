@@ -23,19 +23,21 @@ public final class Constants {
             public static final int id_rightFrontDrive = 4;
             public static final int id_rightCentreDrive = 5;
             public static final int id_rightRearDrive = 6;
+
+            public static final double rampRate = 0.5; // seconds
         }
 
         public static final class kCANCoder {
             public static final int id_leftEncoder = 7;
             public static final int id_rightEncoder = 8;
             public final static double enc_CountsPerRevolution = 4096;
-            public final static double enc_SensorCoefficient = (Math.PI * kDrivetrain.kWheel.kWheelDiameter) / enc_CountsPerRevolution;
+            public final static double enc_SensorCoefficient = (Math.PI * kDrivetrain.kWheel.wheelDiameter) / enc_CountsPerRevolution;
             public final static String enc_UnitString = "m";
         }
 
         public static class kWheel {
-            public final static double kWheelDiameter = 0.09404; // m
-            public final static double kWheelCircumference = Math.PI * kWheelDiameter; // m
+            public final static double wheelDiameter = 0.09404; // m
+            public final static double wheelCircumference = Math.PI * wheelDiameter; // m
         }
     }
 

@@ -11,11 +11,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kGyro;;
+import frc.robot.Constants.kGyro;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -44,15 +43,11 @@ public class Drivetrain extends SubsystemBase {
         mot_leftCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftCentreDrive);
         mot_leftRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftRearDrive);
 
-        mot_leftCentreDrive.follow(mot_leftFrontDrive);
-        mot_leftRearDrive.follow(mot_leftFrontDrive);
-
         mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive);
         mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive);
         mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive);
 
-        mot_rightCentreDrive.follow(mot_rightFrontDrive);
-        mot_rightRearDrive.follow(mot_rightFrontDrive);
+        configMotors();
 
         m_diffDrive = new DifferentialDrive(mot_leftRearDrive, mot_rightFrontDrive);
 
@@ -72,17 +67,66 @@ public class Drivetrain extends SubsystemBase {
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
     }
 
+    /**
+     * Config factory default
+     * 
+     * Set followers
+     * 
+     * Ramp rate
+     */
+    private void configMotors() {
+        mot_leftFrontDrive.configFactoryDefault();
+        mot_leftCentreDrive.configFactoryDefault();
+        mot_leftRearDrive.configFactoryDefault();
+
+        mot_rightFrontDrive.configFactoryDefault();
+        mot_rightCentreDrive.configFactoryDefault();
+        mot_rightRearDrive.configFactoryDefault();
+
+        mot_leftCentreDrive.follow(mot_leftFrontDrive);
+        mot_leftRearDrive.follow(mot_leftFrontDrive);
+
+        mot_rightCentreDrive.follow(mot_rightFrontDrive);
+        mot_rightRearDrive.follow(mot_rightFrontDrive);
+
+        rampRate(kDrivetrain.kMotor.rampRate);
+    }
+
+    /**
+     * Set ramp rate on motors
+     * @param seconds time
+     */
+    public void rampRate(double seconds) {
+        mot_leftFrontDrive.configOpenloopRamp(seconds);
+        mot_leftCentreDrive.configOpenloopRamp(seconds);
+        mot_leftRearDrive.configOpenloopRamp(seconds);
+
+        mot_rightFrontDrive.configOpenloopRamp(seconds);
+        mot_rightCentreDrive.configOpenloopRamp(seconds);
+        mot_rightRearDrive.configOpenloopRamp(seconds);
+    }
+
+    /**
+     * Arcade drive
+     * @param xSpeed forward speed
+     * @param zRotation rotation
+     */
     public void arcadeDrive(double xSpeed, double zRotation) {
         m_diffDrive.arcadeDrive(xSpeed, zRotation);
     }
 
+    /**
+     * Tank drive voltages, for trajectory
+     * @param leftVolts
+     * @param rightVolts
+     */
     public void tankDriveVoltages(double leftVolts, double rightVolts) {
         mot_leftFrontDrive.setVoltage(leftVolts);
         mot_rightFrontDrive.setVoltage(rightVolts);
         m_diffDrive.feed();
     }
 
-    // CANCoders
+    // CANCoders ----------
 
     public void resetEncoders() {
         enc_leftDrive.setPosition(0);
@@ -104,6 +148,8 @@ public class Drivetrain extends SubsystemBase {
     public double getRightVelocity() {
         return enc_rightDrive.getVelocity();
     }
+
+    // ----------
 
     // Gyro and odometry
 
