@@ -75,6 +75,7 @@ public class Drivetrain extends SubsystemBase {
      * Ramp rate
      */
     private void configMotors() {
+        // Reset factory default
         mot_leftFrontDrive.configFactoryDefault();
         mot_leftCentreDrive.configFactoryDefault();
         mot_leftRearDrive.configFactoryDefault();
@@ -83,6 +84,7 @@ public class Drivetrain extends SubsystemBase {
         mot_rightCentreDrive.configFactoryDefault();
         mot_rightRearDrive.configFactoryDefault();
 
+        // Set followers
         mot_leftCentreDrive.follow(mot_leftFrontDrive);
         mot_leftRearDrive.follow(mot_leftFrontDrive);
 
@@ -128,23 +130,38 @@ public class Drivetrain extends SubsystemBase {
 
     // CANCoders ----------
 
+    /**
+     * Set encoder position to 0
+     */
     public void resetEncoders() {
         enc_leftDrive.setPosition(0);
         enc_rightDrive.setPosition(0);
     }
 
+    /**
+     * @return left encoder distance in metres
+     */
     public double getLeftDistance() {
         return enc_leftDrive.getPosition();
     }
 
+    /**
+     * @return right encoder distance in metres
+     */
     public double getRightDistance() {
         return enc_rightDrive.getPosition();
     }
 
+    /**
+     * @return left encoder velocity in metres per second
+     */
     public double getLeftVelocity() {
         return enc_leftDrive.getVelocity();
     }
 
+    /**
+     * @return right encoder velocity in metres per second
+     */
     public double getRightVelocity() {
         return enc_rightDrive.getVelocity();
     }
@@ -153,6 +170,9 @@ public class Drivetrain extends SubsystemBase {
 
     // Gyro and odometry
 
+    /**
+     * Reset gyro heading to zero
+     */
     public void resetGyro() {
         m_gyro.reset();
     }
