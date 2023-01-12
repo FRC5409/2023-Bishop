@@ -11,7 +11,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.kDrivetrain;
@@ -37,6 +40,12 @@ public class Drivetrain extends SubsystemBase {
 
     private final WPI_Pigeon2 m_gyro;
     private final DifferentialDriveOdometry m_odometry;
+
+    private final ShuffleboardTab sb_drivetrainTab;
+    private final GenericEntry nt_leftVelocity;
+    private final GenericEntry nt_rightVelocity;
+    private final GenericEntry nt_leftDistance;
+    private final GenericEntry nt_rightDistance;
 
 
     public Drivetrain() {
@@ -70,6 +79,13 @@ public class Drivetrain extends SubsystemBase {
         // Gyro and odometry
         m_gyro = new WPI_Pigeon2(kGyro.id_gyro);
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+
+        // Shuffleboard
+        sb_drivetrainTab = Shuffleboard.getTab("Drivetrain");
+        nt_leftVelocity = sb_drivetrainTab.add("Left velocity", getLeftVelocity()).getEntry();
+        nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
+        nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
+        nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
     }
 
     /**
@@ -239,6 +255,12 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update odometry
         m_odometry.update(m_gyro.getRotation2d(), enc_leftDrive.getPosition(), enc_rightDrive.getPosition());
+
+        // Push data to Shuffleboard
+        nt_leftVelocity.setDouble(getLeftVelocity());
+        nt_rightVelocity.setDouble(getRightVelocity());
+        nt_leftDistance.setDouble(getLeftDistance());
+        nt_rightDistance.setDouble(getRightDistance());
     }
 
     @Override
