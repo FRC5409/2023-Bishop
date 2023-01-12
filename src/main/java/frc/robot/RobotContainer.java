@@ -26,8 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
 
     // Driver controllers
-    private final CommandXboxController m_driverController1;
-    private final CommandXboxController m_driverController2;
+    private final CommandXboxController joystickMain;
+    private final CommandXboxController joystickSecondary;
 
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
@@ -42,15 +42,15 @@ public class RobotContainer {
     public RobotContainer() {
 
         // Driver controllers
-        m_driverController1 = new CommandXboxController(kOperator.port_driveController1);
-        m_driverController2 = new CommandXboxController(kOperator.port_driveController2);
+        joystickMain = new CommandXboxController(kOperator.port_joystickMain);
+        joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
 
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, m_driverController1);
+        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);

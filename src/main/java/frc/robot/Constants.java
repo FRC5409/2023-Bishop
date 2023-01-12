@@ -15,8 +15,8 @@ package frc.robot;
 public final class Constants {
 
     public static final class kOperator {
-        public static final int port_driveController1           = 0;
-        public static final int port_driveController2           = 1;
+        public static final int port_joystickMain               = 0;
+        public static final int port_joystickSecondary          = 1;
     }
 
     public static final class kDrivetrain {
