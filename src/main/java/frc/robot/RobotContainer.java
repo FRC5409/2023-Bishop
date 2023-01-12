@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +30,7 @@ public class RobotContainer {
 
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
-    private final Drivetrain sys_drivetrain;
+    public final Drivetrain sys_drivetrain;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;

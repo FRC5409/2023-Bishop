@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
@@ -26,6 +27,8 @@ public class Drivetrain extends SubsystemBase {
     private final WPI_TalonFX mot_rightCentreDrive;
     private final WPI_TalonFX mot_rightRearDrive;
 
+    private NeutralMode m_neutralMode;
+
     private final DifferentialDrive m_diffDrive;
 
     private final WPI_CANCoder enc_leftDrive;
@@ -46,6 +49,8 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive);
         mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive);
         mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive);
+
+        m_neutralMode = NeutralMode.Brake;
 
         configMotors();
 
@@ -73,6 +78,8 @@ public class Drivetrain extends SubsystemBase {
      * Set followers
      * 
      * Ramp rate
+     * 
+     * Brake mode
      */
     private void configMotors() {
         // Reset factory default
@@ -91,6 +98,10 @@ public class Drivetrain extends SubsystemBase {
         mot_rightCentreDrive.follow(mot_rightFrontDrive);
         mot_rightRearDrive.follow(mot_rightFrontDrive);
 
+        // Set brake mode
+        setNeutralMode(m_neutralMode);
+
+        // Ramp rate
         rampRate(kDrivetrain.kMotor.rampRate);
     }
 
@@ -126,6 +137,28 @@ public class Drivetrain extends SubsystemBase {
         mot_leftFrontDrive.setVoltage(leftVolts);
         mot_rightFrontDrive.setVoltage(rightVolts);
         m_diffDrive.feed();
+    }
+
+    /**
+     * Set brake/coast mode
+     * @param newMode
+     */
+    public void setNeutralMode(NeutralMode newMode) {
+        m_neutralMode = newMode;
+        mot_leftFrontDrive.setNeutralMode(newMode);
+        mot_leftCentreDrive.setNeutralMode(newMode);
+        mot_leftRearDrive.setNeutralMode(newMode);
+        mot_rightFrontDrive.setNeutralMode(newMode);
+        mot_rightCentreDrive.setNeutralMode(newMode);
+        mot_rightRearDrive.setNeutralMode(newMode);
+    }
+
+    /**
+     * Get brake/coast mode
+     * @return brake / coast mode
+     */
+    public NeutralMode getNeutralMode() {
+        return m_neutralMode;
     }
 
     // CANCoders ----------
