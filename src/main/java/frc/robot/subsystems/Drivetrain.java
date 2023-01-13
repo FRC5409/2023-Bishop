@@ -64,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
         configMotors();
 
         m_diffDrive = new DifferentialDrive(mot_leftFrontDrive, mot_rightFrontDrive);
-\
+
         // Instantiate CANCoders
         enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder);
         enc_rightDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_rightEncoder);
