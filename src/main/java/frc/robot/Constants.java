@@ -50,4 +50,10 @@ public final class Constants {
     public static final class kGyro {
         public static final int id_gyro                         = 10;
     }
+
+    public static final class kBalancing {
+        public static final double targetPitch                  = 0;
+        public static final double maxAngle                     = 33.25;
+        public static final double angleTolerance               = 2;
+    }
 }
