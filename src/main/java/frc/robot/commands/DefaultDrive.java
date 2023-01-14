@@ -32,7 +32,7 @@ public class DefaultDrive extends CommandBase {
     @Override
     public void execute() {
         double xSpeed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
-        double zRotation = m_controller.getLeftX();
+        double zRotation = -m_controller.getLeftX();
 
         m_drivetrain.arcadeDrive(xSpeed, zRotation);
     }
