@@ -218,7 +218,7 @@ public class Drivetrain extends SubsystemBase {
      * @return left encoder distance in metres
      */
     public double getLeftDistance() {
-        return enc_leftDrive.getPosition();
+        return -enc_leftDrive.getPosition();
     }
 
     /**
@@ -232,7 +232,7 @@ public class Drivetrain extends SubsystemBase {
      * @return left encoder velocity in metres per second
      */
     public double getLeftVelocity() {
-        return enc_leftDrive.getVelocity();
+        return -enc_leftDrive.getVelocity();
     }
 
     /**
