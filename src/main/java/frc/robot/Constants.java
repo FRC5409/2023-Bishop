@@ -36,8 +36,8 @@ public final class Constants {
         }
 
         public static final class kCANCoder {
-            public static final int id_leftEncoder              = 5;
-            public static final int id_rightEncoder             = 6;
+            public static final int id_leftEncoder              = 30;
+            public static final int id_rightEncoder             = 29;
             public final static double enc_CountsPerRevolution  = 4096;
             public final static double enc_SensorCoefficient    = (Math.PI * kDrivetrain.kWheel.wheelDiameter) / enc_CountsPerRevolution;
             public final static String enc_UnitString           = "m";
