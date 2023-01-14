@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorTimeBase;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
+import frc.robot.Constants.kDrivetrain.kMotor;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -29,6 +31,8 @@ public class Drivetrain extends SubsystemBase {
     private final WPI_TalonFX mot_rightFrontDrive;
     private final WPI_TalonFX mot_rightCentreDrive;
     private final WPI_TalonFX mot_rightRearDrive;
+
+    private final SupplyCurrentLimitConfiguration m_currentLimit;
 
     private NeutralMode m_neutralMode;
 
@@ -58,6 +62,11 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive);
         mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive);
         mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive);
+
+        // Current limiting
+        m_currentLimit = new SupplyCurrentLimitConfiguration();
+        m_currentLimit.enable = true;
+        m_currentLimit.currentLimit = kMotor.currentLimit;
 
         m_neutralMode = NeutralMode.Brake;
 
@@ -93,6 +102,10 @@ public class Drivetrain extends SubsystemBase {
      * 
      * Set followers
      * 
+     * Invert left side
+     * 
+     * Current limiting
+     * 
      * Ramp rate
      * 
      * Brake mode
@@ -113,6 +126,20 @@ public class Drivetrain extends SubsystemBase {
 
         mot_rightCentreDrive.follow(mot_rightFrontDrive);
         mot_rightRearDrive.follow(mot_rightFrontDrive);
+
+        // Invert left side
+        mot_leftFrontDrive.setInverted(true);
+        mot_leftCentreDrive.setInverted(true);
+        mot_leftRearDrive.setInverted(true);
+
+        // Current limiting
+        mot_leftFrontDrive.configSupplyCurrentLimit(m_currentLimit);
+        mot_leftCentreDrive.configSupplyCurrentLimit(m_currentLimit);
+        mot_leftRearDrive.configSupplyCurrentLimit(m_currentLimit);
+
+        mot_rightFrontDrive.configSupplyCurrentLimit(m_currentLimit);
+        mot_rightCentreDrive.configSupplyCurrentLimit(m_currentLimit);
+        mot_rightRearDrive.configSupplyCurrentLimit(m_currentLimit);
 
         // Set brake mode
         setNeutralMode(m_neutralMode);
