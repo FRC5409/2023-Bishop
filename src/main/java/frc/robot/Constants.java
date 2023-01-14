@@ -32,7 +32,7 @@ public final class Constants {
 
             public static final double rampRate                 = 0.5; // seconds
 
-            public static final int currentLimit                = 40;
+            public static final int currentLimit                = 80;
         }
 
         public static final class kCANCoder {
