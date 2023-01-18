@@ -50,6 +50,9 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_rightVelocity;
     private final GenericEntry nt_leftDistance;
     private final GenericEntry nt_rightDistance;
+    private final GenericEntry nt_leftTemperature;
+    private final GenericEntry nt_rightTemperature;
+    private final GenericEntry nt_gyroHeading;
 
 
     public Drivetrain() {
@@ -95,6 +98,9 @@ public class Drivetrain extends SubsystemBase {
         nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
         nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
         nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
+        nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
+        nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
+        nt_gyroHeading = sb_drivetrainTab.add("Gyro heading", getHeading()).getEntry();
     }
 
     /**
@@ -145,7 +151,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        // rampRate(kDrivetrain.kMotor.rampRate);
+        rampRate(kDrivetrain.kMotor.rampRate);
     }
 
     /**
@@ -202,6 +208,14 @@ public class Drivetrain extends SubsystemBase {
      */
     public NeutralMode getNeutralMode() {
         return m_neutralMode;
+    }
+
+    public double getAverageLeftMotorTemperature() {
+        return (mot_leftFrontDrive.getTemperature() + mot_leftCentreDrive.getTemperature() + mot_leftRearDrive.getTemperature()) / 3;
+    }
+
+    public double getAverageRightMotorTemperature() {
+        return (mot_rightFrontDrive.getTemperature() + mot_rightCentreDrive.getTemperature() + mot_rightRearDrive.getTemperature()) / 3;
     }
 
     // CANCoders ----------
@@ -288,6 +302,9 @@ public class Drivetrain extends SubsystemBase {
         nt_rightVelocity.setDouble(getRightVelocity());
         nt_leftDistance.setDouble(getLeftDistance());
         nt_rightDistance.setDouble(getRightDistance());
+        nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
+        nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
+        nt_gyroHeading.setDouble(getHeading());
     }
 
     @Override
