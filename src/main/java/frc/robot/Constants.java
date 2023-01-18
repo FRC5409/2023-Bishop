@@ -30,7 +30,7 @@ public final class Constants {
             public static final int id_rightCentreDrive         = 24;
             public static final int id_rightRearDrive           = 25;
 
-            public static final double rampRate                 = 0.5; // seconds
+            public static final double rampRate                 = 0.3; // seconds
 
             public static final int currentLimit                = 80;
         }
