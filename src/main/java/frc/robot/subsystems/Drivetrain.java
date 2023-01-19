@@ -90,6 +90,7 @@ public class Drivetrain extends SubsystemBase {
 
         // Gyro and odometry
         m_gyro = new WPI_Pigeon2(kGyro.id_gyro);
+        m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // Shuffleboard
@@ -151,7 +152,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        rampRate(kDrivetrain.kMotor.rampRate);
+        // rampRate(kDrivetrain.kMotor.rampRate);
     }
 
     /**
