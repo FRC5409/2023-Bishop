@@ -52,7 +52,9 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_rightDistance;
     private final GenericEntry nt_leftTemperature;
     private final GenericEntry nt_rightTemperature;
-    private final GenericEntry nt_gyroHeading;
+    private final GenericEntry nt_gyroYaw;
+    private final GenericEntry nt_gyroPitch;
+    private final GenericEntry nt_gyroRoll;
 
 
     public Drivetrain() {
@@ -101,7 +103,9 @@ public class Drivetrain extends SubsystemBase {
         nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
         nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
         nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
-        nt_gyroHeading = sb_drivetrainTab.add("Gyro heading", getHeading()).getEntry();
+        nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
+        nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
+        nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
     }
 
     /**
@@ -275,6 +279,18 @@ public class Drivetrain extends SubsystemBase {
     public double getHeading() {
         return getRotation2d().getDegrees();
     }
+    
+    public double getYaw() {
+        return m_gyro.getYaw();
+    }
+    
+    public double getPitch() {
+        return m_gyro.getPitch();
+    }
+    
+    public double getRoll() {
+        return m_gyro.getRoll();
+    }
 
     public double getTurnRate() {
         return m_gyro.getRate();
@@ -305,7 +321,9 @@ public class Drivetrain extends SubsystemBase {
         nt_rightDistance.setDouble(getRightDistance());
         nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
         nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
-        nt_gyroHeading.setDouble(getHeading());
+        nt_gyroYaw.setDouble(getYaw());
+        nt_gyroPitch.setDouble(getPitch());
+        nt_gyroRoll.setDouble(getRoll());
     }
 
     @Override
