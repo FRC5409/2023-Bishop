@@ -4,12 +4,20 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kTrajectoryJSONPath;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -23,15 +31,27 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
+  // Path following trajectory
+  private Trajectory trajectory = new Trajectory();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+
+    // Load trajectory paths
+    try {
+      Path path = Filesystem.getDeployDirectory().toPath().resolve(kTrajectoryJSONPath.trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(path);
+    } catch (IOException io) {
+      DriverStation.reportError("Unable to load trajectory.", io.getStackTrace());
+    }
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(trajectory);
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)

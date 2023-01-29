@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
 import frc.robot.Constants.kDrivetrain.kMotor;
@@ -50,18 +50,25 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_rightVelocity;
     private final GenericEntry nt_leftDistance;
     private final GenericEntry nt_rightDistance;
+    private final GenericEntry nt_leftTemperature;
+    private final GenericEntry nt_rightTemperature;
+    private final GenericEntry nt_gyroYaw;
+    private final GenericEntry nt_gyroPitch;
+    private final GenericEntry nt_gyroRoll;
+    private final GenericEntry nt_poseMetersX;
+    private final GenericEntry nt_poseMetersY;
 
 
     public Drivetrain() {
 
         // Instantiate motors and differential drive
-        mot_leftFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftFrontDrive);
-        mot_leftCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftCentreDrive);
-        mot_leftRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftRearDrive);
+        mot_leftFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftFrontDrive, kCANBus.bus_drive);
+        mot_leftCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftCentreDrive, kCANBus.bus_drive);
+        mot_leftRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_leftRearDrive, kCANBus.bus_drive);
 
-        mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive);
-        mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive);
-        mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive);
+        mot_rightFrontDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightFrontDrive, kCANBus.bus_drive);
+        mot_rightCentreDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightCentreDrive, kCANBus.bus_drive);
+        mot_rightRearDrive = new WPI_TalonFX(kDrivetrain.kMotor.id_rightRearDrive, kCANBus.bus_drive);
 
         // Current limiting
         m_currentLimit = new SupplyCurrentLimitConfiguration();
@@ -75,8 +82,8 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive = new DifferentialDrive(mot_leftFrontDrive, mot_rightFrontDrive);
 
         // Instantiate CANCoders
-        enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder);
-        enc_rightDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_rightEncoder);
+        enc_leftDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_leftEncoder, kCANBus.bus_drive);
+        enc_rightDrive = new WPI_CANCoder(kDrivetrain.kCANCoder.id_rightEncoder, kCANBus.bus_drive);
 
         enc_config = new CANCoderConfiguration();
         enc_config.sensorCoefficient = kDrivetrain.kCANCoder.enc_SensorCoefficient;
@@ -85,8 +92,12 @@ public class Drivetrain extends SubsystemBase {
         enc_leftDrive.configAllSettings(enc_config);
         enc_rightDrive.configAllSettings(enc_config);
 
+        resetEncoders();
+
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
+        m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
+
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // Shuffleboard
@@ -95,6 +106,13 @@ public class Drivetrain extends SubsystemBase {
         nt_rightVelocity = sb_drivetrainTab.add("Right velocity", getRightVelocity()).getEntry();
         nt_leftDistance = sb_drivetrainTab.add("Left distance", getLeftDistance()).getEntry();
         nt_rightDistance = sb_drivetrainTab.add("Right distance", getRightDistance()).getEntry();
+        nt_leftTemperature = sb_drivetrainTab.add("Left temperature", getAverageLeftMotorTemperature()).getEntry();
+        nt_rightTemperature = sb_drivetrainTab.add("Right temperature", getAverageRightMotorTemperature()).getEntry();
+        nt_gyroYaw = sb_drivetrainTab.add("Gyro yaw", getYaw()).getEntry();
+        nt_gyroPitch = sb_drivetrainTab.add("Gyro pitch", getPitch()).getEntry();
+        nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
+        nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
+        nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
     }
 
     /**
@@ -204,6 +222,14 @@ public class Drivetrain extends SubsystemBase {
         return m_neutralMode;
     }
 
+    public double getAverageLeftMotorTemperature() {
+        return (mot_leftFrontDrive.getTemperature() + mot_leftCentreDrive.getTemperature() + mot_leftRearDrive.getTemperature()) / 3;
+    }
+
+    public double getAverageRightMotorTemperature() {
+        return (mot_rightFrontDrive.getTemperature() + mot_rightCentreDrive.getTemperature() + mot_rightRearDrive.getTemperature()) / 3;
+    }
+
     // CANCoders ----------
 
     /**
@@ -218,7 +244,7 @@ public class Drivetrain extends SubsystemBase {
      * @return left encoder distance in metres
      */
     public double getLeftDistance() {
-        return enc_leftDrive.getPosition();
+        return -enc_leftDrive.getPosition();
     }
 
     /**
@@ -232,7 +258,7 @@ public class Drivetrain extends SubsystemBase {
      * @return left encoder velocity in metres per second
      */
     public double getLeftVelocity() {
-        return enc_leftDrive.getVelocity();
+        return -enc_leftDrive.getVelocity();
     }
 
     /**
@@ -260,6 +286,19 @@ public class Drivetrain extends SubsystemBase {
     public double getHeading() {
         return getRotation2d().getDegrees();
     }
+    
+    public double getYaw() {
+        return m_gyro.getYaw();
+    }
+    
+    public double getPitch() {
+        return m_gyro.getPitch();
+    }
+    
+    public double getRoll() {
+        return m_gyro.getRoll();
+    }
+
 
     public double getTurnRate() {
         return m_gyro.getRate();
@@ -269,29 +308,42 @@ public class Drivetrain extends SubsystemBase {
         return m_odometry.getPoseMeters();
     }
 
-    public double getPitch() {
-        return m_gyro.getPitch();
-    }
-
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getLeftVelocity(), getRightVelocity());
     }
 
-    public void resetOdometry() {
+    /**
+     * Reset the odometry to a specified pose.
+     * 
+     * The reset position command has 0, 0 (distance) hard-coded in to
+     * avoid any encoder timing lag from resetting encoders.
+     * 
+     * @param pose
+     */
+    public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        m_odometry.resetPosition(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance(), getPose2d());
+        m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
     }
+
+    // ----------
 
     @Override
     public void periodic() {
         // Update odometry
-        m_odometry.update(m_gyro.getRotation2d(), enc_leftDrive.getPosition(), enc_rightDrive.getPosition());
+        m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         // Push data to Shuffleboard
         nt_leftVelocity.setDouble(getLeftVelocity());
         nt_rightVelocity.setDouble(getRightVelocity());
         nt_leftDistance.setDouble(getLeftDistance());
         nt_rightDistance.setDouble(getRightDistance());
+        nt_leftTemperature.setDouble(getAverageLeftMotorTemperature());
+        nt_rightTemperature.setDouble(getAverageRightMotorTemperature());
+        nt_gyroYaw.setDouble(getYaw());
+        nt_gyroPitch.setDouble(getPitch());
+        nt_gyroRoll.setDouble(getRoll());
+        nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
+        nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
     }
 
     @Override
