@@ -6,9 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
-import frc.robot.commands.BalancingChargeStation;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.AutoPathPlanning;
+import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -86,8 +86,6 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        joystickMain.b()
-            .whileTrue(cmd_balancingChargeStation);
     }
 
     /**

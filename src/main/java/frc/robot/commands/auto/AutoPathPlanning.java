@@ -24,7 +24,9 @@ public class AutoPathPlanning extends SequentialCommandGroup {
                 new PIDController(kDrivetrain.kPDriveVel, 0, 0),
                 new PIDController(kDrivetrain.kPDriveVel, 0, 0),
                 sys_drivetrain::tankDriveVoltages,
-                sys_drivetrain)
+                sys_drivetrain),
+
+            new BalancingChargeStation(sys_drivetrain)
         );
     }
 
