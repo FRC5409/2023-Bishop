@@ -94,6 +94,10 @@ public final class Constants {
     public static final class kBalancing {
         public static final double targetPitch                  = 0;
         public static final double maxAngle                     = 33.25;
-        public static final double angleTolerance               = 2;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP                           = 0.04;
+        public static final double kI                           = 0;
+        public static final double kD                           = 0;
     }
 }

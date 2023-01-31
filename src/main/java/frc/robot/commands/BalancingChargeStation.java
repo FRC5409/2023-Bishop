@@ -11,17 +11,21 @@ import frc.robot.subsystems.Drivetrain;
 public class BalancingChargeStation extends PIDCommand {
 
     private final Drivetrain m_drivetrain;
+
+    private static final double kP = kBalancing.kP;
+    private static final double kI = kBalancing.kI;
+    private static final double kD = kBalancing.kD;
+
+    // Shuffleboard
     private final ShuffleboardTab sb_balancingTab;
-    private final GenericEntry nt_kP;
-    private final GenericEntry nt_kI;
-    private final GenericEntry nt_kD;
+    private final GenericEntry nt_kP, nt_kI, nt_kD;
 
     public BalancingChargeStation(Drivetrain drivetrain) {
         super(
-            new PIDController(0, 0, 0),
+            new PIDController(kP, kI, kD),
             drivetrain::getPitch,
             kBalancing.targetPitch,
-            output -> drivetrain.arcadeDrive(output, 0),
+            output -> drivetrain.arcadeDrive(-output, 0),
             drivetrain
         );
 
@@ -30,14 +34,11 @@ public class BalancingChargeStation extends PIDCommand {
 
         m_drivetrain = drivetrain;
 
+        // Add items to Shuffleboard
         sb_balancingTab = Shuffleboard.getTab("Balancing");
         nt_kP = sb_balancingTab.add("kP", 0).getEntry();
         nt_kI = sb_balancingTab.add("kI", 0).getEntry();
         nt_kD = sb_balancingTab.add("kD", 0).getEntry();
-
-        getController().setPID(nt_kP.getDouble(0),
-                                nt_kI.getDouble(0),
-                                nt_kD.getDouble(0));
 
         getController().enableContinuousInput(-kBalancing.maxAngle, kBalancing.maxAngle);
         getController().setTolerance(kBalancing.angleTolerance);
@@ -46,25 +47,10 @@ public class BalancingChargeStation extends PIDCommand {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        
-    }
-
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-
-        // Update PID values
-        if (nt_kP.getDouble(0) != getController().getP()) {
-            getController().setP(nt_kP.getDouble(0));
-        }
-
-        if (nt_kI.getDouble(0) != getController().getI()) {
-            getController().setI(nt_kI.getDouble(0));
-        }
-
-        if (nt_kD.getDouble(0) != getController().getD()) {
-            getController().setD(nt_kD.getDouble(0));
-        }
+        // Update PID values from Shuffleboard
+        getController().setP(nt_kP.getDouble(0));
+        getController().setI(nt_kI.getDouble(0));
+        getController().setD(nt_kD.getDouble(0));
     }
 
     // Called once the command ends or is interrupted.

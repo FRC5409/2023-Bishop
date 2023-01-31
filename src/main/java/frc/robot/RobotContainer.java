@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
+import frc.robot.commands.BalancingChargeStation;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.AutoPathPlanning;
 import frc.robot.subsystems.Drivetrain;
@@ -38,6 +39,7 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final BalancingChargeStation cmd_balancingChargeStation;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -60,6 +62,7 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_balancingChargeStation = new BalancingChargeStation(sys_drivetrain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -83,7 +86,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        
+        joystickMain.b()
+            .whileTrue(cmd_balancingChargeStation);
     }
 
     /**
