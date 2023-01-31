@@ -17,8 +17,8 @@ public class BalancingChargeStation extends PIDCommand {
     private static final double kD = kBalancing.kD;
 
     // Shuffleboard
-    private final ShuffleboardTab sb_balancingTab;
-    private final GenericEntry nt_kP, nt_kI, nt_kD;
+    // private final ShuffleboardTab sb_balancingTab;
+    // private final GenericEntry nt_kP, nt_kI, nt_kD;
 
     public BalancingChargeStation(Drivetrain drivetrain) {
         super(
@@ -35,23 +35,23 @@ public class BalancingChargeStation extends PIDCommand {
         m_drivetrain = drivetrain;
 
         // Add items to Shuffleboard
-        sb_balancingTab = Shuffleboard.getTab("Balancing");
-        nt_kP = sb_balancingTab.add("kP", 0).getEntry();
-        nt_kI = sb_balancingTab.add("kI", 0).getEntry();
-        nt_kD = sb_balancingTab.add("kD", 0).getEntry();
+        // sb_balancingTab = Shuffleboard.getTab("Balancing");
+        // nt_kP = sb_balancingTab.add("kP", 0).getEntry();
+        // nt_kI = sb_balancingTab.add("kI", 0).getEntry();
+        // nt_kD = sb_balancingTab.add("kD", 0).getEntry();
 
         getController().enableContinuousInput(-kBalancing.maxAngle, kBalancing.maxAngle);
         getController().setTolerance(kBalancing.angleTolerance);
     }
 
     // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        // Update PID values from Shuffleboard
-        getController().setP(nt_kP.getDouble(0));
-        getController().setI(nt_kI.getDouble(0));
-        getController().setD(nt_kD.getDouble(0));
-    }
+    // @Override
+    // public void initialize() {
+    //     // Update PID values from Shuffleboard
+    //     getController().setP(nt_kP.getDouble(0));
+    //     getController().setI(nt_kI.getDouble(0));
+    //     getController().setD(nt_kD.getDouble(0));
+    // }
 
     // Called once the command ends or is interrupted.
     @Override
