@@ -100,4 +100,13 @@ public final class Constants {
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
+
+    public static final class kTurnDegrees {
+        public static final double maxAngle                     = 360;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP                           = 0.125;
+        public static final double kI                           = 0;
+        public static final double kD                           = 0;
+    }
 }
