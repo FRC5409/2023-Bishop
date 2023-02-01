@@ -12,9 +12,9 @@ public class TurnDegrees extends PIDCommand {
 
     private final Drivetrain m_drivetrain;
 
-    private static final double kP = kTurnDegrees.kP;
-    private static final double kI = kTurnDegrees.kI;
-    private static final double kD = kTurnDegrees.kD;
+    private static final double kP = kTurnDegrees.kP_chargeStation;
+    private static final double kI = kTurnDegrees.kI_chargeStation;
+    private static final double kD = kTurnDegrees.kD_chargeStation;
 
     // Shuffleboard
     // private final ShuffleboardTab sb_turningTab;
