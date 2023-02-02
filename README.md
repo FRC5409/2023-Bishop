@@ -7,4 +7,3 @@
 
 [Motors and Gearing Ratios - Windsor](https://docs.google.com/spreadsheets/d/1FxBIIsZFDOvoKsso25b7TmFgGUk4gB1KhH03Lld9y3U/edit#gid=1544976692)
 
-
