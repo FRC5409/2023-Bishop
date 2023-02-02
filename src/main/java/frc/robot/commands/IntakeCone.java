@@ -23,21 +23,21 @@ public class IntakeCone extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_intake.intakeDown();
-		m_intake.stopRolling();
+		m_intake.intakeDownward();
+		m_intake.stopIntaking();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		m_intake.rollForward();
+		m_intake.startIntaking();
 	}
 
 	// Called once the command ends or is interrupted
 	@Override
 	public void end(boolean interrupted) {
-		m_intake.stopRolling();
-		m_intake.intakeUp();
+		m_intake.stopIntaking();
+		m_intake.intakeUpward();
 	}
 
 	// Returns true when the command should end.
