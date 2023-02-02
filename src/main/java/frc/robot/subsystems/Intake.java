@@ -4,15 +4,17 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.kIntake;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kIntake;
 
 public class Intake extends SubsystemBase
 {
@@ -20,6 +22,7 @@ public class Intake extends SubsystemBase
   private final WPI_TalonFX mot_wrist;
   private final WPI_TalonFX mot_roller;
 
+  private final RelativeEncoder enc_pivot;
   private final DutyCycleEncoder enc_wrist;
 
   public Intake()
@@ -36,11 +39,22 @@ public class Intake extends SubsystemBase
     mot_roller.configFactoryDefault();
     mot_roller.setNeutralMode(NeutralMode.Brake);
 
+    enc_pivot = mot_pivot.getEncoder();
+
     enc_wrist = new DutyCycleEncoder(kIntake.id_encWrist);
   }
 
   @Override
-  public void periodic() {
+  public void periodic()
+  {}
 
+  public double getPivotPos()
+  {
+    return enc_pivot.getPosition();
+  }
+
+  public double getWrist()
+  {
+    return enc_wrist.getAbsolutePosition();
   }
 }
