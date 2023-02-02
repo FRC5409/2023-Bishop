@@ -8,8 +8,10 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
+import frc.robot.commands.IntakeCone;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,9 +36,11 @@ public class RobotContainer {
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    private final Intake sys_intake;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final IntakeCone cmd_intakeCone;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -56,15 +60,19 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_intake = new Intake();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_intakeCone = new IntakeCone(sys_intake);
+        
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Configure the trigger bindings
         configureBindings();
+                joystickMain.x().whileTrue(cmd_intakeCone);
     }
 
     /**
@@ -82,6 +90,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.x().whileTrue(cmd_intakeCone);
     }
 
     /**
