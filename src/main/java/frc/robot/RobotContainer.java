@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.FindClawZero;
+import frc.robot.commands.changeClaw;
 import frc.robot.commands.auto.AutoPathPlanning;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -35,6 +39,7 @@ public class RobotContainer {
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    public final Claw sys_claw;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -57,6 +62,7 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_claw = new Claw();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -83,7 +89,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        
+        joystickMain.x().onTrue(new changeClaw(sys_claw, kClaw.openPosition)).onFalse(new changeClaw(sys_claw, kClaw.closePosition));
     }
 
     /**

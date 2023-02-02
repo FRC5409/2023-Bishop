@@ -4,8 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.CANifier.PinValues;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
-
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -89,5 +89,28 @@ public final class Constants {
 
     public static final class kTrajectoryJSONPath {
         public static final String trajectoryJSON = "pathplanner/generatedJSON/Path1.wpilib.json";
+    }
+
+    public static final class kClaw {
+        //TODO: most values need to be tuned
+        public static final int clawCANID                        = -1;
+
+        public static final int currentLimit                     = 40;
+
+        public static final int openPosition                     = 5;
+        public static final int closePosition                    = 175;
+
+        public static final double outputCurrentMaxLimit         = 40;
+        public static final int currentDataLength                = 10;
+
+        public static final double zeroSpeed                     = 0.3;
+
+        public static final double encoderOffset                 = 10;
+
+        //TODO: Values
+        public static final double kP                            = 0;
+        public static final double kI                            = 0;
+        public static final double kD                            = 0;
+        public static final double kF                            = 0;
     }
 }
