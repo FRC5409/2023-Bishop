@@ -6,14 +6,19 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import java.util.ArrayList;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -32,12 +37,16 @@ public class RobotContainer {
     private final CommandXboxController joystickMain;
     private final CommandXboxController joystickSecondary;
 
+    private final ArrayList<CommandXboxController> sys_joysticks;
+
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final GearShift cmd_lowSpeed;
+    private final GearShift cmd_highSpeed;
 
     // Trajectory
     private PathPlannerTrajectory m_trajectory;
@@ -50,6 +59,8 @@ public class RobotContainer {
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
+        sys_joysticks.add(joystickMain);
+        sys_joysticks.add(joystickSecondary);
 
         // Trajectory paths
         m_trajectory = trajectory;
@@ -59,7 +70,9 @@ public class RobotContainer {
         sys_drivetrain = new Drivetrain();
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
+        cmd_lowSpeed = new GearShift(false, sys_drivetrain);
+        cmd_highSpeed = new GearShift(true, sys_drivetrain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -83,6 +96,42 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.leftBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
+        .onTrue(cmd_lowSpeed);
+
+        joystickMain.leftBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
+        .onFalse(cmd_highSpeed);
+
+        joystickMain.rightBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
+        .onTrue(cmd_lowSpeed);
+
+        joystickMain.rightBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
+        .onFalse(cmd_highSpeed);
+
+
+
+        joystickSecondary.leftBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
+        .onTrue(cmd_lowSpeed);
+        
+        joystickSecondary.leftBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
+        .onFalse(cmd_highSpeed);
+
+
+        joystickSecondary.rightBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
+        .onTrue(cmd_lowSpeed);
+
+        joystickSecondary.rightBumper()
+        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
+        .onFalse(cmd_highSpeed);
+
+        joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
     }
 
     /**
@@ -100,7 +149,7 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+            .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
     }
 }
 

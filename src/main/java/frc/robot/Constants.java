@@ -39,9 +39,6 @@ public final class Constants {
             public static final int id_rightCentreDrive         = 24;
             public static final int id_rightRearDrive           = 25;
 
-            public static final double rampRate                 = 0.3; // seconds
-
-            public static final int currentLimit                = 40;
         }
 
         public static final class kCANCoder {
@@ -77,6 +74,19 @@ public final class Constants {
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
             public static final double kRamseteB                = 2;
             public static final double kRamseteZeta             = 0.7;
+        }
+
+        public static class kDriveteam {
+            public static final double rampRate = 0.2;
+
+            public static final double defaultSpeedMultiplier = 1;
+            public static final double defaultTurningMultiplier = 1;
+                
+            public static final double slowSpeed = 0.7;
+            public static final double kSlowTurn = 0.8;
+                
+            public static final double kChangeRamp = 0.5;
+            public static final int timerLength = 50;
         }
     }
 

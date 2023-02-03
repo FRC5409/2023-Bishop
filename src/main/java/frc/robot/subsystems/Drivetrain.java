@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kMotor;
 
 public class Drivetrain extends SubsystemBase {
@@ -57,6 +58,17 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_gyroRoll;
     private final GenericEntry nt_poseMetersX;
     private final GenericEntry nt_poseMetersY;
+
+    private final ShuffleboardTab sb_driveTab;
+    private final GenericEntry nt_turningSpeedEntry;
+    private final GenericEntry nt_forwardSpeedEntry;
+    private final GenericEntry nt_rampEntry;
+
+    private int currentJoystick = 0;
+
+    private double lastRampEntry = kDriveteam.rampRate;
+
+    private double currentRampRate;
 
 
     public Drivetrain() {
@@ -115,6 +127,13 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
         nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
         nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
+
+        sb_driveTab = Shuffleboard.getTab("Drive Team");
+        nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
+        nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
+        nt_rampEntry = sb_driveTab.add("Ramp Rate: ", kDriveteam.rampRate).getEntry();
+
+        currentJoystick = 0;
     }
 
     /**
@@ -165,7 +184,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        rampRate(kDrivetrain.kMotor.rampRate);
+        rampRate(kDrivetrain.kDriveteam.rampRate);
     }
 
     /**
@@ -180,6 +199,12 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.configOpenloopRamp(seconds);
         mot_rightCentreDrive.configOpenloopRamp(seconds);
         mot_rightRearDrive.configOpenloopRamp(seconds);
+
+        currentRampRate = seconds;
+    }
+
+    public double getRampRate() {
+        return currentRampRate;
     }
 
     /**
@@ -188,7 +213,7 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        m_diffDrive.arcadeDrive(xSpeed, zRotation);
+        m_diffDrive.arcadeDrive(xSpeed * nt_forwardSpeedEntry.getDouble(1), zRotation * nt_turningSpeedEntry.getDouble(1));
     }
 
     /**
@@ -327,6 +352,19 @@ public class Drivetrain extends SubsystemBase {
         m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
     }
 
+    public void setSpeed(double speed, double turningSpeed) {
+        nt_forwardSpeedEntry.setDouble(speed);
+        nt_turningSpeedEntry.setDouble(turningSpeed);
+    }
+
+    public int getCurrentJoystick() {
+        return currentJoystick;
+    }
+
+    public void changeJoystickState() {
+        currentJoystick = (currentJoystick + 1) % 2;
+    }
+
     // ----------
 
     @Override
@@ -346,6 +384,17 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll.setDouble(getRoll());
         nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
         nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
+
+        if (lastRampEntry != nt_rampEntry.getDouble(0)) {
+            // rampRate(rampRateEntry.getDouble(-1));
+            lastRampEntry = nt_rampEntry.getDouble(0);
+            rampRate(lastRampEntry);
+        }
+
+        //making them not bug
+        nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
+        nt_turningSpeedEntry.setDouble(nt_turningSpeedEntry.getDouble(1));
+        nt_rampEntry.setDouble(nt_rampEntry.getDouble(0));
     }
 
     @Override
