@@ -68,29 +68,20 @@ public class Intake extends SubsystemBase
     return enc_wrist.getAbsolutePosition();
   }
 
-    //intake-up, down, forward, backward, stop. 
-	public void intakeForward() {
-		mot_roller.set(Constants.kIntake.kRollers);
-	}
+  public void setPivotTurn(double speed)
+  {
+    mot_pivot.set(speed);
+  }
 
-	public void intakeBackward() {
-		mot_roller.set(-Constants.kIntake.kRollers);
-	}
+  public void setWristTurn(double speed)
+  {
+    mot_wrist.set(speed);
+  }
 
-	public void stopRolling() {
-		mot_roller.set(Constants.kIntake.kRollers);
-	}
-
-	public void intakeDown() {
-		mot_pivot.set(Value.kReverse);
-		mot_wrist.set(Value.kReverse);
-	}
-
-	/** Makes the intake go up */
-	public void intakeUp() {
-		mot_pivot.set(Value.kForward);
-		mot_wrist.set(Value.kForward);
-	}
+  public void setRollerTurn(double speed)
+  {
+    mot_roller.set(speed);
+  }
 
   @Override
   public void periodic()
