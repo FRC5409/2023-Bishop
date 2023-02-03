@@ -24,8 +24,8 @@ public class IntakeCone extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_intake.setWristTurn(0);
-    m_intake.setPivotTurn(0);
+		m_intake.setWristTurn(-0.1);
+    m_intake.setPivotTurn(-0.2);
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +37,7 @@ public class IntakeCone extends CommandBase {
 	// Called once the command ends or is interrupted
 	@Override
 	public void end(boolean interrupted) {
-		m_intake.setRollerTurn(0.2);
+		m_intake.setRollerTurn(-0.2);
 		m_intake.setWristTurn(0.1);
     m_intake.setPivotTurn(0.2);
 	}
