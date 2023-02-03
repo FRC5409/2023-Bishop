@@ -16,6 +16,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
@@ -132,6 +134,8 @@ public class Drivetrain extends SubsystemBase {
         nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
         nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
         nt_rampEntry = sb_driveTab.add("Ramp Rate: ", kDriveteam.rampRate).getEntry();
+        
+        SmartDashboard.putData("Toggle Idle Mode", Commands.runOnce(() -> toggleNeutralMode()));
 
         currentJoystick = 0;
     }
@@ -239,6 +243,14 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.setNeutralMode(newMode);
         mot_rightCentreDrive.setNeutralMode(newMode);
         mot_rightRearDrive.setNeutralMode(newMode);
+    }
+
+    public void toggleNeutralMode() {
+        if (getNeutralMode() == NeutralMode.Brake) {
+            setNeutralMode(NeutralMode.Coast);
+        } else {
+            setNeutralMode(NeutralMode.Brake);
+        }
     }
 
     /**

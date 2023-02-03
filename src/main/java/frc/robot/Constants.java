@@ -39,6 +39,8 @@ public final class Constants {
             public static final int id_rightCentreDrive         = 24;
             public static final int id_rightRearDrive           = 25;
 
+            public static final int currentLimit = 40;
+
         }
 
         public static final class kCANCoder {
