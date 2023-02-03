@@ -13,7 +13,10 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase
@@ -24,6 +27,10 @@ public class Intake extends SubsystemBase
 
   private final RelativeEncoder enc_pivot;
   private final DutyCycleEncoder enc_wrist;
+
+  private final ShuffleboardTab intake;
+  private final GenericEntry entry_encPivot;
+  private final GenericEntry entry_encWrist;
 
   public Intake()
   {
@@ -42,19 +49,26 @@ public class Intake extends SubsystemBase
     enc_pivot = mot_pivot.getEncoder();
 
     enc_wrist = new DutyCycleEncoder(kIntake.id_encWrist);
-  }
 
-  @Override
-  public void periodic()
-  {}
+    intake = Shuffleboard.getTab("Intake");
+    entry_encPivot = intake.add("Pivot Pos", getPivotPos()).getEntry();
+    entry_encWrist = intake.add("Wrist Pos", getWristPos()).getEntry();
+  }
 
   public double getPivotPos()
   {
     return enc_pivot.getPosition();
   }
 
-  public double getWrist()
+  public double getWristPos()
   {
     return enc_wrist.getAbsolutePosition();
+  }
+
+  @Override
+  public void periodic()
+  {
+    entry_encPivot.setDouble(getPivotPos());
+    entry_encWrist.setDouble(getWristPos());
   }
 }
