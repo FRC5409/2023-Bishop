@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
 import frc.robot.Constants.kIntake;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -16,8 +15,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
