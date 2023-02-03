@@ -59,6 +59,7 @@ public class RobotContainer {
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
+        sys_joysticks = new ArrayList<>();
         sys_joysticks.add(joystickMain);
         sys_joysticks.add(joystickSecondary);
 
