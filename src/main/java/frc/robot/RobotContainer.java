@@ -6,8 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
+import frc.robot.commands.BrakeCommand;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.Brake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -34,6 +36,7 @@ public class RobotContainer {
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    private final Brake sys_brake;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -56,6 +59,7 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_brake = new Brake();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -82,6 +86,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.a().onTrue(new BrakeCommand(sys_brake));
     }
 
     /**
