@@ -26,5 +26,6 @@ public class BrakeCommand extends InstantCommand {
             sys_brake.setBrakeState();
         }
         Timer.delay(0.5);
+        sys_brake.stopBrake();
     }
 }

@@ -34,8 +34,12 @@ public class Brake extends SubsystemBase {
     }
     
     public void releaseBreak() {
-        mot_brake.set(ControlMode.PercentOutput, -0.15);
+        mot_brake.set(ControlMode.PercentOutput, -0.15);    
 
+    }
+
+    public void stopBrake() {
+        mot_brake.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
