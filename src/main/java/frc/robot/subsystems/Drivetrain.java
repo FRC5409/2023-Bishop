@@ -135,6 +135,7 @@ public class Drivetrain extends SubsystemBase {
         nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
         nt_rampEntry = sb_driveTab.add("Ramp Rate: ", kDriveteam.rampRate).getEntry();
         
+        //toggles the neutral mode when pressed
         SmartDashboard.putData("Toggle Idle Mode", Commands.runOnce(() -> toggleNeutralMode()));
 
         currentJoystick = 0;
@@ -193,9 +194,10 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Set ramp rate on motors
-     * @param seconds time
+     * @param seconds time to get to desired speed
      */
     public void rampRate(double seconds) {
+        //sets the ramprate to all the motors
         mot_leftFrontDrive.configOpenloopRamp(seconds);
         mot_leftCentreDrive.configOpenloopRamp(seconds);
         mot_leftRearDrive.configOpenloopRamp(seconds);
@@ -208,6 +210,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getRampRate() {
+        //gets the current ramprate applied to the motors
         return currentRampRate;
     }
 
@@ -365,15 +368,18 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setSpeed(double speed, double turningSpeed) {
+        //updating the multipliers for the drive
         nt_forwardSpeedEntry.setDouble(speed);
         nt_turningSpeedEntry.setDouble(turningSpeed);
     }
 
     public int getCurrentJoystick() {
+        //returns the current joystick
         return currentJoystick;
     }
 
     public void changeJoystickState() {
+        //switches from 0 to 1 and 1 to 0
         currentJoystick = (currentJoystick + 1) % 2;
     }
 
@@ -397,13 +403,15 @@ public class Drivetrain extends SubsystemBase {
         nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
         nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
 
+        //updating ramprate if the ramprate entry was updated
+
         if (lastRampEntry != nt_rampEntry.getDouble(0)) {
             // rampRate(rampRateEntry.getDouble(-1));
             lastRampEntry = nt_rampEntry.getDouble(0);
             rampRate(lastRampEntry);
         }
 
-        //making them not bug
+        //making them not bug out
         nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
         nt_turningSpeedEntry.setDouble(nt_turningSpeedEntry.getDouble(1));
         nt_rampEntry.setDouble(nt_rampEntry.getDouble(0));
