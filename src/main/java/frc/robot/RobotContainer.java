@@ -9,6 +9,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.commands.IntakeCone;
+import frc.robot.commands.IntakeMove;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
@@ -27,20 +28,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer {
+public class RobotContainer
+{
 
     // Driver controllers
     private final CommandXboxController joystickMain;
     private final CommandXboxController joystickSecondary;
 
     // Subsystems
-    private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
     private final Intake sys_intake;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
     private final IntakeCone cmd_intakeCone;
+    private final IntakeMove cmd_intakeMove;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -48,7 +50,8 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(Trajectory trajectory) {
+    public RobotContainer(Trajectory trajectory)
+    {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
@@ -58,21 +61,21 @@ public class RobotContainer {
         m_trajectory = trajectory;
 
         // Subsystems
-        sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
         sys_intake = new Intake();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
         cmd_intakeCone = new IntakeCone(sys_intake);
+        cmd_intakeMove = new IntakeMove(sys_intake, joystickMain);
         
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
+        sys_intake.setDefaultCommand(cmd_intakeMove);
 
         // Configure the trigger bindings
         configureBindings();
-                joystickMain.x().whileTrue(cmd_intakeCone);
     }
 
     /**
@@ -89,16 +92,15 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings() {
-        joystickMain.x().whileTrue(cmd_intakeCone);
-    }
+    private void configureBindings() {}
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+    public Command getAutonomousCommand()
+    {
         // An example command will be run in autonomous
 
         // Disable ramp rate

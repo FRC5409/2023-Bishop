@@ -29,7 +29,27 @@ public class IntakeMove extends CommandBase
   {
     if (controller.povUp().getAsBoolean())
     {
-      
+      intake.setPivotTurn(0.2);
+    }
+    if (controller.povDown().getAsBoolean())
+    {
+      intake.setPivotTurn(-0.2);
+    }
+    if (controller.y().getAsBoolean())
+    {
+      intake.setWristTurn(0.2);
+    }
+    if (controller.a().getAsBoolean())
+    {
+      intake.setWristTurn(-0.2);
+    }
+    if (controller.x().getAsBoolean())
+    {
+      intake.setRollerTurn(-0.2);
+    }
+    if (controller.b().getAsBoolean())
+    {
+      intake.setRollerTurn(0.2);
     }
   }
 
