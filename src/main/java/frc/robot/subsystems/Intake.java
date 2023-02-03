@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants;
 import frc.robot.Constants.kIntake;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -15,6 +16,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -64,6 +67,30 @@ public class Intake extends SubsystemBase
   {
     return enc_wrist.getAbsolutePosition();
   }
+
+    //intake-up, down, forward, backward, stop. 
+	public void intakeForward() {
+		mot_roller.set(Constants.kIntake.kRollers);
+	}
+
+	public void intakeBackward() {
+		mot_roller.set(-Constants.kIntake.kRollers);
+	}
+
+	public void stopRolling() {
+		mot_roller.set(Constants.kIntake.kRollers);
+	}
+
+	public void intakeDown() {
+		mot_pivot.set(Value.kReverse);
+		mot_wrist.set(Value.kReverse);
+	}
+
+	/** Makes the intake go up */
+	public void intakeUp() {
+		mot_pivot.set(Value.kForward);
+		mot_wrist.set(Value.kForward);
+	}
 
   @Override
   public void periodic()

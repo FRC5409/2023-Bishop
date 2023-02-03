@@ -20,24 +20,25 @@ public class IntakeCone extends CommandBase {
 		addRequirements(m_intake);
 	}
 
+  //intake-up, down, forward, backward, stop. 
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_intake.intakeDownward();
+		m_intake.intakeDown();
 		m_intake.stopIntaking();
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		m_intake.startIntaking();
+		m_intake.intakeForward();
 	}
 
 	// Called once the command ends or is interrupted
 	@Override
 	public void end(boolean interrupted) {
 		m_intake.stopIntaking();
-		m_intake.intakeUpward();
+		m_intake.intakeUp();
 	}
 
 	// Returns true when the command should end.
