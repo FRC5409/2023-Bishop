@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.commands.DefaultDrive;
@@ -12,11 +11,8 @@ import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
-
 import java.util.ArrayList;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
