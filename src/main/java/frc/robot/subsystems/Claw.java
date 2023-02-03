@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kClaw;
 
@@ -20,39 +19,57 @@ public class Claw extends SubsystemBase {
     private final RelativeEncoder clawEncoder;
 
     private final ShuffleboardTab clawTab;
-    private final GenericEntry kP, kI, kD, kF;
+    private final GenericEntry EncoderPosEntry, isStalledEntry, tempEntry;
 
-    private double currentOverTime[] = new double[kClaw.currentDataLength];
+    // private final GenericEntry currentEntry;
 
-    private int currentIndex = 0;
+    // private double currentOverTime[] = new double[kClaw.currentDataLength];
+
+    // private int currentIndex = 0;
+
+    private double lastEncoder = 0;
+    private double lastEncoder2 = 0;
 
     public Claw() {
         clawMot = new CANSparkMax(kClaw.clawCANID, MotorType.kBrushless);
 
-        configMot();
-
         pidController_claw = clawMot.getPIDController();
+
+        configMot();
 
         clawEncoder = clawMot.getEncoder();
 
         clawTab = Shuffleboard.getTab("Claw");
 
-        kP = clawTab.add("kP", 0).getEntry();
-        kI = clawTab.add("kI", 0).getEntry();
-        kD = clawTab.add("kD", 0).getEntry();
-        kF = clawTab.add("kF", 0).getEntry();
+        // kP = clawTab.add("kP", 0).getEntry();
+        // kI = clawTab.add("kI", 0).getEntry();
+        // kD = clawTab.add("kD", 0).getEntry();
+        // kF = clawTab.add("kF", 0).getEntry();
+
+        // currentEntry = clawTab.add("Current: ", 0).getEntry();
+        EncoderPosEntry = clawTab.add("Encoder: ", getEncoderPosition()).getEntry();
+        isStalledEntry = clawTab.add("Is Stalled: ", isStalled()).getEntry();
+        tempEntry = clawTab.add("Motor Temp: ", getMotorTempature()).getEntry();        
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        setPIDF(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0), kF.getDouble(0));
 
-        currentOverTime[currentIndex] = clawMot.getOutputCurrent();
-        currentIndex++;
-        currentIndex %= currentOverTime.length;
+        // currentOverTime[currentIndex] = clawMot.getOutputCurrent();
+        // currentIndex++;
+        // currentIndex %= currentOverTime.length;
 
-        SmartDashboard.putNumber("Average current: ", getAverageCurrent());
+
+        // lastEncoder = getEncoderPosition();
+        EncoderPosEntry.setDouble(getEncoderPosition());
+        isStalledEntry.setBoolean(isStalled());
+        tempEntry.setDouble(getMotorTempature());
+        // currentEntry.setDouble(getAverageCurrent());
+
+        lastEncoder = lastEncoder2;
+        lastEncoder2 = getEncoderPosition();
+        
     }
 
     @Override
@@ -67,6 +84,10 @@ public class Claw extends SubsystemBase {
         clawMot.setIdleMode(IdleMode.kBrake);
 
         clawMot.setSmartCurrentLimit(kClaw.currentLimit);
+
+        setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
+
+        clawMot.burnFlash();
     }
 
     public void setPIDF(double p, double i, double d, double f) {
@@ -104,17 +125,41 @@ public class Claw extends SubsystemBase {
         clawMot.set(speed);
     }
 
-    public double getAverageCurrent() {
-        double total = 0;
-        for (int i = 0; i < currentOverTime.length; i++) {
-            if (currentOverTime[i] == 0) {
-                total = -1;
-                break;
+    // public double getAverageCurrent() {
+    //     double total = 0;
+    //     for (int i = 0; i < currentOverTime.length; i++) {
+    //         if (currentOverTime[i] == 0) {
+    //             total = -1;
+    //             break;
+    //         } else {
+    //             total += currentOverTime[i];
+    //         }
+    //     }
+    //     return total / currentOverTime.length;
+    // }
+
+    public boolean isStalled() {
+        double pos = getEncoderPosition();
+        if (clawMot.get() != 0) {
+            if (pos == lastEncoder) {
+                System.out.println("Motor stalled");
+                return true;
             } else {
-                total += currentOverTime[i];
+                System.out.println("Motor not stalled");
+                return false;
             }
+
+        } else {
+            return false;
         }
-        return total / currentOverTime.length;
+    }
+
+    public double getMotorTempature() {
+        return clawMot.getMotorTemperature();
+    }
+
+    public void setIdleMode(IdleMode idle) {
+        clawMot.setIdleMode(idle);
     }
 
 }

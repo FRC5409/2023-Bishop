@@ -8,6 +8,7 @@ import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FindClawZero;
 import frc.robot.commands.changeClaw;
 import frc.robot.commands.auto.AutoPathPlanning;
@@ -16,8 +17,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -38,11 +39,11 @@ public class RobotContainer {
 
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
-    public final Drivetrain sys_drivetrain;
+    // public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
 
     // Commands
-    private final DefaultDrive cmd_defaultDrive;
+    // private final DefaultDrive cmd_defaultDrive;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -61,14 +62,14 @@ public class RobotContainer {
 
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
-        sys_drivetrain = new Drivetrain();
+        // sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        // cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
-        sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
+        // sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Configure the trigger bindings
         configureBindings();
@@ -89,7 +90,19 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        joystickMain.x().onTrue(new changeClaw(sys_claw, kClaw.openPosition)).onFalse(new changeClaw(sys_claw, kClaw.closePosition));
+        joystickMain.x()
+        .onTrue(new changeClaw(sys_claw, kClaw.openPosition));
+        // .onFalse(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
+        // .onFalse(new changeClaw(sys_claw, kClaw.closePosition));
+        joystickMain.leftBumper().onTrue(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
+        joystickMain.rightBumper().onTrue(new changeClaw(sys_claw, kClaw.closePosition));
+        
+        joystickMain.a()
+        .onTrue(Commands.runOnce(() -> sys_claw.stopMot()));
+
+        // joystickMain.y().onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+        joystickMain.y().onTrue(new FindClawZero(sys_claw));
+        joystickMain.b().onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
     }
 
     /**
@@ -97,17 +110,18 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
+    // public Command getAutonomousCommand() {
+    //     // An example command will be run in autonomous
 
-        // Disable ramp rate
-        sys_drivetrain.rampRate(0);
-        // Reset odometry
-        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
-        // Run auto path, then stop and re-set ramp rate
-        return new AutoPathPlanning(sys_drivetrain, m_trajectory)
-            .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
-    }
+    //     // Disable ramp rate
+    //     // sys_drivetrain.rampRate(0);
+    //     // // Reset odometry
+    //     // sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+    //     // // Run auto path, then stop and re-set ramp rate
+    //     // return new AutoPathPlanning(sys_drivetrain, m_trajectory)
+    //     //     .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
+    //     //     .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+    //     // return ExampleCommand;
+    // }
 }
 

@@ -55,10 +55,10 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer(trajectory);
 
     // Set coast mode after 5 seconds disabled
-    new Trigger(this::isEnabled)
-      .negate()
-      .debounce(5)
-      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain));
+    // new Trigger(this::isEnabled)
+    //   .negate()
+    //   .debounce(5)
+      // .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain));
   }
 
   /**
@@ -89,9 +89,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
 
     // Set brake mode
-    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+    // m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
 
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
 
     // Set brake mode
-    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+    // m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
 
     new FindClawZero(m_robotContainer.sys_claw);
 
@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
 
     // Set brake mode
-    m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
+    // m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
 
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();

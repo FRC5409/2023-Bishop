@@ -35,7 +35,8 @@ public class FindClawZero extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() { 
-        return m_claw.getAverageCurrent() >= kClaw.outputCurrentMaxLimit;
+        // return m_claw.getAverageCurrent() >= kClaw.outputCurrentMaxLimit;
+        return m_claw.isStalled();
     }
 
 }

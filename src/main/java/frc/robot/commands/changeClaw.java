@@ -7,9 +7,9 @@ import frc.robot.subsystems.Claw;
 public class changeClaw extends CommandBase {
 
     private final Claw m_claw;
-    private final int pos;
+    private final double pos;
 
-    public changeClaw(Claw claw, int value) {
+    public changeClaw(Claw claw, double value) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
         pos = value;
@@ -26,9 +26,7 @@ public class changeClaw extends CommandBase {
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
@@ -39,7 +37,7 @@ public class changeClaw extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return (pos - m_claw.getEncoderPosition()) >= kClaw.encoderOffset;
+        return Math.abs(pos - m_claw.getEncoderPosition()) <= kClaw.encoderOffset;
     }
 
 }
