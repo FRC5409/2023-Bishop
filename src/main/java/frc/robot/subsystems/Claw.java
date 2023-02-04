@@ -19,16 +19,14 @@ public class Claw extends SubsystemBase {
     private final RelativeEncoder clawEncoder;
 
     private final ShuffleboardTab clawTab;
-    private final GenericEntry EncoderPosEntry, isStalledEntry, tempEntry;
+    private final GenericEntry encoderPosEntry, encoderVeloEntry, isStalledEntry, tempEntry;
+    // private final GenericEntry kP;
 
     // private final GenericEntry currentEntry;
 
     // private double currentOverTime[] = new double[kClaw.currentDataLength];
 
     // private int currentIndex = 0;
-
-    private double lastEncoder = 0;
-    private double lastEncoder2 = 0;
 
     public Claw() {
         clawMot = new CANSparkMax(kClaw.clawCANID, MotorType.kBrushless);
@@ -47,7 +45,8 @@ public class Claw extends SubsystemBase {
         // kF = clawTab.add("kF", 0).getEntry();
 
         // currentEntry = clawTab.add("Current: ", 0).getEntry();
-        EncoderPosEntry = clawTab.add("Encoder: ", getEncoderPosition()).getEntry();
+        encoderPosEntry = clawTab.add("Encoder: ", getEncoderPosition()).getEntry();
+        encoderVeloEntry = clawTab.add("Encoder Velo: ", getEncoderVelocity()).getEntry();
         isStalledEntry = clawTab.add("Is Stalled: ", isStalled()).getEntry();
         tempEntry = clawTab.add("Motor Temp: ", getMotorTempature()).getEntry();        
     }
@@ -62,13 +61,12 @@ public class Claw extends SubsystemBase {
 
 
         // lastEncoder = getEncoderPosition();
-        EncoderPosEntry.setDouble(getEncoderPosition());
+        encoderPosEntry.setDouble(getEncoderPosition());
+        encoderVeloEntry.setDouble(getEncoderVelocity());
         isStalledEntry.setBoolean(isStalled());
         tempEntry.setDouble(getMotorTempature());
         // currentEntry.setDouble(getAverageCurrent());
-
-        lastEncoder = lastEncoder2;
-        lastEncoder2 = getEncoderPosition();
+        // setPIDF(kP.getDouble(0), 0, 0, 0);
         
     }
 
@@ -117,6 +115,10 @@ public class Claw extends SubsystemBase {
         return clawEncoder.getPosition();
     }
 
+    public double getEncoderVelocity() {
+        return Math.abs(clawEncoder.getVelocity());
+    }
+
     public void zeroEncoder() {
         clawEncoder.setPosition(0);
     }
@@ -139,17 +141,18 @@ public class Claw extends SubsystemBase {
     // }
 
     public boolean isStalled() {
-        double pos = getEncoderPosition();
+        double velo = getEncoderVelocity();
         if (clawMot.get() != 0) {
-            if (pos == lastEncoder) {
-                System.out.println("Motor stalled");
+            if (velo <= 0.1) {
+                //motor stalled
                 return true;
             } else {
-                System.out.println("Motor not stalled");
+                //motor not stalled
                 return false;
             }
 
         } else {
+            //motor not running
             return false;
         }
     }
