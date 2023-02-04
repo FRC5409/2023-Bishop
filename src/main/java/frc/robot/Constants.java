@@ -124,11 +124,15 @@ public final class Constants
 
     public static final class kIntake
     {
-        public static final int id_motorPivot                = 0; /* placeholder */
-        public static final int id_motorWrist                = 0; /* placeholder */
-        public static final int id_motorRoller               = 0; /* placeholder */
+        public static final int id_motPivot                = 0; /* placeholder */
+        public static final int id_motWrist                = 0; /* placeholder */
+        public static final int id_motRoller               = 0; /* placeholder */
 
         public static final int id_encPivot                  = 0; /* placeholder */
         public static final int id_encWrist                  = 0; /* placeholder */
+
+        public static final double kP                        = 0.0; /* placeholder */
+        public static final double kI                        = 0.0; /* placeholder */
+        public static final double kD                        = 0.0; /* placeholder */
     }
 }
