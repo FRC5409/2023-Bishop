@@ -5,25 +5,25 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakePID;;
+import frc.robot.subsystems.Intake.IntakeRoller;
  
 public class RollerMove extends CommandBase {
 
-  private final IntakePID sys_IntakePID;
+  private final IntakeRoller sys_IntakeRoller;
   private double speed;
 
-  public RollerMove(IntakePID subsystem, double speed) {
-      sys_IntakePID = subsystem;
+  public RollerMove(IntakeRoller subsystem, double speed) {
+      sys_IntakeRoller = subsystem;
       this.speed = speed;
 
       // Use addRequirements() here to declare subsystem dependencies.
-      addRequirements(sys_IntakePID);   
+      addRequirements(sys_IntakeRoller);   
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakePID.rollerControl(speed);
+    sys_IntakeRoller.rollerControl(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class RollerMove extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    sys_IntakePID.rollerControl(0);
+    sys_IntakeRoller.rollerControl(0);
   }
 
   // Returns true when the command should end.

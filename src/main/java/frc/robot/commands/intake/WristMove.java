@@ -5,25 +5,25 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakePID;;
+import frc.robot.subsystems.Intake.IntakeWrist;
  
 public class WristMove extends CommandBase {
 
-  private final IntakePID sys_IntakePID;
+  private final IntakeWrist sys_IntakeWrist;
   private double speed;
 
-  public WristMove(IntakePID subsystem, double speed) {
-      sys_IntakePID = subsystem;
+  public WristMove(IntakeWrist subsystem, double speed) {
+      sys_IntakeWrist = subsystem;
       this.speed = speed;
 
       // Use addRequirements() here to declare subsystem dependencies.
-      addRequirements(sys_IntakePID);   
+      addRequirements(sys_IntakeWrist);   
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakePID.wristControl(speed);
+    sys_IntakeWrist.wristControl(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class WristMove extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    sys_IntakePID.wristControl(0);
+    sys_IntakeWrist.wristControl(0);
   }
 
   // Returns true when the command should end.
