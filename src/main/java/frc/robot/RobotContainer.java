@@ -9,7 +9,9 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.IntakePID;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeRoller;
+import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.commands.intake.PivotMove;
 import frc.robot.commands.intake.RollerMove;
 import frc.robot.commands.intake.WristMove;
@@ -38,7 +40,9 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final IntakePID sys_intake;
+    private final IntakePivot sys_intakePivot;
+    private final IntakeRoller sys_intakeRoller;
+    private final IntakeWrist sys_intakeWrist;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -64,13 +68,15 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intake = new IntakePID();
+        sys_intakePivot = new IntakePivot();
+        sys_intakeRoller = new IntakeRoller();
+        sys_intakeWrist = new IntakeWrist();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_pivotMove = new PivotMove(sys_intake, 0);
-        cmd_wristMove = new WristMove(sys_intake, 0);
-        cmd_rollerMove = new RollerMove(sys_intake, 0);
+        cmd_pivotMove = new PivotMove(sys_intakePivot, 0);
+        cmd_wristMove = new WristMove(sys_intakeWrist, 0);
+        cmd_rollerMove = new RollerMove(sys_intakeRoller, 0);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -94,7 +100,7 @@ public class RobotContainer
      * joysticks}.
      */
     private void configureBindings() {
-        
+
     }
 
     /**
