@@ -42,7 +42,6 @@ public class RobotContainer
     // Commands
     private final DefaultDrive cmd_defaultDrive;
     private final IntakeCone cmd_intakeCone;
-    private final IntakeMove cmd_intakeMove;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -67,12 +66,10 @@ public class RobotContainer
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
         cmd_intakeCone = new IntakeCone(sys_intake);
-        cmd_intakeMove = new IntakeMove(sys_intake, joystickMain);
         
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
-        sys_intake.setDefaultCommand(cmd_intakeMove);
 
         // Configure the trigger bindings
         configureBindings();
@@ -92,7 +89,15 @@ public class RobotContainer
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings() {}
+    private void configureBindings()
+    {
+        joystickMain.povUp().whileTrue(new IntakeMove(sys_intake, 1, 0.2));
+        joystickMain.povDown().whileTrue(new IntakeMove(sys_intake, 1, -0.2));
+        joystickMain.y().whileTrue(new IntakeMove(sys_intake, 2, 0.2));
+        joystickMain.a().whileTrue(new IntakeMove(sys_intake, 2, -0.2));
+        joystickMain.x().whileTrue(new IntakeMove(sys_intake, 3, -0.2));
+        joystickMain.b().whileTrue(new IntakeMove(sys_intake, 3, 0.2));
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -5,59 +5,50 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Intake;
 
 public class IntakeMove extends CommandBase
 {
   private final Intake intake;
-  private final CommandXboxController controller;
+  private final int joint;
+  private final double speed;
 
-  public IntakeMove(Intake _intake, CommandXboxController _controller)
+  public IntakeMove(Intake _intake, int _joint, double _speed)
   {
     intake = _intake;
-    controller = _controller;
+    joint = _joint;
+    speed = _speed;
 
     addRequirements(intake);
   }
 
   @Override
-  public void initialize() {}
-
-  @Override
-  public void execute()
+  public void initialize()
   {
-    if (controller.povUp().getAsBoolean())
+    switch (joint)
     {
-      intake.setPivotTurn(0.2);
-    }
-    if (controller.povDown().getAsBoolean())
-    {
-      intake.setPivotTurn(-0.2);
-    }
-    if (controller.y().getAsBoolean())
-    {
-      intake.setWristTurn(0.2);
-    }
-    if (controller.a().getAsBoolean())
-    {
-      intake.setWristTurn(-0.2);
-    }
-    if (controller.x().getAsBoolean())
-    {
-      intake.setRollerTurn(-0.2);
-    }
-    if (controller.b().getAsBoolean())
-    {
-      intake.setRollerTurn(0.2);
+      case 1:
+        intake.setPivotTurn(speed);
+        break;
+      
+      case 2:
+        intake.setWristTurn(speed);
+        break;
+      
+      case 3:
+        intake.setRollerTurn(speed);
+        break;
     }
   }
 
   @Override
+  public void execute() {}
+  @Override
   public void end(boolean interrupted) {}
 
   @Override
-  public boolean isFinished() {
+  public boolean isFinished()
+  {
     return false;
   }
 }
