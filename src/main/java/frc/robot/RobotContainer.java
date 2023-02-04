@@ -10,11 +10,15 @@ import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.IntakePID;
+import frc.robot.commands.intake.PivotMove;
+import frc.robot.commands.intake.RollerMove;
+import frc.robot.commands.intake.WristMove;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -38,6 +42,9 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final PivotMove cmd_pivotMove;
+    private final RollerMove cmd_rollerMove;
+    private final WristMove cmd_wristMove;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -61,7 +68,9 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        
+        cmd_pivotMove = new PivotMove();
+        cmd_wristMove = new WristMove();
+        cmd_rollerMove = new RollerMove();
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
