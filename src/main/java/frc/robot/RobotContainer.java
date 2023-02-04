@@ -10,7 +10,6 @@ import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,7 +35,6 @@ public class RobotContainer {
     private final ArrayList<CommandXboxController> sys_joysticks;
 
     // Subsystems
-    private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
 
     // Commands
@@ -63,7 +61,6 @@ public class RobotContainer {
         m_trajectory = trajectory;
 
         // Subsystems
-        sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
 
         // Commands

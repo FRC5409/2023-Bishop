@@ -93,6 +93,13 @@ public final class Constants {
                 
             public static final double kChangeRamp               = 0.5;
             public static final int timerLength                  = 50;
+
+            public static final double maxSpinSpeed              = 2000;
+            public static final double lowerSpinSpeed            = 0.7;
+            public static final double spinRamp                  = 1;
+            public static final int lowerTimer                   = 20;
+
+            public static final double rumbleIntensity = 0.5;
         }
     }
 
