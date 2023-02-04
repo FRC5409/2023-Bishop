@@ -9,7 +9,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePID;
 
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +34,7 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final Intake sys_intake;
+    private final IntakePID sys_intake;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -57,7 +57,7 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intake = new Intake();
+        sys_intake = new IntakePID();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
