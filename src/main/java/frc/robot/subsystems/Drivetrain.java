@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
@@ -145,9 +144,6 @@ public class Drivetrain extends SubsystemBase {
         nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
         nt_rampEntry = sb_driveTab.add("Ramp Rate: ", kDriveteam.rampRate).getEntry();
         
-        //toggles the neutral mode when pressed
-        SmartDashboard.putData("Toggle Idle Mode", Commands.runOnce(() -> toggleNeutralMode()));
-        SmartDashboard.putData("Toggle freespin", Commands.runOnce(() -> toggleFreeSpin()));
         SmartDashboard.putBoolean("Free spin", checkSpin);
 
         currentJoystick = 0;
@@ -232,9 +228,15 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        m_diffDrive.arcadeDrive(
-            xSpeed * nt_forwardSpeedEntry.getDouble(1) * spinMultiplier,
-            zRotation * nt_turningSpeedEntry.getDouble(1) * spinMultiplier);
+        if (spinTimer <= 0) {
+            m_diffDrive.arcadeDrive(
+                xSpeed * nt_forwardSpeedEntry.getDouble(1) * spinMultiplier,
+                zRotation * nt_turningSpeedEntry.getDouble(1) * spinMultiplier);
+        } else {
+            m_diffDrive.arcadeDrive(
+                xSpeed * nt_forwardSpeedEntry.getDouble(1) * spinMultiplier * kDriveteam.lowerSpinSpeed,
+                zRotation * nt_turningSpeedEntry.getDouble(1) * spinMultiplier * kDriveteam.lowerSpinSpeed);
+        }
     }
 
     /**
@@ -330,7 +332,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getAverageVelocity() {
-        return (getLeftVelocity() + getRightVelocity()) / 2;
+        return (Math.abs(getLeftVelocity()) + Math.abs(getRightVelocity())) / 2;
     }
 
     // ----------
@@ -410,13 +412,6 @@ public class Drivetrain extends SubsystemBase {
         checkSpin = !checkSpin;
     }
 
-    public void rampDown() {
-        double currentSpeed = mot_leftFrontDrive.get();
-        setMotorSpeeds(kDriveteam.lowerSpinSpeed);
-        rampRate(kDriveteam.spinRamp);
-        setMotorSpeeds(currentSpeed);
-    }
-
     // ----------
 
     @Override
@@ -442,29 +437,34 @@ public class Drivetrain extends SubsystemBase {
         if (lastRampEntry != nt_rampEntry.getDouble(0)) {
             // rampRate(rampRateEntry.getDouble(-1));
             lastRampEntry = nt_rampEntry.getDouble(0);
-            rampRate(lastRampEntry);
+            rampRate(nt_rampEntry.getDouble(0));
         }
 
         //making them not bug out
-        nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
-        nt_turningSpeedEntry.setDouble(nt_turningSpeedEntry.getDouble(1));
-        nt_rampEntry.setDouble(nt_rampEntry.getDouble(0));
+        // nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
+        // nt_turningSpeedEntry.setDouble(nt_turningSpeedEntry.getDouble(1));
+        // nt_rampEntry.setDouble(nt_rampEntry.getDouble(0));
 
         //free spinning
         SmartDashboard.putBoolean("Free spin", checkSpin);
         SmartDashboard.putNumber("Average Wheel Velocity", getAverageVelocity());
         if (checkSpin) {
-            if (getAverageVelocity() >= kDriveteam.maxSpinSpeed && spinTimer == 0) {
+            if (getAverageVelocity() >= kDriveteam.maxSpinSpeed && spinTimer == -1) {
                 spinTimer = kDriveteam.lowerTimer;
+
                 lastRamp = getRampRate();
-                rampDown();
+
+                setMotorSpeeds(kDriveteam.lowerSpinSpeed);
+                rampRate(kDriveteam.spinRamp);
+                setMotorSpeeds(kDriveteam.lowerSpinSpeed);
+
                 joystickMain.setRumble(RumbleType.kBothRumble, kDriveteam.rumbleIntensity);
             }
         }
         if (spinTimer > 0) {
             spinTimer--;
-        } else {
-            spinTimer = 0;
+        } else if (spinTimer == 0) {
+            spinTimer = -1;
             rampRate(lastRamp);
             joystickMain.setRumble(RumbleType.kBothRumble, 0);
         }

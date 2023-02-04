@@ -33,7 +33,7 @@ public class DefaultDrive extends CommandBase {
         // LT forward, RT rear, LSB turnval
         forwardSpeed = m_joysticks.get(drivetrain.getCurrentJoystick()).getLeftTriggerAxis();
         rearSpeed = m_joysticks.get(drivetrain.getCurrentJoystick()).getRightTriggerAxis();
-        turnVal = m_joysticks.get(drivetrain.getCurrentJoystick()).getLeftX();
+        turnVal = -m_joysticks.get(drivetrain.getCurrentJoystick()).getLeftX();
 
         // SmartDashboard.putNumber("Forward Speed", forwardSpeed);
         // SmartDashboard.putNumber("Reverse Speed", Math.round(rearSpeed * 100));
