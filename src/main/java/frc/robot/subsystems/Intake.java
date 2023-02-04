@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase
   private final WPI_TalonFX mot_wrist;
   private final WPI_TalonFX mot_roller;
 
-  private final RelativeEncoder enc_pivot;
+  private final DutyCycleEncoder enc_pivot;
   private final DutyCycleEncoder enc_wrist;
 
   private final ShuffleboardTab intake;
@@ -46,8 +46,7 @@ public class Intake extends SubsystemBase
     mot_roller.configFactoryDefault();
     mot_roller.setNeutralMode(NeutralMode.Brake);
 
-    enc_pivot = mot_pivot.getEncoder();
-
+    enc_pivot = new DutyCycleEncoder(kIntake.id_encPivot);
     enc_wrist = new DutyCycleEncoder(kIntake.id_encWrist);
 
     intake = Shuffleboard.getTab("Intake");
@@ -57,7 +56,7 @@ public class Intake extends SubsystemBase
 
   public double getPivotPos()
   {
-    return enc_pivot.getPosition();
+    return enc_pivot.getAbsolutePosition();
   }
 
   public double getWristPos()

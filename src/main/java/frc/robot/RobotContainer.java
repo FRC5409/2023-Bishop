@@ -8,10 +8,7 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
-import frc.robot.commands.IntakeCone;
-import frc.robot.commands.IntakeMove;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -41,7 +38,6 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final IntakeCone cmd_intakeCone;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -65,7 +61,6 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_intakeCone = new IntakeCone(sys_intake);
         
 
         // Set default drive as drivetrain's default command
@@ -89,15 +84,7 @@ public class RobotContainer
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings()
-    {
-        joystickMain.povUp().whileTrue(new IntakeMove(sys_intake, 1, 0.2));
-        joystickMain.povDown().whileTrue(new IntakeMove(sys_intake, 1, -0.2));
-        joystickMain.y().whileTrue(new IntakeMove(sys_intake, 2, 0.2));
-        joystickMain.a().whileTrue(new IntakeMove(sys_intake, 2, -0.2));
-        joystickMain.x().whileTrue(new IntakeMove(sys_intake, 3, -0.2));
-        joystickMain.b().whileTrue(new IntakeMove(sys_intake, 3, 0.2));
-    }
+    private void configureBindings() {}
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

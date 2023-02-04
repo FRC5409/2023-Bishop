@@ -128,6 +128,7 @@ public final class Constants
         public static final int id_motorWrist                = 0; /* placeholder */
         public static final int id_motorRoller               = 0; /* placeholder */
 
-        public static final int id_encWrist                 = 0; /* placeholder */
+        public static final int id_encPivot                  = 0; /* placeholder */
+        public static final int id_encWrist                  = 0; /* placeholder */
     }
 }
