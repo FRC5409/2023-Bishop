@@ -4,25 +4,51 @@
 
 package frc.robot.subsystems.Intake;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.Constants.kIntake;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
-public class IntakePivot extends PIDSubsystem {
-  /** Creates a new IntakePivot. */
-  public IntakePivot() {
-    super(
-        // The PIDController used by the subsystem
-        new PIDController(0, 0, 0));
+public class IntakePivot extends PIDSubsystem
+{
+  private final CANSparkMax motor;
+  private final DutyCycleEncoder encoder;
+
+  public final ShuffleboardTab tab_intake;
+  private final GenericEntry kP, kI, kD, encPos;
+
+  public IntakePivot()
+  {
+    super(new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD));
+
+    motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
+    motor.restoreFactoryDefaults();
+    motor.setIdleMode(IdleMode.kBrake);
+
+    encoder = new DutyCycleEncoder(kIntake.id_encPivot);
+
+    tab_intake = Shuffleboard.getTab("Intake");
+    kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
+    kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
+    kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
+    encPos = tab_intake.add("Encoder Pos", getMeasurement()).getEntry();
   }
 
   @Override
-  public void useOutput(double output, double setpoint) {
-    // Use the output here
-  }
+  public void useOutput(double output, double setpoint)
+  {}
 
   @Override
-  public double getMeasurement() {
-    // Return the process variable measurement here
-    return 0;
+  public double getMeasurement()
+  {
+    return encoder.getAbsolutePosition();
   }
 }
