@@ -24,22 +24,22 @@ public class IntakeCone extends CommandBase {
 	// Called when the command is initially scheduled.
 	@Override
 	public void initialize() {
-		m_intake.setWristTurn(-0.2);
-    	m_intake.setPivotTurn(-0.1);
+		m_intake.setWristTurn(-0.2); //lower the wrist to the point where it's ready to intake the cone.
+    	m_intake.setPivotTurn(-0.1); //lower the pivot so intake can reach the cone on the ground.
 	}
 
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override
 	public void execute() {
-		m_intake.setRollerTurn(0.2);
+		m_intake.setRollerTurn(0.2); //start intaking the cone.
 	}
 
 	// Called once the command ends or is interrupted
 	@Override
 	public void end(boolean interrupted) {
-		m_intake.setWristTurn(0.2);
-    	m_intake.setPivotTurn(0.1);		
-		m_intake.setRollerTurn(-0.2);
+		m_intake.setWristTurn(0.2); //rotate the wrist so it flips the cone upside down.
+    	m_intake.setPivotTurn(0.1); //rotate the pivot (up) so the arm can reach and grab the cone.
+		m_intake.setRollerTurn(-0.2); //roller roll backwards for arm to grab. 
 		
 	}
 
