@@ -5,16 +5,26 @@
 package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.IntakePID;
 
 public class PivotMove extends CommandBase {
-  /** Creates a new PivotMove. */
-  public PivotMove() {
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  private final IntakePID sys_IntakePID;
+  private double speed;
+
+  public PivotMove(IntakePID subsystem, double speed) {
+      sys_IntakePID = subsystem;
+      this.speed = speed;
+
+      // Use addRequirements() here to declare subsystem dependencies.
+      addRequirements(sys_IntakePID);   
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    sys_IntakePID.pivotMove(speed);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -22,7 +32,9 @@ public class PivotMove extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    sys_IntakePID.pivotMove (0);
+  }
 
   // Returns true when the command should end.
   @Override
