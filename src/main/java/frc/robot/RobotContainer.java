@@ -100,7 +100,11 @@ public class RobotContainer
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.y()
+            .whileTrue(cmd_pivotMove);
 
+        joystickMain.a()
+            .whileTrue(pivotMove());
     }
 
     /**
