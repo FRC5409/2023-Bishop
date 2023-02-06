@@ -101,10 +101,18 @@ public class RobotContainer
      */
     private void configureBindings() {
         joystickMain.y()
-            .whileTrue(cmd_pivotMove);
+            .whileTrue(sys_intakePivot, pivotControl(0.2));
 
         joystickMain.a()
-            .whileTrue(pivotMove());
+            .whileTrue(sys_intakePivot, pivotControl(-0.2));
+
+        joystickMain.x()
+            .whileTrue(sys_intakeRoller, rollerControl(0.2));
+        
+        joystickMain.b()
+            .whileTrue(sys_intakeRoller, rollerControl(-0.2));
+        
+        
     }
 
     /**
