@@ -94,13 +94,12 @@ public final class Constants {
 
         public static final int clawCANID                        = 12;
 
+        public static final int ToFCANID                         = -1;
+
         public static final int currentLimit                     = 20;
 
         public static final double openPosition                  = -24;
         public static final double closePosition                 = -86;
-
-        public static final double outputCurrentMaxLimit         = 40;
-        public static final int currentDataLength                = 10;
 
         public static final double zeroSpeed                     = 0.2;
 
@@ -110,6 +109,9 @@ public final class Constants {
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;
+
+        //distance from the claw to the object in front of it
+        public static final double objectRange                   = 100;
 
     }
 }

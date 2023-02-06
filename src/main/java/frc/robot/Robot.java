@@ -108,9 +108,7 @@ public class Robot extends TimedRobot {
 
     // Set brake mode
     // m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
-
-    new FindClawZero(m_robotContainer.sys_claw);
-
+    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

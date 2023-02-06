@@ -91,17 +91,20 @@ public class RobotContainer {
      */
     private void configureBindings() {
         joystickMain.x()
-        .onTrue(new changeClaw(sys_claw, kClaw.openPosition));
+        .onTrue(new changeClaw(sys_claw, true).andThen(new changeClaw(sys_claw, false)));
         // .onFalse(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
         // .onFalse(new changeClaw(sys_claw, kClaw.closePosition));
         joystickMain.leftBumper().onTrue(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
-        joystickMain.rightBumper().onTrue(new changeClaw(sys_claw, kClaw.closePosition));
+
+        joystickMain.rightBumper().onTrue(new changeClaw(sys_claw, false));
         
         joystickMain.a()
         .onTrue(Commands.runOnce(() -> sys_claw.stopMot()));
 
         // joystickMain.y().onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
-        joystickMain.y().onTrue(new FindClawZero(sys_claw));
+        joystickMain.y().onTrue(new FindClawZero(sys_claw)
+        .andThen(new changeClaw(sys_claw, true)));
+
         joystickMain.b().onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
     }
 

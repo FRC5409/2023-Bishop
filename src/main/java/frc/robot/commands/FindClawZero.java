@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.Claw;
 
@@ -35,7 +34,6 @@ public class FindClawZero extends CommandBase {
     public void end(boolean interrupted) {
         m_claw.zeroEncoder();
         m_claw.stopMot();
-        new changeClaw(m_claw, kClaw.openPosition);
     }
 
     // Returns true when the command should end.

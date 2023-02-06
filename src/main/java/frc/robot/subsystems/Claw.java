@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -18,15 +19,10 @@ public class Claw extends SubsystemBase {
     private final SparkMaxPIDController pidController_claw;
     private final RelativeEncoder clawEncoder;
 
+    private final TimeOfFlight clawSensor;
+
     private final ShuffleboardTab clawTab;
-    private final GenericEntry encoderPosEntry, encoderVeloEntry, isStalledEntry, tempEntry;
-    // private final GenericEntry kP;
-
-    // private final GenericEntry currentEntry;
-
-    // private double currentOverTime[] = new double[kClaw.currentDataLength];
-
-    // private int currentIndex = 0;
+    private final GenericEntry encoderPosEntry, encoderVeloEntry, isStalledEntry, tempEntry, distanceEntry;
 
     public Claw() {
         clawMot = new CANSparkMax(kClaw.clawCANID, MotorType.kBrushless);
@@ -37,6 +33,8 @@ public class Claw extends SubsystemBase {
 
         clawEncoder = clawMot.getEncoder();
 
+        clawSensor = new TimeOfFlight(kClaw.ToFCANID);
+
         clawTab = Shuffleboard.getTab("Claw");
 
         // kP = clawTab.add("kP", 0).getEntry();
@@ -44,30 +42,22 @@ public class Claw extends SubsystemBase {
         // kD = clawTab.add("kD", 0).getEntry();
         // kF = clawTab.add("kF", 0).getEntry();
 
-        // currentEntry = clawTab.add("Current: ", 0).getEntry();
-        encoderPosEntry = clawTab.add("Encoder: ", getEncoderPosition()).getEntry();
-        encoderVeloEntry = clawTab.add("Encoder Velo: ", getEncoderVelocity()).getEntry();
-        isStalledEntry = clawTab.add("Is Stalled: ", isStalled()).getEntry();
-        tempEntry = clawTab.add("Motor Temp: ", getMotorTempature()).getEntry();        
+        encoderPosEntry = clawTab.add("Encoder", getEncoderPosition()).getEntry();
+        encoderVeloEntry = clawTab.add("Encoder Velo", getEncoderVelocity()).getEntry();
+        isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
+        tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
+        distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry();   
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
 
-        // currentOverTime[currentIndex] = clawMot.getOutputCurrent();
-        // currentIndex++;
-        // currentIndex %= currentOverTime.length;
-
-
-        // lastEncoder = getEncoderPosition();
         encoderPosEntry.setDouble(getEncoderPosition());
         encoderVeloEntry.setDouble(getEncoderVelocity());
         isStalledEntry.setBoolean(isStalled());
         tempEntry.setDouble(getMotorTempature());
-        // currentEntry.setDouble(getAverageCurrent());
-        // setPIDF(kP.getDouble(0), 0, 0, 0);
-        
+        distanceEntry.setDouble(getDistanceFromClaw());
     }
 
     @Override
@@ -127,19 +117,6 @@ public class Claw extends SubsystemBase {
         clawMot.set(speed);
     }
 
-    // public double getAverageCurrent() {
-    //     double total = 0;
-    //     for (int i = 0; i < currentOverTime.length; i++) {
-    //         if (currentOverTime[i] == 0) {
-    //             total = -1;
-    //             break;
-    //         } else {
-    //             total += currentOverTime[i];
-    //         }
-    //     }
-    //     return total / currentOverTime.length;
-    // }
-
     public boolean isStalled() {
         double velo = getEncoderVelocity();
         if (clawMot.get() != 0) {
@@ -161,8 +138,8 @@ public class Claw extends SubsystemBase {
         return clawMot.getMotorTemperature();
     }
 
-    public void setIdleMode(IdleMode idle) {
-        clawMot.setIdleMode(idle);
+    public double getDistanceFromClaw() {
+        return clawSensor.getRange();
     }
 
 }
