@@ -23,7 +23,7 @@ public class PivotMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakePivot.pivotMove(speed);
+    sys_IntakePivot.pivotControl(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class PivotMove extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    sys_IntakePivot.pivotMove(0);
+    sys_IntakePivot.pivotControl(0);
   }
 
   // Returns true when the command should end.
