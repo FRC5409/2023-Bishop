@@ -22,7 +22,7 @@ public class IntakePivot extends PIDSubsystem
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  public final ShuffleboardTab tab_intake;
+  private final ShuffleboardTab tab_intake;
   private final GenericEntry kP, kI, kD, encPos;
 
   public IntakePivot()
@@ -39,12 +39,14 @@ public class IntakePivot extends PIDSubsystem
     kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
     kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
     kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
-    encPos = tab_intake.add("Encoder Pos", getMeasurement()).getEntry();
+    encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
   }
 
   @Override
   public void useOutput(double output, double setpoint)
-  {}
+  {
+    motor.set(0.2);
+  }
 
   @Override
   public double getMeasurement()
