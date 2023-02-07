@@ -99,6 +99,12 @@ public class RobotContainer
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
+    /**
+     * y-intake pivot ascend
+     * a-intake pivot descend
+     * x-intake roller roll backwards
+     * b-intake roller roll forwards */
+
     private void configureBindings() {
         joystickMain.y()
             .whileTrue(sys_intakePivot, pivotControl(0.2));
@@ -107,10 +113,10 @@ public class RobotContainer
             .whileTrue(sys_intakePivot, pivotControl(-0.2));
 
         joystickMain.x()
-            .whileTrue(sys_intakeRoller, rollerControl(0.2));
+            .whileTrue(sys_intakeRoller, rollerControl(-0.2));
         
         joystickMain.b()
-            .whileTrue(sys_intakeRoller, rollerControl(-0.2));
+            .whileTrue(sys_intakeRoller, rollerControl(0.2));
         
         
     }
