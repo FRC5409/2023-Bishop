@@ -10,6 +10,7 @@ import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Limelight;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
@@ -35,6 +36,7 @@ public class RobotContainer {
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    private final Limelight sys_limelight;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -57,6 +59,8 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_limelight = new Limelight();
+
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);

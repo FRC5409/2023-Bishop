@@ -109,4 +109,9 @@ public final class Constants {
         public static final double kI_chargeStation             = 0;
         public static final double kD_chargeStation             = 0;
     }
+
+    public static class kLimelight {
+        public static final int heightOffFloor = 15; //cm
+        public static final int angle = 0; //degrees
+    }
 }
