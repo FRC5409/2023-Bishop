@@ -10,11 +10,11 @@ import frc.robot.subsystems.Intake.IntakeWrist;
 public class WristMove extends CommandBase {
 
   private final IntakeWrist sys_IntakeWrist;
-  private double speed;
+  private double voltage;
 
-  public WristMove(IntakeWrist subsystem, double speed) {
+  public WristMove(IntakeWrist subsystem, double voltage) {
       sys_IntakeWrist = subsystem;
-      this.speed = speed;
+      this.voltage = voltage;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(sys_IntakeWrist);   
@@ -23,7 +23,7 @@ public class WristMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakeWrist.wristControl(speed);
+    sys_IntakeWrist.wristControl(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -10,11 +10,11 @@ import frc.robot.subsystems.Intake.IntakePivot;
 public class PivotMove extends CommandBase {
 
   private final IntakePivot sys_IntakePivot;
-  private double speed;
+  private double voltage;
 
-  public PivotMove(IntakePivot subsystem, double speed) {
+  public PivotMove(IntakePivot subsystem, double voltage) {
       sys_IntakePivot = subsystem;
-      this.speed = speed;
+      this.voltage = voltage;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(sys_IntakePivot);   
@@ -23,7 +23,7 @@ public class PivotMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakePivot.pivotControl(speed);
+    sys_IntakePivot.pivotControl(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -10,11 +10,11 @@ import frc.robot.subsystems.Intake.IntakeRoller;
 public class RollerMove extends CommandBase {
 
   private final IntakeRoller sys_IntakeRoller;
-  private double speed;
+  private double voltage;
 
-  public RollerMove(IntakeRoller subsystem, double speed) {
+  public RollerMove(IntakeRoller subsystem, double voltage) {
       sys_IntakeRoller = subsystem;
-      this.speed = speed;
+      this.voltage = voltage;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(sys_IntakeRoller);   
@@ -23,7 +23,7 @@ public class RollerMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakeRoller.rollerControl(speed);
+    sys_IntakeRoller.rollerControl(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
