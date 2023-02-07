@@ -1,24 +1,27 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Brake extends SubsystemBase {
 
     private final WPI_TalonSRX mot_brake;
+    private final SupplyCurrentLimitConfiguration currentLimitConfiguration;
 
     private boolean brake = false;
 
     public Brake() {
         mot_brake = new WPI_TalonSRX(Constants.kDrivetrain.kBrake.brakeID);
+
+        currentLimitConfiguration = new SupplyCurrentLimitConfiguration();
+        currentLimitConfiguration.enable = true;
+        currentLimitConfiguration.currentLimit = 10;
+
+        mot_brake.enableCurrentLimit(true);
+        mot_brake.configSupplyCurrentLimit(currentLimitConfiguration);
     }
 
     public void setBrakeState() {

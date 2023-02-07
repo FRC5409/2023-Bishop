@@ -7,9 +7,11 @@ import frc.robot.subsystems.Brake;
 public class BrakeCommand extends InstantCommand {
 
     private final Brake sys_brake;
+    private double time;
 
-    public BrakeCommand(Brake subsystem) {
+    public BrakeCommand(Brake subsystem, double time) {
         sys_brake = subsystem;
+        this.time = time;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_brake);
         
@@ -25,7 +27,7 @@ public class BrakeCommand extends InstantCommand {
             sys_brake.releaseBreak();
             sys_brake.setBrakeState();
         }
-        Timer.delay(0.5);
+        Timer.delay(time);
         sys_brake.stopBrake();
     }
 }

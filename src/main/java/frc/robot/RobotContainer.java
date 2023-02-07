@@ -86,7 +86,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        joystickMain.a().onTrue(new BrakeCommand(sys_brake));
+        joystickMain.a().onTrue(new BrakeCommand(sys_brake, 0.5));
     }
 
     /**
