@@ -77,9 +77,8 @@ public class Drivetrain extends SubsystemBase {
     
     private double lastRamp;
 
-    private boolean checkSpin = true;
-    private int spinTimer = 0;
-    private double spinMultiplier = 1;
+    private boolean checkSpin = false;
+    private boolean freeSpinning = false;
 
 
     public Drivetrain() {
@@ -228,14 +227,13 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        if (spinTimer <= 0) {
+        if (!freeSpinning) {
             m_diffDrive.arcadeDrive(
-                xSpeed * nt_forwardSpeedEntry.getDouble(1) * spinMultiplier,
-                zRotation * nt_turningSpeedEntry.getDouble(1) * spinMultiplier);
+                xSpeed * nt_forwardSpeedEntry.getDouble(1),
+                zRotation * nt_turningSpeedEntry.getDouble(1));
         } else {
-            m_diffDrive.arcadeDrive(
-                xSpeed * nt_forwardSpeedEntry.getDouble(1) * spinMultiplier * kDriveteam.lowerSpinSpeed,
-                zRotation * nt_turningSpeedEntry.getDouble(1) * spinMultiplier * kDriveteam.lowerSpinSpeed);
+            freeSpinning = false;
+            rampRate(lastRamp);
         }
     }
 
@@ -250,9 +248,10 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive.feed();
     }
 
-    public void setMotorSpeeds(double speed) {
+    public void tankDriveSpeeds(double speed) {
         mot_leftFrontDrive.set(speed);
         mot_rightFrontDrive.set(speed);
+        m_diffDrive.feed();
     }
 
     /**
@@ -434,11 +433,12 @@ public class Drivetrain extends SubsystemBase {
 
         //updating ramprate if the ramprate entry was updated
 
-        if (lastRampEntry != nt_rampEntry.getDouble(0)) {
-            // rampRate(rampRateEntry.getDouble(-1));
-            lastRampEntry = nt_rampEntry.getDouble(0);
-            rampRate(nt_rampEntry.getDouble(0));
-        }
+        // if (lastRampEntry != nt_rampEntry.getDouble(0)) {
+        //     // rampRate(rampRateEntry.getDouble(-1));
+        //     lastRampEntry = nt_rampEntry.getDouble(0);
+        //     rampRate(nt_rampEntry.getDouble(0));
+        // }
+        rampRate(nt_rampEntry.getDouble(0));
 
         //making them not bug out
         // nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
@@ -449,25 +449,21 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putBoolean("Free spin", checkSpin);
         SmartDashboard.putNumber("Average Wheel Velocity", getAverageVelocity());
         if (checkSpin) {
-            if (getAverageVelocity() >= kDriveteam.maxSpinSpeed && spinTimer == -1) {
-                spinTimer = kDriveteam.lowerTimer;
+            if (getAverageVelocity() >= kDriveteam.maxSpinSpeed) {
+                freeSpinning = true;
 
                 lastRamp = getRampRate();
 
-                setMotorSpeeds(kDriveteam.lowerSpinSpeed);
+                tankDriveSpeeds(kDriveteam.lowerSpinSpeed);
                 rampRate(kDriveteam.spinRamp);
-                setMotorSpeeds(kDriveteam.lowerSpinSpeed);
 
                 joystickMain.setRumble(RumbleType.kBothRumble, kDriveteam.rumbleIntensity);
+            } else {
+                joystickMain.setRumble(RumbleType.kBothRumble, 0);
             }
+
         }
-        if (spinTimer > 0) {
-            spinTimer--;
-        } else if (spinTimer == 0) {
-            spinTimer = -1;
-            rampRate(lastRamp);
-            joystickMain.setRumble(RumbleType.kBothRumble, 0);
-        }
+        
     }
 
     @Override

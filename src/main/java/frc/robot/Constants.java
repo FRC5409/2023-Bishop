@@ -20,9 +20,10 @@ public final class Constants {
 
 
     public static final class kOperator {
-        /*    Team 5409   */
-        public static final int teamNumber = 5409;
-        /*  The Chargers  */
+                                                          /*   Team 5409   */
+        public static final int teamNumber                      = 5409;
+                                                          /*  The Chargers */
+                                                          
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
     }
@@ -94,12 +95,12 @@ public final class Constants {
             public static final double kChangeRamp               = 0.5;
             public static final int timerLength                  = 50;
 
-            public static final double maxSpinSpeed              = 3.4;
+            public static final double maxSpinSpeed              = 3;
             public static final double lowerSpinSpeed            = 0.7;
             public static final double spinRamp                  = 1;
-            public static final int lowerTimer                   = 20;
+            public static final int lowerTimer                   = 10;
 
-            public static final double rumbleIntensity           = 0.8;
+            public static final double rumbleIntensity           = 1;
         }
     }
 
