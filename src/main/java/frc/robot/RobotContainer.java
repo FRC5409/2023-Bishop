@@ -8,12 +8,15 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -35,10 +38,10 @@ public class RobotContainer {
     // Subsystems
     private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    private final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-
     // Trajectory
     private PathPlannerTrajectory m_trajectory;
 
@@ -57,6 +60,7 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -83,6 +87,10 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.5));
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.96));
+        joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
+        joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
     }
 
     /**
@@ -101,6 +109,13 @@ public class RobotContainer {
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+        
+        
+            
+        }
+        
+        
+
     }
-}
+
 

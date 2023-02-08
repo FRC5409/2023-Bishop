@@ -7,13 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmPIDSubsystem;
 
-public class newArmRotation extends CommandBase {
+public class ArmRotation extends CommandBase {
   private final ArmPIDSubsystem sys_arm;
   private double setpoint;
 
 
   /** Creates a new ArmRotation2. */
-  public newArmRotation(ArmPIDSubsystem armPIDSubsystem, double setpoint) {
+  public ArmRotation(ArmPIDSubsystem armPIDSubsystem, double setpoint) {
     sys_arm = armPIDSubsystem;
     this.setpoint = setpoint;
 
