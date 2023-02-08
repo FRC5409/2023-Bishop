@@ -11,10 +11,12 @@ public class WristMove extends CommandBase {
 
   private final Intake intake;
   private double voltage;
+  private boolean inverted;
 
-  public WristMove(Intake subsystem, double _voltage) {
+  public WristMove(Intake subsystem, double voltage, boolean inverted) {
       intake = subsystem;
-      voltage = _voltage;
+      this.voltage = voltage;
+      this.inverted = inverted;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(intake);   
@@ -23,6 +25,15 @@ public class WristMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (inverted)
+    {
+      intake.setWristDirection(true);
+    }
+    else
+    {
+      intake.setWristDirection(false);
+    }
+
     intake.wristControl(voltage);
   }
 

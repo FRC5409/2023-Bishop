@@ -11,10 +11,12 @@ public class PivotMove extends CommandBase {
 
   private final Intake intake;
   private double voltage;
+  private boolean inverted;
 
-  public PivotMove(Intake sys_intakePivot, double _voltage) {
-      intake = sys_intakePivot;
-      voltage = _voltage;
+  public PivotMove(Intake subsystem, double voltage, boolean inverted) {
+      intake = subsystem;
+      this.voltage = voltage;
+      this.inverted = inverted;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(intake);   
@@ -23,6 +25,15 @@ public class PivotMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (inverted)
+    {
+      intake.setPivotDirection(true);
+    }
+    else
+    {
+      intake.setPivotDirection(false);
+    }
+
     intake.pivotControl(voltage);
   }
 

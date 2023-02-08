@@ -98,18 +98,16 @@ public class RobotContainer
 
     private void configureBindings() {
         joystickMain.y()
-            .whileTrue(new PivotMove(sys_intake, 2.4)); //pivot rise up
+            .whileTrue(new PivotMove(sys_intake, 2.4, false)); //pivot rise up
 
         joystickMain.a()
-            .whileTrue(new PivotMove(sys_intake, 2.4)); //pivot lower down
+            .whileTrue(new PivotMove(sys_intake, 2.4, true)); //pivot lower down
 
         joystickMain.x()
-            .whileTrue(new RollerMove(sys_intake, 2.4)); //roller roll backwards
+            .whileTrue(new RollerMove(sys_intake, 2.4, false)); //start intaking (roller roll forwards)
         
         joystickMain.b()
-            .whileTrue(new RollerMove(sys_intake, 2.4)); //start intaking (roller roll forwards)
-        
-        
+            .whileTrue(new RollerMove(sys_intake, 2.4, true)); //roller roll backwards
     }
 
     /**

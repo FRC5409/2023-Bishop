@@ -74,14 +74,50 @@ public class Intake extends SubsystemBase
     pivot.setVoltage(voltage);
   }
 
+  public void setPivotDirection(boolean inverted)
+  {
+    if (inverted)
+    {
+      pivot.setInverted(true);
+    }
+    else
+    {
+      pivot.setInverted(false);
+    }
+  }
+
   public void wristControl(double voltage)
   {
     wrist.setVoltage(voltage);
   }
 
+  public void setWristDirection(boolean inverted)
+  {
+    if (inverted)
+    {
+      wrist.setInverted(true);
+    }
+    else
+    {
+      wrist.setInverted(false);
+    }
+  }
+
   public void rollerControl(double voltage)
   {
     roller.setVoltage(voltage);
+  }
+
+  public void setRollerDirection(boolean inverted)
+  {
+    if (inverted)
+    {
+      roller.setInverted(true);
+    }
+    else
+    {
+      roller.setInverted(false);
+    }
   }
 
   @Override

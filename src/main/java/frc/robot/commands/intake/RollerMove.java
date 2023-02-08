@@ -11,10 +11,12 @@ public class RollerMove extends CommandBase {
 
   private final Intake intake;
   private double voltage;
+  private boolean inverted;
 
-  public RollerMove(Intake subsystem, double _voltage) {
+  public RollerMove(Intake subsystem, double voltage, boolean inverted) {
       intake = subsystem;
-      voltage = _voltage;
+      this.voltage = voltage;
+      this.inverted = inverted;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(intake);   
@@ -23,6 +25,15 @@ public class RollerMove extends CommandBase {
 // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (inverted)
+    {
+      intake.setRollerDirection(true);
+    }
+    else
+    {
+      intake.setRollerDirection(false);
+    }
+
     intake.rollerControl(voltage);
   }
 
