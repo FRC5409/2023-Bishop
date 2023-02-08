@@ -91,8 +91,10 @@ public final class Constants {
         public static final String path1 = "Path1";
         public static final String PLACE_CONE_MID_GRID_AND_BALANCE
             = "Place cone mid grid and balance";
-        public static final String PLACE_CONE_AND_BALANCE_NEAR_WALL_GRID
-            = "Place cone mid wall grid and balance";
+        public static final String PLACE_CONE_WALL_GRID_AND_BALANCE
+            = "Place cone wall grid and balance";
+        public static final String PLACE_CONE_LOADING_GRID_AND_BALANCE
+            = "Place cone loading grid and balance";
     }
 
     public static final class kBalancing {
