@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.subsystems.Drivetrain;
 
 public class GearShift extends CommandBase {
@@ -10,18 +11,39 @@ public class GearShift extends CommandBase {
     private final double turningSpeed;
 
     private final Drivetrain m_drivetrain;
+    private final GearState m_gearState;
 
     private int timer;
 
-    public GearShift(boolean fast, Drivetrain drivetrain) {
+    /**
+     * Code gear shifting to increase, decrease speed
+     * @param gearState kSlow, kDefault, kBoost
+     * @param drivetrain Drivetrain subsystem
+     */
+
+    public GearShift(GearState gearState, Drivetrain drivetrain) {
         // Use addRequirements() here to declare subsystem dependencies.
 
-        if (fast) {
-            forwardSpeed = kDriveteam.defaultSpeedMultiplier;
-            this.turningSpeed = kDriveteam.defaultSpeedMultiplier;
-        } else {
-            forwardSpeed = kDriveteam.slowSpeed * kDriveteam.defaultSpeedMultiplier;
-            this.turningSpeed = kDriveteam.kSlowTurn * kDriveteam.defaultTurningMultiplier;
+        m_gearState = gearState;
+
+        
+        switch(m_gearState) {
+            case kSlow:
+                forwardSpeed = kDriveteam.slowSpeed;
+                this.turningSpeed = kDriveteam.slowTurn;
+                break;
+            case kDefault:
+                forwardSpeed = kDriveteam.defaultSpeedMultiplier;
+                this.turningSpeed = kDriveteam.defaultTurningMultiplier;
+                break;
+            case kBoost:
+                forwardSpeed = kDriveteam.boostSpeed;
+                this.turningSpeed = kDriveteam.boostTurningSpeed;
+                break;
+            default:
+                forwardSpeed = kDriveteam.defaultSpeedMultiplier;
+                this.turningSpeed = kDriveteam.defaultTurningMultiplier;
+                break;
         }
 
         m_drivetrain = drivetrain;

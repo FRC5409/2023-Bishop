@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
@@ -40,6 +41,7 @@ public class RobotContainer {
     // Commands
     private final DefaultDrive cmd_defaultDrive;
     private final GearShift cmd_lowSpeed;
+    private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
 
     // Trajectory
@@ -65,8 +67,10 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
-        cmd_lowSpeed = new GearShift(false, sys_drivetrain);
-        cmd_highSpeed = new GearShift(true, sys_drivetrain);
+
+        cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
+        cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
+        cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -96,15 +100,15 @@ public class RobotContainer {
 
         joystickMain.leftBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
-        .onFalse(cmd_highSpeed);
+        .onFalse(cmd_midSpeed);
 
         joystickMain.rightBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
-        .onTrue(cmd_lowSpeed);
+        .onTrue(cmd_highSpeed);
 
         joystickMain.rightBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
-        .onFalse(cmd_highSpeed);
+        .onFalse(cmd_midSpeed);
 
 
 
@@ -114,16 +118,16 @@ public class RobotContainer {
         
         joystickSecondary.leftBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
-        .onFalse(cmd_highSpeed);
+        .onFalse(cmd_midSpeed);
 
 
         joystickSecondary.rightBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
-        .onTrue(cmd_lowSpeed);
+        .onTrue(cmd_highSpeed);
 
         joystickSecondary.rightBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
-        .onFalse(cmd_highSpeed);
+        .onFalse(cmd_midSpeed);
 
         joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
     }

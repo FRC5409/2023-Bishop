@@ -13,9 +13,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
     private final WPI_Pigeon2 m_gyro;
     private final DifferentialDriveOdometry m_odometry;
 
+    private final Accelerometer m_accelerometer;
+
     private final ShuffleboardTab sb_drivetrainTab;
     private final GenericEntry nt_leftVelocity;
     private final GenericEntry nt_rightVelocity;
@@ -72,13 +76,14 @@ public class Drivetrain extends SubsystemBase {
 
     private int currentJoystick = 0;
 
-    private double lastRampEntry = kDriveteam.rampRate;
     private double currentRampRate;
     
     private double lastRamp;
 
     private boolean checkSpin = false;
     private boolean freeSpinning = false;
+
+    private double robotSpeed = 0;
 
 
     public Drivetrain() {
@@ -119,6 +124,8 @@ public class Drivetrain extends SubsystemBase {
         // Gyro and odometry
         m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
+
+        m_accelerometer = new BuiltInAccelerometer();
 
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
@@ -248,6 +255,11 @@ public class Drivetrain extends SubsystemBase {
         m_diffDrive.feed();
     }
 
+    /**
+     * Tank Drive % speeds, for setting motor speeds
+     * @param speed speed at which the drivetrain should spin at
+     */
+
     public void tankDriveSpeeds(double speed) {
         mot_leftFrontDrive.set(speed);
         mot_rightFrontDrive.set(speed);
@@ -267,6 +279,10 @@ public class Drivetrain extends SubsystemBase {
         mot_rightCentreDrive.setNeutralMode(newMode);
         mot_rightRearDrive.setNeutralMode(newMode);
     }
+
+    /**
+     * Toggles neutral mode
+     */
 
     public void toggleNeutralMode() {
         if (getNeutralMode() == NeutralMode.Brake) {
@@ -330,6 +346,11 @@ public class Drivetrain extends SubsystemBase {
         return enc_rightDrive.getVelocity();
     }
 
+    /**
+     * Get the absolute motor velocitys
+     * @return The absolute motor speeds
+     */
+
     public double getAverageVelocity() {
         return (Math.abs(getLeftVelocity()) + Math.abs(getRightVelocity())) / 2;
     }
@@ -391,24 +412,60 @@ public class Drivetrain extends SubsystemBase {
         m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
     }
 
+    /**
+     * Sets the speed multiplier for the network table entry
+     * @param speed x speed
+     * @param turningSpeed z rotation
+     */
+
     public void setSpeed(double speed, double turningSpeed) {
         //updating the multipliers for the drive
         nt_forwardSpeedEntry.setDouble(speed);
         nt_turningSpeedEntry.setDouble(turningSpeed);
     }
 
+    /**
+     * Gets the current joystick for the driver
+     * @return returns who is in control of the robot
+     */
+
     public int getCurrentJoystick() {
         //returns the current joystick
         return currentJoystick;
     }
+
+    /**
+     * switches the joystick from 0 to 1 and 1 to 0
+     */
 
     public void changeJoystickState() {
         //switches from 0 to 1 and 1 to 0
         currentJoystick = (currentJoystick + 1) % 2;
     }
 
+    /**
+     * Toggles if tracktion control is enabled
+     */
+
     public void toggleFreeSpin() {
         checkSpin = !checkSpin;
+    }
+
+    /**
+     * Get the robot acceleration in m/s^2
+     * @return robot acceleration
+     */
+    public double getRobotAcceleration() {
+        return m_accelerometer.getY() * 9.81;
+    }
+
+    /**
+     * Gets the absoulute heading velocity using the gyro
+     * @return
+     */
+
+    public double gyroGetHeadingSpeed() {
+        return Math.abs(robotSpeed);
     }
 
     // ----------
@@ -417,6 +474,8 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update odometry
         m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+
+        robotSpeed += getRobotAcceleration();
 
         // Push data to Shuffleboard
         nt_leftVelocity.setDouble(getLeftVelocity());
