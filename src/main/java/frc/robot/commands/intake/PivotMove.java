@@ -2,28 +2,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.intake;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake;
 
 public class PivotMove extends CommandBase {
 
-  private final IntakePivot sys_IntakePivot;
+  private final Intake intake;
   private double voltage;
 
-  public PivotMove(IntakePivot subsystem, double voltage) {
-      sys_IntakePivot = subsystem;
-      this.voltage = voltage;
+  public PivotMove(Intake subsystem, double _voltage) {
+      intake = subsystem;
+      voltage = _voltage;
 
       // Use addRequirements() here to declare subsystem dependencies.
-      addRequirements(sys_IntakePivot);   
+      addRequirements(intake);   
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sys_IntakePivot.pivotControl(voltage);
+    intake.pivotControl(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +33,7 @@ public class PivotMove extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    sys_IntakePivot.pivotControl(0);
+    intake.pivotControl(0);
   }
 
   // Returns true when the command should end.

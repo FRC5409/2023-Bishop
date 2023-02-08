@@ -62,6 +62,21 @@ public class Intake extends SubsystemBase
     return enc_wrist.getPosition();
   }
 
+  public void pivotControl(double voltage)
+  {
+    pivot.setVoltage(voltage);
+  }
+
+  public void wristControl(double voltage)
+  {
+    wrist.setVoltage(voltage);
+  }
+
+  public void rollerControl(double voltage)
+  {
+    roller.setVoltage(voltage);
+  }
+
   @Override
   public void periodic()
   {
