@@ -21,7 +21,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry kP,kI,kD,AbsolutePosition;
+  private final GenericEntry kP,kI,kD,AbsolutePosition,Angle;
   // fix the genericentry import it
 
   /** Creates a new ArmPIDSubsystem. */
@@ -47,6 +47,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
     kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     AbsolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
+    Angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     
   }
@@ -54,13 +55,13 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   @Override
   public void useOutput(double voltage, double setpoint) { // outputs the voltage 
     if (voltage > Constants.kArmSubsystem.kVoltageLimit){
-      m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit+ calculateFF());
+      m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit- calculateFF());
     }
     else if (voltage < -Constants.kArmSubsystem.kVoltageLimit){
-      m_motor1.setVoltage(-Constants.kArmSubsystem.kVoltageLimit + calculateFF());
+      m_motor1.setVoltage(-Constants.kArmSubsystem.kVoltageLimit - calculateFF());
     }
     else{
-      m_motor1.setVoltage(voltage + calculateFF());
+      m_motor1.setVoltage(voltage - calculateFF());
     }
     System.out.println(voltage);
   }
@@ -70,11 +71,11 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
     if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      AbsolutePosition.setDouble(ecd_value + 1);
-      return ecd_value +1;
+      AbsolutePosition.setDouble(ecd_value + 1 + Constants.kArmSubsystem.knintydegreepos);
+      return ecd_value +1 - Constants.kArmSubsystem.knintydegreepos;
     }else{
-      AbsolutePosition.setDouble(ecd_value);
-      return ecd_value;
+      AbsolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      return ecd_value - Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
   }
@@ -100,13 +101,17 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   }
 
   public double getAngle(){
-    return 0;
+
+    return getMeasurement()*360;
   }
 
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
+      Angle.setDouble(getAngle());
+
+
   }
   
 }

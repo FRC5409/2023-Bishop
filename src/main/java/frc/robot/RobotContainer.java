@@ -87,8 +87,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.5));
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.96));
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46));
         joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
         joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
     }
