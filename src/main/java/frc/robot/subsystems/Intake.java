@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -23,6 +24,9 @@ public class Intake extends SubsystemBase
   private final CANSparkMax pivot;
   private final CANSparkMax wrist;
   private final WPI_TalonFX roller;
+
+  private final PIDController pid_pivot;
+  private final PIDController pid_wrist;
 
   private final DutyCycleEncoder enc_pivot;
   private final RelativeEncoder enc_wrist;
@@ -43,6 +47,9 @@ public class Intake extends SubsystemBase
     roller = new WPI_TalonFX(kIntake.id_motRoller);
     roller.configFactoryDefault();
     roller.setNeutralMode(NeutralMode.Brake);
+
+    pid_pivot = new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD);
+    pid_wrist = new PIDController(kIntake.kWristP, kIntake.kWristI, kIntake.kWristD);
 
     enc_pivot = new DutyCycleEncoder(kIntake.id_encPivot);
     enc_wrist = wrist.getEncoder();
