@@ -20,7 +20,7 @@ public class RollerMove extends CommandBase {
       addRequirements(intake);   
   }
 
-  // Called when the command is initially scheduled.
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
     intake.rollerControl(voltage);

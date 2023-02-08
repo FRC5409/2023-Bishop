@@ -7,19 +7,15 @@ package frc.robot;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.Intake.PivotMove;
+import frc.robot.commands.Intake.RollerMove;
+// import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeRoller;
-import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.commands.intake.PivotMove;
-import frc.robot.commands.intake.RollerMove;
-import frc.robot.commands.intake.WristMove;
-
+import frc.robot.subsystems.Intake;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 /**
@@ -40,15 +36,10 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final IntakePivot sys_intakePivot;
-    private final IntakeRoller sys_intakeRoller;
-    private final IntakeWrist sys_intakeWrist;
+    private final Intake sys_intake;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotMove cmd_pivotMove;
-    private final RollerMove cmd_rollerMove;
-    private final WristMove cmd_wristMove;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -68,16 +59,11 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intakePivot = new IntakePivot();
-        sys_intakeRoller = new IntakeRoller();
-        sys_intakeWrist = new IntakeWrist();
+        sys_intake = new Intake();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_pivotMove = new PivotMove(sys_intakePivot, 0);
-        cmd_wristMove = new WristMove(sys_intakeWrist, 0);
-        cmd_rollerMove = new RollerMove(sys_intakeRoller, 0);
-
+        
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
@@ -105,18 +91,23 @@ public class RobotContainer
      * x-intake roller roll backwards
      * b-intake roller roll forwards */
 
+     /*
+      * starting with - 20% of 12 = 2.4
+      */
+
+
     private void configureBindings() {
         joystickMain.y()
-            .whileTrue(sys_intakePivot, pivotControl(0.2));
+            .whileTrue(new PivotMove(sys_intake, 2.4)); //pivot rise up
 
         joystickMain.a()
-            .whileTrue(sys_intakePivot, pivotControl(-0.2));
+            .whileTrue(new PivotMove(sys_intake, 2.4)); //pivot lower down
 
         joystickMain.x()
-            .whileTrue(sys_intakeRoller, rollerControl(-0.2));
+            .whileTrue(new RollerMove(sys_intake, 2.4)); //roller roll backwards
         
         joystickMain.b()
-            .whileTrue(sys_intakeRoller, rollerControl(0.2));
+            .whileTrue(new RollerMove(sys_intake, 2.4)); //start intaking (roller roll forwards)
         
         
     }

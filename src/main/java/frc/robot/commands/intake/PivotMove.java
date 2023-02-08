@@ -12,8 +12,8 @@ public class PivotMove extends CommandBase {
   private final Intake intake;
   private double voltage;
 
-  public PivotMove(Intake subsystem, double _voltage) {
-      intake = subsystem;
+  public PivotMove(Intake sys_intakePivot, double _voltage) {
+      intake = sys_intakePivot;
       voltage = _voltage;
 
       // Use addRequirements() here to declare subsystem dependencies.
