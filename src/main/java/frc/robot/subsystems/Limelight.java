@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -14,13 +15,15 @@ import edu.wpi.first.networktables.NetworkTable;
 
 public class Limelight extends SubsystemBase {
   //networktables
-  NetworkTable limelighTable;
+  NetworkTable limelightTable;
 
   //shuffleboard
   private final ShuffleboardLayout localizationPos; 
   private final ShuffleboardLayout localizationRot;
+  private final ShuffleboardLayout localizationPipeline; 
   private final GenericEntry xWidget, yWidget, zWidget;
   private final GenericEntry rxWidget, ryWidget, rzWidget;
+  private final GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
 
   private double[] positionDefaults = new double[]{0};
   public Limelight() {
@@ -31,6 +34,7 @@ public class Limelight extends SubsystemBase {
     //shuffleboard
     Shuffleboard.getTab("Field Localization").add("Position", 0);
     Shuffleboard.getTab("Field Localization").add("Rotation", 0);
+    Shuffleboard.getTab("Field Localization").add("Pipeline Info", 0);
 
     localizationPos = Shuffleboard.getTab("Field Localization")
         .getLayout("Position", BuiltInLayouts.kGrid)
@@ -47,6 +51,13 @@ public class Limelight extends SubsystemBase {
     rxWidget = localizationRot.add("rX", 0).getEntry();
     ryWidget = localizationRot.add("rY", 0).getEntry();
     rzWidget = localizationRot.add("rZ", 0).getEntry();
+
+    localizationPipeline = Shuffleboard.getTab("Field Localization")
+      .getLayout("Pipeline Info")
+      .withSize(1, 2);
+
+    pipelineIndexWidget = localizationPipeline.add("Pipeline", 0).getEntry();
+    pipelineLatencyWidget = localizationPipeline.add("Latency", 0).getEntry();
   }
 
   @Override
@@ -62,7 +73,7 @@ public class Limelight extends SubsystemBase {
       .getDoubleArray(positionDefaults); //TEMPORARY
     
     //pushing to shuffleboard1
-    if (robotPos.length != 0){ 
+    if (robotPos.length != 0){
       //update Rotation and Position here 
       xWidget.setDouble(robotPos[0]);
       yWidget.setDouble(robotPos[1]);
@@ -71,6 +82,9 @@ public class Limelight extends SubsystemBase {
       rxWidget.setDouble(robotPos[3]);
       ryWidget.setDouble(robotPos[4]);
       rzWidget.setDouble(robotPos[5]);
+
+      pipelineIndexWidget.setDouble(LimelightHelpers.getCurrentPipelineIndex("limelight"));
+      pipelineLatencyWidget.setDouble(LimelightHelpers.getLatency_Pipeline("limelight"));
     }
   }
 }
