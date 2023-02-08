@@ -126,7 +126,7 @@ public final class Constants {
         public final static double knintydegreepos = 0.478;
 
         public static class kPID{
-            public final static double kP = 120;
+            public final static double kP = 100;
             public final static double kI = 0;
             public final static double kD = 0;
         }
