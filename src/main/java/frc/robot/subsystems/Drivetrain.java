@@ -122,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
         resetEncoders();
 
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_drive);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_accelerometer = new BuiltInAccelerometer();
@@ -222,6 +222,11 @@ public class Drivetrain extends SubsystemBase {
 
         currentRampRate = seconds;
     }
+
+    /**
+     * Gets the current ramp rate applied to all the motors
+     * @return ramp rate in seconds
+     */
 
     public double getRampRate() {
         //gets the current ramprate applied to the motors
@@ -461,7 +466,7 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Gets the absoulute heading velocity using the gyro
-     * @return
+     * @return Robot speed in meters/s^2
      */
 
     public double gyroGetHeadingSpeed() {
