@@ -18,7 +18,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
+
     public static final class kOperator {
+                                                          /*   Team 5409   */
+        public static final int teamNumber                      = 5409;
+                                                          /*  The Chargers */
+                                                          
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
     }
@@ -39,9 +44,8 @@ public final class Constants {
             public static final int id_rightCentreDrive         = 24;
             public static final int id_rightRearDrive           = 25;
 
-            public static final double rampRate                 = 0.3; // seconds
-
             public static final int currentLimit                = 40;
+
         }
 
         public static final class kCANCoder {
@@ -52,7 +56,7 @@ public final class Constants {
             public static final String enc_UnitString           = "m";
         }
 
-        public static class kWheel {
+        public static final class kWheel {
             public static final double wheelDiameter            = 0.1; // metres, placeholder value
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
@@ -67,7 +71,7 @@ public final class Constants {
         public static final DifferentialDriveKinematics kDriveKinematics
             = new DifferentialDriveKinematics(kTrackWidth);
 
-        public static class kAuto {
+        public static final class kAuto {
             public static final double kMaxVolts                = 10;
 
             public static final double kMaxSpeed                = 3;
@@ -77,6 +81,35 @@ public final class Constants {
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
             public static final double kRamseteB                = 2;
             public static final double kRamseteZeta             = 0.7;
+        }
+
+        public static final class kDriveteam {
+            public static final double rampRate                  = 0.2;
+
+            public static final double defaultSpeedMultiplier    = 0.8;
+            public static final double defaultTurningMultiplier  = 0.8;
+                
+            public static final double slowSpeed                 = 0.5;
+            public static final double slowTurn                  = 0.6;
+
+            public static final double boostSpeed                = 1;
+            public static final double boostTurningSpeed         = 1;
+                
+            public static final double kChangeRamp               = 0.5;
+            public static final int timerLength                  = 50;
+
+            public static final double maxSpinSpeed              = 3;
+            public static final double lowerSpinSpeed            = 0.7;
+            public static final double spinRamp                  = 1;
+            public static final int lowerTimer                   = 10;
+
+            public static final double rumbleIntensity           = 1;
+
+            public static enum GearState {
+                kSlow,
+                kDefault,
+                kBoost
+            }
         }
     }
 
