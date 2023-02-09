@@ -10,6 +10,8 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
 import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -37,9 +39,11 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
+    private final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
@@ -64,6 +68,7 @@ public class RobotContainer {
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
+        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
@@ -94,6 +99,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+
         joystickMain.leftBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onTrue(cmd_lowSpeed);
@@ -109,8 +115,7 @@ public class RobotContainer {
         joystickMain.rightBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onFalse(cmd_midSpeed);
-
-
+        
 
         joystickSecondary.leftBumper()
         .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
@@ -130,6 +135,12 @@ public class RobotContainer {
         .onFalse(cmd_midSpeed);
 
         joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
+        
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
+        joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
+       // joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
+
     }
 
     /**
@@ -147,7 +158,8 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
+
             .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
     }
-}
+
 
