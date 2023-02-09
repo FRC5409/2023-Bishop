@@ -49,7 +49,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     AbsolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
     Angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
-    
   }
 
   @Override
@@ -96,12 +95,11 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   }
 
   public double calculateFF(){
-    return Constants.kArmSubsystem.kg*Math.cos(getAngle());
+    return Constants.kArmSubsystem.kg*Math.cos(Math.toRadians(getAngle()));
     
   }
 
   public double getAngle(){
-
     return getMeasurement()*360;
   }
 
@@ -115,9 +113,3 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   }
   
 }
-
-
-
-// notes
-// convert speed to voltage 
-// make a feed forward 

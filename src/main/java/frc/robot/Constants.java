@@ -122,7 +122,7 @@ public final class Constants {
         public final static double kHighSetpoint = 0.7;
         public final static double kLowSetpoint = 0.5;
 
-        public final static double kg = 0.2;
+        public final static double kg = 0.4;
         public final static double knintydegreepos = 0.478;
 
         public static class kPID{
