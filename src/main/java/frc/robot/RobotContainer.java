@@ -90,7 +90,7 @@ public class RobotContainer {
         joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
         joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
         joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
-        joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
+       // joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
     }
 
     /**

@@ -37,7 +37,7 @@ public class ArmRotation extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     sys_arm.disable();
-    System.out.println("ArmRotation");
+    //System.out.println("ArmRotation");
   }
 
   // Returns true when the command should end.

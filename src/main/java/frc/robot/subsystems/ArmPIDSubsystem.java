@@ -21,7 +21,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry kP,kI,kD,AbsolutePosition,Angle;
+  private final GenericEntry AbsolutePosition,Angle;
   // fix the genericentry import it
 
   /** Creates a new ArmPIDSubsystem. */
@@ -43,11 +43,11 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
-    kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
-    kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
-    kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
+   // kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
+   // kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
+    // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     AbsolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-    Angle = sb_armTab.add("Angle",0).getEntry();
+     Angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
   }
 
@@ -62,7 +62,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     else{
       m_motor1.setVoltage(voltage - calculateFF());
     }
-    System.out.println(voltage);
+    // System.out.println(voltage);
   }
 
   @Override
@@ -85,10 +85,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     m_controller.setD(kD);
   }
 
-  public void setPIDfromshuffleboard(){ // sets PID values for shuffleboard and runs on a button
-    setPIDFvalues(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
-    System.out.println("kP:" + m_controller.getP() + " kI:" + kI.getDouble(0) + " kD:" + kD.getDouble(0));
-  }
+  // public void setPIDfromshuffleboard(){ // sets PID values for shuffleboard and runs on a button
+  //   setPIDFvalues(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0));
+     // System.out.println("kP:" + m_controller.getP() + " kI:" + kI.getDouble(0) + " kD:" + kD.getDouble(0));
+  // }
 
   public void resetEncoder(){
     m_encoder.reset();
