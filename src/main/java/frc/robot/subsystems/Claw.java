@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.playingwithfusion.TimeOfFlight;
+import com.playingwithfusion.TimeOfFlight.RangingMode;
+// import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -34,6 +36,8 @@ public class Claw extends SubsystemBase {
         clawEncoder = clawMot.getEncoder();
 
         clawSensor = new TimeOfFlight(kClaw.ToFCANID);
+
+        clawSensor.setRangingMode(RangingMode.Short, 100);
 
         clawTab = Shuffleboard.getTab("Claw");
 

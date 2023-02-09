@@ -94,7 +94,7 @@ public final class Constants {
 
         public static final int clawCANID                        = 12;
 
-        public static final int ToFCANID                         = -1;
+        public static final int ToFCANID                         = 36;
 
         public static final int currentLimit                     = 20;
 
@@ -111,7 +111,7 @@ public final class Constants {
         public static final double kF                            = 0;
 
         //distance from the claw to the object in front of it
-        public static final double objectRange                   = 100;
+        public static final double objectRange                   = 120;
 
     }
 }

@@ -93,7 +93,7 @@ public class RobotContainer {
         joystickMain.x()
         .onTrue(new changeClaw(sys_claw, true).andThen(new changeClaw(sys_claw, false)));
         // .onFalse(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
-        // .onFalse(new changeClaw(sys_claw, kClaw.closePosition));
+        // .onFalse(new changeClaw(sys_claw, false));
         joystickMain.leftBumper().onTrue(Commands.runOnce(() -> sys_claw.spinAt(kClaw.zeroSpeed * -1)));
 
         joystickMain.rightBumper().onTrue(new changeClaw(sys_claw, false));

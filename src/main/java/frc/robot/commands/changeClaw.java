@@ -49,6 +49,7 @@ public class changeClaw extends CommandBase {
         || 
         //close state
         (Math.abs(pos - m_claw.getEncoderPosition()) <= kClaw.encoderOffset && !openState);
+        // Math.abs(pos - m_claw.getEncoderPosition()) <= kClaw.encoderOffset;
     }
 
 }
