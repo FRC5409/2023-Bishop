@@ -122,7 +122,8 @@ public class Drivetrain extends SubsystemBase {
         resetEncoders();
 
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_drive);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
+        // TODO; on the comp robot, the canbus needs to be set for the can encoder
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_accelerometer = new BuiltInAccelerometer();

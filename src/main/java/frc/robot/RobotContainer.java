@@ -136,11 +136,16 @@ public class RobotContainer {
 
         joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
         
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
-        joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
+        joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
+        joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
+        
+        //joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
        // joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
-
+// placement back 0.44
+// placement foreward 0.057
+// intake front -.06
     }
 
     /**
@@ -160,6 +165,6 @@ public class RobotContainer {
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
 
             .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
-    }
+    }}
 
 
