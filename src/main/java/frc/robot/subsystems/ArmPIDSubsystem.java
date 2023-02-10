@@ -70,10 +70,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
     if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      AbsolutePosition.setDouble(ecd_value + 1 + Constants.kArmSubsystem.knintydegreepos);
+      AbsolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value +1 - Constants.kArmSubsystem.knintydegreepos;
     }else{
-      AbsolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      AbsolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value - Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
