@@ -17,7 +17,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
+
     public static final class kOperator {
+                                                          /*   Team 5409   */
+        public static final int teamNumber                      = 5409;
+                                                          /*  The Chargers */
+                                                          
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
     }
@@ -38,9 +43,8 @@ public final class Constants {
             public static final int id_rightCentreDrive         = 24;
             public static final int id_rightRearDrive           = 25;
 
-            public static final double rampRate                 = 0.3; // seconds
-
             public static final int currentLimit                = 40;
+
         }
 
         public static final class kCANCoder {
@@ -51,7 +55,7 @@ public final class Constants {
             public static final String enc_UnitString           = "m";
         }
 
-        public static class kWheel {
+        public static final class kWheel {
             public static final double wheelDiameter            = 0.1; // metres, placeholder value
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
@@ -66,16 +70,45 @@ public final class Constants {
         public static final DifferentialDriveKinematics kDriveKinematics
             = new DifferentialDriveKinematics(kTrackWidth);
 
-        public static class kAuto {
+        public static final class kAuto {
             public static final double kMaxVolts                = 10;
 
-            public static final double kMaxSpeed                = 1;
-            public static final double kMaxAcceleration         = 1;
+            public static final double kMaxSpeed                = 3;
+            public static final double kMaxAcceleration         = 3;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
             public static final double kRamseteB                = 2;
             public static final double kRamseteZeta             = 0.7;
+        }
+
+        public static final class kDriveteam {
+            public static final double rampRate                  = 0.2;
+
+            public static final double defaultSpeedMultiplier    = 0.8;
+            public static final double defaultTurningMultiplier  = 0.8;
+                
+            public static final double slowSpeed                 = 0.5;
+            public static final double slowTurn                  = 0.6;
+
+            public static final double boostSpeed                = 1;
+            public static final double boostTurningSpeed         = 1;
+                
+            public static final double kChangeRamp               = 0.5;
+            public static final int timerLength                  = 50;
+
+            public static final double maxSpinSpeed              = 3;
+            public static final double lowerSpinSpeed            = 0.7;
+            public static final double spinRamp                  = 1;
+            public static final int lowerTimer                   = 10;
+
+            public static final double rumbleIntensity           = 1;
+
+            public static enum GearState {
+                kSlow,
+                kDefault,
+                kBoost
+            }
         }
     }
 
@@ -86,8 +119,18 @@ public final class Constants {
         public static final AxisDirection mountPoseUp           = AxisDirection.PositiveZ;
     }
 
-    public static final class kTrajectoryJSONPath {
-        public static final String trajectoryJSON = "pathplanner/generatedJSON/Path1.wpilib.json";
+    public static final class kTrajectoryPath {
+        public static final String path1 = "Path1";
+    }
+
+    public static final class kBalancing {
+        public static final double targetPitch                  = 0;
+        public static final double maxAngle                     = 33.25;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP                           = 0.04;
+        public static final double kI                           = 0;
+        public static final double kD                           = 0;
     }
 
     public static final class kClaw {
@@ -113,5 +156,35 @@ public final class Constants {
         //distance from the claw to the object in front of it
         public static final double objectRange                   = 120;
 
+    }
+    public static final class kTurn90DegreesChargeStation {
+        public static final double maxAngle                     = 90;
+        public static final double angleTolerance               = 1.5;
+
+        public static final double kP_chargeStation             = 0.0125;
+        public static final double kI_chargeStation             = 0;
+        public static final double kD_chargeStation             = 0;
+    }
+
+    public static class kArmSubsystem {
+        public final static int kMotor1ID = 34;
+        public final static int kMotor2ID = 35;
+        public final static int kEncoderChannel = 8;
+        public final static double kLimit = 0.75;
+        public final static double kVoltageLimit = 10.5;
+        public final static int kCurrentLimit = 40;
+        public final static double kPositionTolerance = 0.1;
+
+        public final static double kHighSetpoint = 0.7;
+        public final static double kLowSetpoint = 0.5;
+
+        public final static double kg = 0.4;
+        public final static double knintydegreepos = 0.478;
+
+        public static class kPID{
+            public final static double kP = 100;
+            public final static double kI = 0;
+            public final static double kD = 0;
+        }
     }
 }
