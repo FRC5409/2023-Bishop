@@ -36,12 +36,12 @@ public class Arm extends SubsystemBase {
     m_pidController = m_motor1.getPIDController(); 
 
     m_motor1.restoreFactoryDefaults();
-    m_motor1.setIdleMode(IdleMode.kBrake);
+    m_motor1.setIdleMode(IdleMode.kCoast);
     m_motor1.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     m_motor2.restoreFactoryDefaults();
     m_motor2.follow(m_motor1);
-    m_motor2.setIdleMode(IdleMode.kBrake);
+    m_motor2.setIdleMode(IdleMode.kCoast);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
@@ -85,7 +85,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setReference(double setReference){
-    m_pidController.setReference(setReference, ControlType.kPosition, 0, calculateFF());
+    m_pidController.setReference(setReference, ControlType.kPosition, 0);
   }
 
   @Override
