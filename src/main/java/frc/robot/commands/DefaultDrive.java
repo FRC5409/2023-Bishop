@@ -1,54 +1,46 @@
-package frc.robot.commands; 
+package frc.robot.commands;
 
-import java.util.ArrayList;
-
-import edu.wpi.first.wpilibj2.command.CommandBase; 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain;
 
 public class DefaultDrive extends CommandBase {
 
-    private final Drivetrain drivetrain;
-    private final CommandXboxController m_joystick;
+    private final Drivetrain m_drivetrain;
+    private final CommandXboxController m_controller;
 
-    double forwardSpeed;
-    double rearSpeed;
-    double turnVal;
-
-    public DefaultDrive(Drivetrain p_drivetrain, CommandXboxController joystick) {
-
-        drivetrain = p_drivetrain;
-        m_joystick = joystick;
-
+    /**
+     * Default drive command
+     * 
+     * Controller:
+     * - right trigger: accelerate
+     * - left trigger: decelerate / backwards
+     * - left stick: turning
+     * 
+     * @param drivetrain
+     * @param controller
+     */
+    public DefaultDrive(Drivetrain drivetrain, CommandXboxController controller) {
+        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(drivetrain);
-        
+
+        m_drivetrain = drivetrain;
+        m_controller = controller;
     }
 
-    @Override
-    public void initialize() {}
-
+    // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        double xSpeed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
+        double zRotation = -m_controller.getLeftX();
 
-        // LT forward, RT rear, LSB turnval
-        forwardSpeed = m_joystick.getLeftTriggerAxis();
-        rearSpeed = m_joystick.getRightTriggerAxis();
-        turnVal = -m_joystick.getLeftX();
-
-        // SmartDashboard.putNumber("Forward Speed", forwardSpeed);
-        // SmartDashboard.putNumber("Reverse Speed", Math.round(rearSpeed * 100));
-        // SmartDashboard.putNumber("Turn Amount", Math.round(turnVal * 100));
-
-        drivetrain.arcadeDrive(forwardSpeed - rearSpeed, turnVal);
-
+        m_drivetrain.arcadeDrive(xSpeed, zRotation);
     }
 
-    @Override
-    public void end(boolean interrupted) {}
-
-
+    // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         return false;
     }
+
 }

@@ -21,7 +21,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry AbsolutePosition,Angle;
+  private final GenericEntry absolutePosition, angle;
   // fix the genericentry import it
 
   /** Creates a new ArmPIDSubsystem. */
@@ -46,8 +46,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
    // kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
    // kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
     // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
-    AbsolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-     Angle = sb_armTab.add("Angle",0).getEntry();
+    absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
+     angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
   }
 
@@ -70,10 +70,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
     if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      AbsolutePosition.setDouble(ecd_value + 1 + Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value + 1 + Constants.kArmSubsystem.knintydegreepos);
       return ecd_value +1 - Constants.kArmSubsystem.knintydegreepos;
     }else{
-      AbsolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
       return ecd_value - Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
@@ -107,7 +107,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
-      Angle.setDouble(getAngle());
+      angle.setDouble(getAngle());
 
 
   }

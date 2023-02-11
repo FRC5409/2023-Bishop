@@ -13,7 +13,6 @@ import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
-import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
