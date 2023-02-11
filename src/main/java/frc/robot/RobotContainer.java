@@ -95,36 +95,35 @@ public class RobotContainer {
     private void configureBindings() {
 
         joystickMain.leftBumper()
-        .onTrue(cmd_lowSpeed);
+            .onTrue(cmd_lowSpeed);
 
         joystickMain.leftBumper()
-        .onFalse(cmd_midSpeed);
+            .onFalse(cmd_midSpeed);
 
         joystickMain.rightBumper()
-        .onTrue(cmd_highSpeed);
+            .onTrue(cmd_highSpeed);
 
         joystickMain.rightBumper()
-        .onFalse(cmd_midSpeed);
+            .onFalse(cmd_midSpeed);
         
 
         joystickSecondary.leftBumper()
-        .onTrue(cmd_lowSpeed);
+            .onTrue(cmd_lowSpeed);
         
         joystickSecondary.leftBumper()
-        .onFalse(cmd_midSpeed);
+            .onFalse(cmd_midSpeed);
 
 
         joystickSecondary.rightBumper()
-        .onTrue(cmd_highSpeed);
+            .onTrue(cmd_highSpeed);
 
         joystickSecondary.rightBumper()
-        .onFalse(cmd_midSpeed);
+            .onFalse(cmd_midSpeed);
 
-        
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
-        joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
-       // joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
+        joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
+        joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
 
     }
 

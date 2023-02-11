@@ -49,6 +49,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
      angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
+    m_motor1.burnFlash();
+    m_motor2.burnFlash();
   }
 
   @Override
@@ -70,10 +72,10 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
     if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      absolutePosition.setDouble(ecd_value + 1 + Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value +1 - Constants.kArmSubsystem.knintydegreepos;
     }else{
-      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value - Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
