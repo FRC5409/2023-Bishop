@@ -8,12 +8,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,10 +26,10 @@ public class Intake extends SubsystemBase
   private final CANSparkMax wrist;
   private final WPI_TalonFX roller;
 
-  private final PIDController pid_pivot;
-  private final PIDController pid_wrist;
+  private final SparkMaxPIDController pid_pivot;
+  private final SparkMaxPIDController pid_wrist;
 
-  private final DutyCycleEncoder enc_pivot;
+  private final SparkMaxAbsoluteEncoder enc_pivot;
   private final RelativeEncoder enc_wrist;
 
   private final ShuffleboardTab tab_intake;
@@ -48,11 +49,23 @@ public class Intake extends SubsystemBase
     roller.configFactoryDefault();
     roller.setNeutralMode(NeutralMode.Brake);
 
-    pid_pivot = new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD);
-    pid_wrist = new PIDController(kIntake.kWristP, kIntake.kWristI, kIntake.kWristD);
-
-    enc_pivot = new DutyCycleEncoder(kIntake.id_encPivot);
+    enc_pivot = pivot.getAbsoluteEncoder(Type.kDutyCycle);
     enc_wrist = wrist.getEncoder();
+
+    pid_pivot = pivot.getPIDController();
+    pid_pivot.setFeedbackDevice(enc_pivot);
+    pid_pivot.setP(kIntake.kPivotP);
+    pid_pivot.setI(kIntake.kPivotI);
+    pid_pivot.setD(kIntake.kPivotD);
+
+    pid_wrist = pivot.getPIDController();
+    pid_wrist.setFeedbackDevice(enc_wrist);
+    pid_wrist.setP(kIntake.kWristP);
+    pid_wrist.setI(kIntake.kWristI);
+    pid_wrist.setD(kIntake.kWristD);
+
+    pivot.burnFlash();
+    wrist.burnFlash();
 
     tab_intake = Shuffleboard.getTab("Intake");
     pos_encPivot = tab_intake.add("Pivot Pos", getPivotPos()).getEntry();
@@ -61,7 +74,7 @@ public class Intake extends SubsystemBase
 
   public double getPivotPos()
   {
-    return enc_pivot.getAbsolutePosition();
+    return enc_pivot.getPosition();
   }
 
   public double getWristPos()
