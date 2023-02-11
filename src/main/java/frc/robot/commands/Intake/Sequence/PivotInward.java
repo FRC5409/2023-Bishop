@@ -1,22 +1,18 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+package frc.robot.commands.Intake.Sequence;
 
-package frc.robot.commands.Intake;
-
-import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.subsystems.Intake;
 
-public class PivotOutward extends CommandBase
+public class PivotInward extends CommandBase
 {
   private final Intake sys_intake;
   private final double setpoint;
 
-  public PivotOutward(Intake subsystem)
+  public PivotInward(Intake subsystem)
   {
     sys_intake = subsystem;
-    setpoint = kPivotSetpoints.kPivotExtended;
+    setpoint = kPivotSetpoints.kPivotRetracted;
 
     addRequirements(sys_intake);
   }
@@ -40,11 +36,11 @@ public class PivotOutward extends CommandBase
   @Override
   public boolean isFinished()
   {
-    if (Math.abs(setpoint - sys_intake.getPivotPos()) < 1)
+    if (Math.abs(setpoint - sys_intake.getPivotPos()) < 0.5)
     {
       return true;
     }
-
+        
     return false;
   }
 }
