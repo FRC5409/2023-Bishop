@@ -157,6 +157,8 @@ public final class Constants {
 
         public final static double kg = 0.4;
         public final static double knintydegreepos = 0.478;
+        public final static double kgUnextended = 9; // inches from center of ax
+        public final static double kgExtended = 11.5; // inches 
 
         public static class kPID{
             public final static double kP = 100;
