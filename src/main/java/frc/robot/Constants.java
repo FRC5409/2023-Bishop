@@ -57,11 +57,11 @@ public final class Constants {
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0.08122;
-        public static final double kvVolts                      = 2.796;
-        public static final double kaVolts                      = 0.28485;
+        public static final double ksVolts                      = 0.087295;
+        public static final double kvVolts                      = 2.7618;
+        public static final double kaVolts                      = 0.31894;
 
-        public static final double kPDriveVel                   = 3.3466;
+        public static final double kPDriveVel                   = 3.4136;
 
         public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
