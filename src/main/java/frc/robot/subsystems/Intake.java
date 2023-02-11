@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -53,23 +54,30 @@ public class Intake extends SubsystemBase
     enc_wrist = wrist.getEncoder();
 
     pid_pivot = pivot.getPIDController();
-    pid_pivot.setFeedbackDevice(enc_pivot);
-    pid_pivot.setP(kIntake.kPivotP);
-    pid_pivot.setI(kIntake.kPivotI);
-    pid_pivot.setD(kIntake.kPivotD);
-
-    pid_wrist = pivot.getPIDController();
-    pid_wrist.setFeedbackDevice(enc_wrist);
-    pid_wrist.setP(kIntake.kWristP);
-    pid_wrist.setI(kIntake.kWristI);
-    pid_wrist.setD(kIntake.kWristD);
-
+    setPivotPID();
+    
+    pid_wrist = wrist.getPIDController();
+    setWristPID();
+    
     pivot.burnFlash();
     wrist.burnFlash();
 
     tab_intake = Shuffleboard.getTab("Intake");
     pos_encPivot = tab_intake.add("Pivot Pos", getPivotPos()).getEntry();
     pos_encWrist = tab_intake.add("Wrist Pos", getWristPos()).getEntry();;
+  }
+
+  public void setPivotPID() {
+    pid_pivot.setFeedbackDevice(enc_pivot);
+    pid_pivot.setP(kIntake.kPivotP);
+    pid_pivot.setI(kIntake.kPivotI);
+    pid_pivot.setD(kIntake.kPivotD);
+  }
+
+  public void setWristPID() {
+    pid_wrist.setP(kIntake.kWristP);
+    pid_wrist.setI(kIntake.kWristI);
+    pid_wrist.setD(kIntake.kWristD);
   }
 
   public double getPivotPos()
@@ -131,6 +139,14 @@ public class Intake extends SubsystemBase
     {
       roller.setInverted(false);
     }
+  }
+
+  public void pivotToSetpoint(double setpoint) {
+    pid_pivot.setReference(setpoint, ControlType.kPosition);
+  }
+
+  public void wristToSetpoint(double setpoint) {
+    pid_wrist.setReference(setpoint, ControlType.kPosition);
   }
 
   @Override
