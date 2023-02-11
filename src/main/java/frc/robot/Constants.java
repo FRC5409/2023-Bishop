@@ -152,13 +152,15 @@ public final class Constants {
         public final static int kCurrentLimit = 40;
         public final static double kPositionTolerance = 0.1;
 
-        public final static double kHighSetpoint = 0.7;
-        public final static double kLowSetpoint = 0.5;
-
         public final static double kg = 0.4;
         public final static double knintydegreepos = 0.478;
         public final static double kgUnextended = 9; // inches from center of ax
         public final static double kgExtended = 11.5; // inches 
+
+        public final static double kSetIntakeBack = 0.55;
+        public final static double kSetIntakeFront = -0.06;
+        public final static double kSetPlaceFront = 0.057;
+        public final static double kSetPlaceBack = 0.44;
 
         public static class kPID{
             public final static double kP = 100;
