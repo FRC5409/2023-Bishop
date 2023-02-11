@@ -33,7 +33,8 @@ public class Arm extends SubsystemBase {
     m_motor1 = new CANSparkMax(Constants.kArmSubsystem.kMotor1ID, MotorType.kBrushless);
     m_motor2 = new CANSparkMax(Constants.kArmSubsystem.kMotor2ID, MotorType.kBrushless);
     m_encoder = m_motor1.getAbsoluteEncoder(Type.kDutyCycle);
-    m_pidController = m_motor1.getPIDController(); 
+    m_pidController = m_motor1.getPIDController();
+    m_pidController.setFeedbackDevice(m_encoder); 
 
     m_motor1.restoreFactoryDefaults();
     m_motor1.setIdleMode(IdleMode.kCoast);
@@ -44,6 +45,7 @@ public class Arm extends SubsystemBase {
     m_motor2.setIdleMode(IdleMode.kCoast);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
+
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
     kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
     kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
@@ -53,8 +55,6 @@ public class Arm extends SubsystemBase {
     setPIDFvalues();
    // m_motor1.burnFlash();
     //m_motor2.burnFlash();
-
-    
   }
 
   public double getPosition() { // gets absolute position and returns the value 
