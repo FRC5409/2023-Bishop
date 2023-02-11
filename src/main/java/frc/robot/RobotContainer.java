@@ -9,9 +9,9 @@ import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
+import frc.robot.commands.newArmRotation;
 import frc.robot.commands.auto.Auto;
-import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.commands.ArmRotation;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Drivetrain;
 import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -39,7 +39,7 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final ArmPIDSubsystem sys_ArmPIDSubsystem;
+    private final Arm sys_Arm;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -68,7 +68,7 @@ public class RobotContainer {
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
+        sys_Arm = new Arm();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
@@ -136,9 +136,18 @@ public class RobotContainer {
 
         joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
         
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
-        joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
+        // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
+        // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
+        // joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
+
+        joystickSecondary.x().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetIntakeBack));
+        joystickSecondary.b().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetIntakeFront));
+        joystickSecondary.y().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetPlaceFront));
+        joystickSecondary.a().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetPlaceBack));
+        
+
+
+
        // joystickSecondary.a().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.setPIDfromshuffleboard()));
 
     }
