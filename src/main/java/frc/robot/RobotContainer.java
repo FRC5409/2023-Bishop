@@ -39,7 +39,7 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final Arm sys_Arm;
+    private final Arm sys_arm;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -68,7 +68,7 @@ public class RobotContainer {
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_Arm = new Arm();
+        sys_arm = new Arm();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
@@ -140,10 +140,10 @@ public class RobotContainer {
         // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
         // joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
 
-        joystickSecondary.x().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetIntakeBack));
-        joystickSecondary.b().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetIntakeFront));
-        joystickSecondary.y().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetPlaceFront));
-        joystickSecondary.a().onTrue(new newArmRotation(sys_Arm, Constants.kArmSubsystem.kSetPlaceBack));
+        joystickSecondary.x().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetIntakeBack));
+        joystickSecondary.b().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetIntakeFront));
+        joystickSecondary.y().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetPlaceFront));
+        joystickSecondary.a().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetPlaceBack));
         
 
 

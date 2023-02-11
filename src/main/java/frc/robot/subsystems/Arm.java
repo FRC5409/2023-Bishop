@@ -26,7 +26,7 @@ public class Arm extends SubsystemBase {
   private final AbsoluteEncoder m_encoder;
   private SparkMaxPIDController m_pidController;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry kP,kI,kD,AbsolutePosition,Angle;
+  private final GenericEntry kP, kI, kD, absolutePosition, angle;
 
   /** Creates a new Arm. */
   public Arm() {
@@ -34,23 +34,26 @@ public class Arm extends SubsystemBase {
     m_motor2 = new CANSparkMax(Constants.kArmSubsystem.kMotor2ID, MotorType.kBrushless);
     m_encoder = m_motor1.getAbsoluteEncoder(Type.kDutyCycle);
     m_pidController = m_motor1.getPIDController(); 
-    setPIDFvalues();
 
     m_motor1.restoreFactoryDefaults();
-    m_motor1.setIdleMode(IdleMode.kCoast);
+    m_motor1.setIdleMode(IdleMode.kBrake);
     m_motor1.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     m_motor2.restoreFactoryDefaults();
     m_motor2.follow(m_motor1);
-    m_motor2.setIdleMode(IdleMode.kCoast);
+    m_motor2.setIdleMode(IdleMode.kBrake);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
     kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
     kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
     kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
-    AbsolutePosition = sb_armTab.add("AbsolutePosition", getPosition()).withWidget(BuiltInWidgets.kTextView).getEntry();
-    Angle = sb_armTab.add("Angle", getAngle()).getEntry();
+    absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
+    angle = sb_armTab.add("Angle",0).getEntry();
+    setPIDFvalues();
+   // m_motor1.burnFlash();
+    //m_motor2.burnFlash();
+
     
   }
 
@@ -58,10 +61,10 @@ public class Arm extends SubsystemBase {
     double ecd_value = m_encoder.getPosition();
 
     if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      AbsolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos;
     }else{
-      AbsolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
+      absolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
       return ecd_value - Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
@@ -87,7 +90,9 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Angle.setDouble(getAngle());
+    angle.setDouble(getAngle());
+    absolutePosition.setDouble(getPosition());
+
 
     // This method will be called once per scheduler run
   }
