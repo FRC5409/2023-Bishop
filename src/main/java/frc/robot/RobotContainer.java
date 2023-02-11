@@ -9,6 +9,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
+import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
 // import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
@@ -40,6 +41,13 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final PivotMove cmd_pivotMoveUp;
+    private final PivotMove cmd_pivotMoveDown;
+    private final RollerMove cmd_rollerCapture;
+    private final RollerMove cmd_rollerRelease;
+
+    // Sequential commands
+    private final IntakePickupSequence seq_intakePickup;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -63,6 +71,13 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_pivotMoveUp =  new PivotMove(sys_intake, 2.4, false);
+        cmd_pivotMoveDown = new PivotMove(sys_intake, 2.4, true);
+        cmd_rollerCapture = new RollerMove(sys_intake, 6, false);
+        cmd_rollerRelease = new RollerMove(sys_intake, 6, true);
+
+        // Sequential commands
+        seq_intakePickup = new IntakePickupSequence(sys_intake);
         
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -98,16 +113,19 @@ public class RobotContainer
 
     private void configureBindings() {
         joystickMain.y()
-            .whileTrue(new PivotMove(sys_intake, 2.4, false)); //pivot rise up
+            .whileTrue(cmd_pivotMoveUp);
 
         joystickMain.a()
-            .whileTrue(new PivotMove(sys_intake, 2.4, true)); //pivot lower down
+            .whileTrue(cmd_pivotMoveDown);
 
         joystickMain.x()
-            .whileTrue(new RollerMove(sys_intake, 2.4, false)); //start intaking (roller roll forwards)
+            .whileTrue(cmd_rollerCapture);
         
         joystickMain.b()
-            .whileTrue(new RollerMove(sys_intake, 2.4, true)); //roller roll backwards
+            .whileTrue(cmd_rollerRelease);
+        
+        joystickMain.rightBumper()
+            .onTrue(seq_intakePickup);
     }
 
     /**

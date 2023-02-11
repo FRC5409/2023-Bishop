@@ -130,6 +130,9 @@ public final class Constants
     public static final int id_encPivot                               = 0; /* placeholder */
     public static final int id_encWrist                               = 0; /* placeholder */
 
+    public static final int id_tofRoller                              = 0; /* placeholder */
+    public static final double kDefaultTofRange                       = 0.0; /* placeholder */
+
     public static final double kPivotP                                = 0.0; /* placeholder */
     public static final double kWristP                                = 0.0; /* placeholder */
 

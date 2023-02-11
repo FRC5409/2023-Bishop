@@ -40,11 +40,6 @@ public class PivotOutward extends CommandBase
   @Override
   public boolean isFinished()
   {
-    if (Math.abs(setpoint - sys_intake.getPivotPos()) < 1)
-    {
-      return true;
-    }
-
     return false;
   }
 }

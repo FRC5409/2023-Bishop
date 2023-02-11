@@ -4,19 +4,17 @@
 
 package frc.robot.commands.Intake.Sequence;
 
-import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
+import frc.robot.Constants.kIntake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class WristPickup extends CommandBase
+public class RollerPickup extends CommandBase
 {
   private final Intake sys_intake;
-  private final double setpoint;
-  
-  public WristPickup(Intake subsystem)
+
+  public RollerPickup(Intake subsystem)
   {
     sys_intake = subsystem;
-    setpoint = kWristSetpoints.kWristPickup;
 
     addRequirements(sys_intake);
   }
@@ -25,7 +23,7 @@ public class WristPickup extends CommandBase
   @Override
   public void initialize()
   {
-    sys_intake.wristToSetpoint(setpoint);
+    sys_intake.rollerControl(6);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,12 +32,20 @@ public class WristPickup extends CommandBase
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted)
+  {
+    sys_intake.rollerControl(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished()
   {
+    if (sys_intake.getTofRange() != kIntake.kDefaultTofRange)
+    {
+      return true;
+    }
+
     return false;
   }
 }

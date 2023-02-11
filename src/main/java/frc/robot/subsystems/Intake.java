@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.playingwithfusion.TimeOfFlight;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
@@ -33,8 +34,10 @@ public class Intake extends SubsystemBase
   private final SparkMaxAbsoluteEncoder enc_pivot;
   private final RelativeEncoder enc_wrist;
 
+  private final TimeOfFlight tof_roller;
+
   private final ShuffleboardTab tab_intake;
-  private final GenericEntry pos_encPivot, pos_encWrist;
+  private final GenericEntry pos_encPivot, pos_encWrist, range_tofRoller;
   
   public Intake()
   {
@@ -62,9 +65,12 @@ public class Intake extends SubsystemBase
     pivot.burnFlash();
     wrist.burnFlash();
 
+    tof_roller = new TimeOfFlight(kIntake.id_tofRoller);
+
     tab_intake = Shuffleboard.getTab("Intake");
     pos_encPivot = tab_intake.add("Pivot Pos", getPivotPos()).getEntry();
-    pos_encWrist = tab_intake.add("Wrist Pos", getWristPos()).getEntry();;
+    pos_encWrist = tab_intake.add("Wrist Pos", getWristPos()).getEntry();
+    range_tofRoller = tab_intake.add("TOF Range", getTofRange()).getEntry();
   }
 
   public void setPivotPID() {
@@ -149,10 +155,16 @@ public class Intake extends SubsystemBase
     pid_wrist.setReference(setpoint, ControlType.kPosition);
   }
 
+  public double getTofRange()
+  {
+    return tof_roller.getRange();
+  }
+
   @Override
   public void periodic()
   {
     pos_encPivot.setDouble(getPivotPos());
     pos_encWrist.setDouble(getWristPos());
+    range_tofRoller.setDouble(getTofRange());
   }
 }
