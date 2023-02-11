@@ -144,13 +144,13 @@ public final class Constants {
     }
 
     public static class kArmSubsystem {
-        public final static int kMotor1ID = 20;
-        public final static int kMotor2ID = 21;
+        public final static int kMotor1ID = 34;
+        public final static int kMotor2ID = 35;
         public final static int kEncoderChannel = 8;
-        public final static double kLimit = 0.75;
-        public final static double kVoltageLimit = 10.5;
+        //public final static double kLimit = 0.75;
+       // public final static double kVoltageLimit = 10.5;
         public final static int kCurrentLimit = 40;
-        public final static double kPositionTolerance = 0.1;
+        //public final static double kPositionTolerance = 0.1;
 
         public final static double kg = 0.4;
         public final static double knintydegreepos = 0.478;

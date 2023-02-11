@@ -10,6 +10,7 @@ import frc.robot.subsystems.Arm;
 public class newArmRotation extends CommandBase {
   private final Arm sys_arm;
   private double setReference;
+
   /** Creates a new newArmRotation. */
   public newArmRotation(Arm arm, double setReference) {
     sys_arm = arm;

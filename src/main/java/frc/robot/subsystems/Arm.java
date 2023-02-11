@@ -14,6 +14,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import frc.robot.Constants;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,24 +33,24 @@ public class Arm extends SubsystemBase {
     m_motor1 = new CANSparkMax(Constants.kArmSubsystem.kMotor1ID, MotorType.kBrushless);
     m_motor2 = new CANSparkMax(Constants.kArmSubsystem.kMotor2ID, MotorType.kBrushless);
     m_encoder = m_motor1.getAbsoluteEncoder(Type.kDutyCycle);
-    m_pidController = m_motor1.getPIDController(); // ask do i need to make two
+    m_pidController = m_motor1.getPIDController(); 
     setPIDFvalues();
 
     m_motor1.restoreFactoryDefaults();
-    m_motor1.setIdleMode(IdleMode.kBrake);
+    m_motor1.setIdleMode(IdleMode.kCoast);
     m_motor1.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     m_motor2.restoreFactoryDefaults();
     m_motor2.follow(m_motor1);
-    m_motor2.setIdleMode(IdleMode.kBrake);
+    m_motor2.setIdleMode(IdleMode.kCoast);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
     kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
     kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
     kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
-    AbsolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-    Angle = sb_armTab.add("Angle",0).getEntry();
+    AbsolutePosition = sb_armTab.add("AbsolutePosition", getPosition()).withWidget(BuiltInWidgets.kTextView).getEntry();
+    Angle = sb_armTab.add("Angle", getAngle()).getEntry();
     
   }
 
@@ -86,8 +87,8 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    getPosition();
     Angle.setDouble(getAngle());
+
     // This method will be called once per scheduler run
   }
 }
