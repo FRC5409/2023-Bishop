@@ -35,8 +35,6 @@ public class RobotContainer {
     private final CommandXboxController joystickMain;
     private final CommandXboxController joystickSecondary;
 
-    private final ArrayList<CommandXboxController> sys_joysticks;
-
     // Subsystems
     public final Drivetrain sys_drivetrain;
     private final ArmPIDSubsystem sys_ArmPIDSubsystem;
@@ -59,9 +57,6 @@ public class RobotContainer {
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
-        sys_joysticks = new ArrayList<>();
-        sys_joysticks.add(joystickMain);
-        sys_joysticks.add(joystickSecondary);
 
         // Trajectory paths
         m_trajectory = trajectory;
@@ -71,7 +66,7 @@ public class RobotContainer {
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, sys_joysticks);
+        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
 
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
@@ -101,40 +96,31 @@ public class RobotContainer {
     private void configureBindings() {
 
         joystickMain.leftBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onTrue(cmd_lowSpeed);
 
         joystickMain.leftBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onFalse(cmd_midSpeed);
 
         joystickMain.rightBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onTrue(cmd_highSpeed);
 
         joystickMain.rightBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 0)
         .onFalse(cmd_midSpeed);
         
 
         joystickSecondary.leftBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
         .onTrue(cmd_lowSpeed);
         
         joystickSecondary.leftBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
         .onFalse(cmd_midSpeed);
 
 
         joystickSecondary.rightBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
         .onTrue(cmd_highSpeed);
 
         joystickSecondary.rightBumper()
-        .and(() -> sys_drivetrain.getCurrentJoystick() == 1)
         .onFalse(cmd_midSpeed);
 
-        joystickSecondary.start().onTrue(Commands.runOnce(() -> sys_drivetrain.changeJoystickState()));
         
         joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.04));
         joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
@@ -161,5 +147,7 @@ public class RobotContainer {
 
             .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
     }
+
+}
 
 

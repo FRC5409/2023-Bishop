@@ -9,16 +9,16 @@ import frc.robot.subsystems.Drivetrain;
 public class DefaultDrive extends CommandBase {
 
     private final Drivetrain drivetrain;
-    private final ArrayList<CommandXboxController> m_joysticks;
+    private final CommandXboxController m_joystick;
 
     double forwardSpeed;
     double rearSpeed;
     double turnVal;
 
-    public DefaultDrive(Drivetrain p_drivetrain, ArrayList<CommandXboxController> joysticks) {
+    public DefaultDrive(Drivetrain p_drivetrain, CommandXboxController joystick) {
 
         drivetrain = p_drivetrain;
-        m_joysticks = joysticks;
+        m_joystick = joystick;
 
         addRequirements(drivetrain);
         
@@ -31,9 +31,9 @@ public class DefaultDrive extends CommandBase {
     public void execute() {
 
         // LT forward, RT rear, LSB turnval
-        forwardSpeed = m_joysticks.get(drivetrain.getCurrentJoystick()).getLeftTriggerAxis();
-        rearSpeed = m_joysticks.get(drivetrain.getCurrentJoystick()).getRightTriggerAxis();
-        turnVal = -m_joysticks.get(drivetrain.getCurrentJoystick()).getLeftX();
+        forwardSpeed = m_joystick.getLeftTriggerAxis();
+        rearSpeed = m_joystick.getRightTriggerAxis();
+        turnVal = -m_joystick.getLeftX();
 
         // SmartDashboard.putNumber("Forward Speed", forwardSpeed);
         // SmartDashboard.putNumber("Reverse Speed", Math.round(rearSpeed * 100));
