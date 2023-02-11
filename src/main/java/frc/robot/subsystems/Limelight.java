@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.networktables.NetworkTableInstance;
+
+import java.util.Arrays;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 
@@ -53,7 +56,7 @@ public class Limelight extends SubsystemBase {
     rzWidget = localizationRot.add("rZ", 0).getEntry();
 
     localizationPipeline = Shuffleboard.getTab("Field Localization")
-      .getLayout("Pipeline Info")
+      .getLayout("Pipeline Info", BuiltInLayouts.kGrid)
       .withSize(1, 2);
 
     pipelineIndexWidget = localizationPipeline.add("Pipeline", 0).getEntry();
@@ -72,9 +75,14 @@ public class Limelight extends SubsystemBase {
       .getEntry("botpose")
       .getDoubleArray(positionDefaults); //TEMPORARY
     
-    //pushing to shuffleboard1
+    //updating pipeline data to shuffleboard
+    pipelineIndexWidget.setDouble(LimelightHelpers.getCurrentPipelineIndex("limelight"));
+    pipelineLatencyWidget.setDouble(LimelightHelpers.getLatency_Pipeline("limelight"));
+    
+    //Shuffleboard robotpos update
+    System.out.println(Arrays.toString(robotPos));
     if (robotPos.length != 0){
-      //update Rotation and Position here 
+      //update Rotation and Position here  
       xWidget.setDouble(robotPos[0]);
       yWidget.setDouble(robotPos[1]);
       zWidget.setDouble(robotPos[2]);
@@ -82,9 +90,6 @@ public class Limelight extends SubsystemBase {
       rxWidget.setDouble(robotPos[3]);
       ryWidget.setDouble(robotPos[4]);
       rzWidget.setDouble(robotPos[5]);
-
-      pipelineIndexWidget.setDouble(LimelightHelpers.getCurrentPipelineIndex("limelight"));
-      pipelineLatencyWidget.setDouble(LimelightHelpers.getLatency_Pipeline("limelight"));
     }
   }
 }
