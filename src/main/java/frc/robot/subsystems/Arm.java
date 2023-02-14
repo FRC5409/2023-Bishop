@@ -35,6 +35,9 @@ public class Arm extends SubsystemBase {
     m_encoder = m_motor1.getAbsoluteEncoder(Type.kDutyCycle);
     m_pidController = m_motor1.getPIDController();
     m_pidController.setFeedbackDevice(m_encoder); 
+    m_pidController.setPositionPIDWrappingEnabled(true);
+    m_pidController.setPositionPIDWrappingMinInput(0);
+    m_pidController.setPositionPIDWrappingMaxInput(1);
 
     m_motor1.restoreFactoryDefaults();
     m_motor1.setIdleMode(IdleMode.kCoast);
@@ -53,20 +56,21 @@ public class Arm extends SubsystemBase {
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
     angle = sb_armTab.add("Angle",0).getEntry();
     setPIDFvalues();
-   // m_motor1.burnFlash();
-    //m_motor2.burnFlash();
+    m_motor1.burnFlash();
+    m_motor2.burnFlash();
   }
 
   public double getPosition() { // gets absolute position and returns the value 
     double ecd_value = m_encoder.getPosition();
+    return ecd_value;
 
-    if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      absolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos;
-    }else{
-      absolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value - Constants.kArmSubsystem.knintydegreepos;
-    }
+    // if (ecd_value < 0.3){  // used to fix the weird values from encoder
+    //   absolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
+    //   return ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos;
+    // }else{
+    //   absolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
+    //   return ecd_value - Constants.kArmSubsystem.knintydegreepos;
+    // }
     // Return the process variable measurement here 
   }
 
