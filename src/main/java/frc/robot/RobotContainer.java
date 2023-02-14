@@ -73,8 +73,8 @@ public class RobotContainer
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
         cmd_pivotMoveUp =  new PivotMove(sys_intake, 2.4, false);
         cmd_pivotMoveDown = new PivotMove(sys_intake, 2.4, true);
-        cmd_rollerCapture = new RollerMove(sys_intake, 6, false);
-        cmd_rollerRelease = new RollerMove(sys_intake, 6, true);
+        cmd_rollerCapture = new RollerMove(sys_intake, 1, false);
+        cmd_rollerRelease = new RollerMove(sys_intake, 1, true);
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intake);
