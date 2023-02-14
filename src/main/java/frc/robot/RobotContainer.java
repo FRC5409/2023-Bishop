@@ -111,7 +111,8 @@ public class RobotContainer
       */
 
 
-    private void configureBindings() {
+    private void configureBindings()
+    {
         joystickMain.y()
             .whileTrue(cmd_pivotMoveUp);
 

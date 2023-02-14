@@ -7,13 +7,14 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class PivotMove extends CommandBase {
-
+public class PivotMove extends CommandBase
+{
   private final Intake intake;
   private double voltage;
   private boolean inverted;
 
-  public PivotMove(Intake subsystem, double voltage, boolean inverted) {
+  public PivotMove(Intake subsystem, double voltage, boolean inverted)
+  {
       intake = subsystem;
       this.voltage = voltage;
       this.inverted = inverted;
@@ -24,7 +25,8 @@ public class PivotMove extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize()
+  {
     if (inverted)
     {
       intake.setPivotDirection(true);
@@ -43,13 +45,15 @@ public class PivotMove extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted)
+  {
     intake.pivotControl(0);
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished()
+  {
     return false;
   }
 }
