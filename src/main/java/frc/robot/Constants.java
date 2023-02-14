@@ -156,5 +156,12 @@ public final class Constants
         public static final double kWristHandoff                      = 0.0; /* placeholder */
       }
     }
+
+    public static final class kVoltage
+    {
+      public static final double kPivotVoltage                        = 2.4;
+      public static final double kWristVoltage                        = 2.4;
+      public static final double kRollerVoltage                       = 4;
+    }
   }
 }

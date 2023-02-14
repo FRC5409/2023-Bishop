@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kIntake.kVoltage;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
@@ -73,10 +74,10 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_pivotMoveUp =  new PivotMove(sys_intake, 2.4, false);
-        cmd_pivotMoveDown = new PivotMove(sys_intake, 2.4, true);
-        cmd_rollerCapture = new RollerMove(sys_intake, 1, false);
-        cmd_rollerRelease = new RollerMove(sys_intake, 1, true);
+        cmd_pivotMoveUp =  new PivotMove(sys_intake, kVoltage.kPivotVoltage, true);
+        cmd_pivotMoveDown = new PivotMove(sys_intake, kVoltage.kPivotVoltage, false);
+        cmd_rollerCapture = new RollerMove(sys_intake, kVoltage.kRollerVoltage, true);
+        cmd_rollerRelease = new RollerMove(sys_intake, kVoltage.kRollerVoltage, false);
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intake);
