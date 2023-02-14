@@ -1,4 +1,4 @@
-# 2023-Comp
+# 2023-Bishop
 
 ## Useful Documentation
 [CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit#gid=1456793576)

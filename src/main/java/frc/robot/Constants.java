@@ -123,9 +123,9 @@ public final class Constants
 
   public static final class kIntake
   {
-    public static final int id_motPivot                               = 0; /* placeholder */
-    public static final int id_motWrist                               = 0; /* placeholder */
-    public static final int id_motRoller                              = 0; /* placeholder */
+    public static final int id_motPivot                               = 0; /* TBD */
+    public static final int id_motWrist                               = 34; /* to be tested */
+    public static final int id_motRoller                              = 28; /* to be tested */
 
     public static final int id_encPivot                               = 0; /* placeholder */
     public static final int id_encWrist                               = 0; /* placeholder */
