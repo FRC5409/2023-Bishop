@@ -7,11 +7,13 @@ package frc.robot;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+//import frc.robot.commands.ArmRotation;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.newArmRotation;
-import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -140,10 +142,13 @@ public class RobotContainer {
         // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.46)); // new setpoints
         // joystickSecondary.y().onTrue(Commands.runOnce(() -> sys_ArmPIDSubsystem.disable()));
 
-        joystickSecondary.x().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetIntakeBack));
-        joystickSecondary.b().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetIntakeFront));
-        joystickSecondary.y().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetPlaceFront));
-        joystickSecondary.a().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.kSetPlaceBack));
+        joystickSecondary.x().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.Setpoints.kSetIntakeBack));
+        joystickSecondary.b().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.Setpoints.kSetIntakeFront));
+        joystickSecondary.y().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.Setpoints.kSetPlaceFront));
+        joystickSecondary.a().onTrue(new newArmRotation(sys_arm, Constants.kArmSubsystem.Setpoints.kSetPlaceBack));
+        
+
+
         
 
 

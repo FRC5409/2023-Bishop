@@ -157,15 +157,19 @@ public final class Constants {
         public final static double kgUnextended = 9; // inches from center of ax
         public final static double kgExtended = 11.5; // inches 
 
-        public final static double kSetIntakeBack = 0.55;
-        public final static double kSetIntakeFront = -0.06;
-        public final static double kSetPlaceFront = 0.057;
-        public final static double kSetPlaceBack = 0.44;
 
         public static class kPID{
             public final static double kP = 10;
             public final static double kI = 0;
             public final static double kD = 0;
+        }
+
+        public static class Setpoints{
+        public final static double kSetIntakeBack = 0.55;
+        public final static double kSetIntakeFront = -0.06;
+        public final static double kSetPlaceFront = 0.057;
+        public final static double kSetPlaceBack = 0.44;
+
         }
     }
 
