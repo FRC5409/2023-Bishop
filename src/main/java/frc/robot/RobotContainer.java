@@ -9,6 +9,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
+import frc.robot.commands.Intake.Sequence.IntakeHandoffSequence;
 import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
 // import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
@@ -48,6 +49,7 @@ public class RobotContainer
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHandoffSequence seq_intakeHandoff;
 
     // Trajectory
     private Trajectory m_trajectory;
@@ -78,6 +80,7 @@ public class RobotContainer
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intake);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intake);
         
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -127,6 +130,9 @@ public class RobotContainer
         
         joystickMain.rightBumper()
             .whileTrue(seq_intakePickup);
+
+        joystickMain.rightBumper()
+            .whileFalse(seq_intakeHandoff);
     }
 
     /**
