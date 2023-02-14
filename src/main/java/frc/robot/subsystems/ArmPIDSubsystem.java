@@ -115,3 +115,5 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   }
   
 }
+
+//TO DO make it print the raw encoder setpoint, make sure the code is the same as the driveteam code, delete useless constants, pull new code from main and fix stuff 
