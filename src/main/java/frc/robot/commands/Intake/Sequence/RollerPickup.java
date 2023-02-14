@@ -23,7 +23,7 @@ public class RollerPickup extends CommandBase
   @Override
   public void initialize()
   {
-    sys_intake.rollerControl(6);
+    sys_intake.rollerControl(4);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,11 +41,6 @@ public class RollerPickup extends CommandBase
   @Override
   public boolean isFinished()
   {
-    if (sys_intake.getTofRange() != kIntake.kDefaultTofRange)
-    {
-      return true;
-    }
-
     return false;
   }
 }

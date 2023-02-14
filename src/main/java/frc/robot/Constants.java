@@ -148,7 +148,6 @@ public final class Constants
       {
         public static final double kPivotExtended                     = 0.0; /* placeholder */
         public static final double kPivotDefault                      = 0.0; /* placeholder */
-        public static final double kPivotStoring                      = 0.0; /* placeholder, potentially arbitary */
       }
 
       public static final class kWristSetpoints

@@ -7,15 +7,15 @@ package frc.robot.commands.Intake.Sequence;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Intake;
 
-public class IntakePickupSequence extends SequentialCommandGroup
+public class IntakeHandoffSequence extends SequentialCommandGroup
 {
-  public IntakePickupSequence(Intake intake)
+  
+  public IntakeHandoffSequence(Intake intake)
   {
     addCommands
     (
-      new PivotOutward(intake),
-      new WristPickup(intake),
-      new RollerPickup(intake)
+      new WristHandoff(intake),
+      new PivotInward(intake)
     );
   }
 }

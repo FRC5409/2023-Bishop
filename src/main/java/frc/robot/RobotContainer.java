@@ -126,7 +126,7 @@ public class RobotContainer
             .whileTrue(cmd_rollerRelease);
         
         joystickMain.rightBumper()
-            .onTrue(seq_intakePickup);
+            .whileTrue(seq_intakePickup);
     }
 
     /**

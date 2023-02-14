@@ -68,16 +68,24 @@ public class Intake extends SubsystemBase
 
   public void setPivotPID() {
     pid_pivot.setFeedbackDevice(enc_pivot);
+
     pid_pivot.setP(kIntake.kPivotP);
     pid_pivot.setI(kIntake.kPivotI);
     pid_pivot.setD(kIntake.kPivotD);
-    
+
+    pid_pivot.setPositionPIDWrappingEnabled(true);
+    pid_pivot.setPositionPIDWrappingMinInput(0);
+    pid_pivot.setPositionPIDWrappingMaxInput(1);
   }
 
   public void setWristPID() {
     pid_wrist.setP(kIntake.kWristP);
     pid_wrist.setI(kIntake.kWristI);
     pid_wrist.setD(kIntake.kWristD);
+
+    pid_wrist.setPositionPIDWrappingEnabled(true);
+    pid_wrist.setPositionPIDWrappingMinInput(0);
+    pid_wrist.setPositionPIDWrappingMaxInput(1);
   }
 
   public double getPivotPos()
