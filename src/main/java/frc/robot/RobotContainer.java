@@ -36,7 +36,7 @@ public class RobotContainer {
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final ArmPIDSubsystem sys_ArmPIDSubsystem;
+    public final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -120,10 +120,14 @@ public class RobotContainer {
         joystickSecondary.rightBumper()
             .onFalse(cmd_midSpeed);
 
-        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
-        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
-        joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
-        joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
+        // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
+        // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
+        // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
+        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kdrivingpos)); // pickup from loading station
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kpickupconefromfloor)); // pickup from floor
+        joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kplacehigh));
+        joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kplacelow));
 
     }
 
