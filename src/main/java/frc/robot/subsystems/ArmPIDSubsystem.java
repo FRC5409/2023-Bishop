@@ -21,7 +21,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry absolutePosition, angle;
+  private final GenericEntry absolutePosition, angle, rawAbsolutePosition;
   // fix the genericentry import it
 
   /** Creates a new ArmPIDSubsystem. */
@@ -48,6 +48,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
      angle = sb_armTab.add("Angle",0).getEntry();
+     rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
@@ -92,10 +93,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
      // System.out.println("kP:" + m_controller.getP() + " kI:" + kI.getDouble(0) + " kD:" + kD.getDouble(0));
   // }
 
-  public void resetEncoder(){
-    m_encoder.reset();
-  }
-
   public double calculateFF(){
     return Constants.kArmSubsystem.kg*Math.cos(Math.toRadians(getAngle()));
     
@@ -105,11 +102,18 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     return getMeasurement()*360;
   }
 
+  public double getRawEcd(){
+    double rawEcd_value = m_encoder.getAbsolutePosition();
+    return rawEcd_value;
+  }
+
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
+      getRawEcd();
       angle.setDouble(getAngle());
+      rawAbsolutePosition.setDouble(getRawEcd());
 
 
   }
