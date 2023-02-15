@@ -35,18 +35,22 @@ public class Arm extends SubsystemBase {
     m_encoder = m_motor1.getAbsoluteEncoder(Type.kDutyCycle);
     m_pidController = m_motor1.getPIDController();
     m_pidController.setFeedbackDevice(m_encoder); 
+    m_pidController.setOutputRange(-0.4,0.4);
     m_pidController.setPositionPIDWrappingEnabled(true);
     m_pidController.setPositionPIDWrappingMinInput(0);
     m_pidController.setPositionPIDWrappingMaxInput(1);
+  
+  
 
     m_motor1.restoreFactoryDefaults();
-    m_motor1.setIdleMode(IdleMode.kCoast);
+    m_motor1.setIdleMode(IdleMode.kBrake);
     m_motor1.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     m_motor2.restoreFactoryDefaults();
     m_motor2.follow(m_motor1);
-    m_motor2.setIdleMode(IdleMode.kCoast);
+    m_motor2.setIdleMode(IdleMode.kBrake);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
+
 
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
@@ -85,7 +89,11 @@ public class Arm extends SubsystemBase {
   }
 
   public double getAngle(){
-    return getPosition()*360;
+    double pos = getPosition()*360;
+    if (pos < 30){ // value of angle when it hits the ground, should be negative
+      pos = pos + 360; 
+    }
+    return pos - 167; // value of angle when the arm in 0 degrees
   }
 
   public void setReference(double setReference){

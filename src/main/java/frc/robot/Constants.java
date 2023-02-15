@@ -165,10 +165,10 @@ public final class Constants {
         }
 
         public static class Setpoints{
-        public final static double kSetIntakeBack = 0.55;
-        public final static double kSetIntakeFront = -0.06;
-        public final static double kSetPlaceFront = 0.057;
-        public final static double kSetPlaceBack = 0.44;
+        public final static double kSetIntakeBack = 0.4;
+        public final static double kSetIntakeFront = 0.04;
+        public final static double kSetPlaceFront = 0.46;
+        public final static double kSetPlaceBack = 0.94;
 
         }
     }
