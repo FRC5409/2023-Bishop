@@ -30,6 +30,28 @@ public final class Constants {
 
     public static final class kDrivetrain {
 
+        public static final class kDriveteam {
+            public static final double rampRate                  = 0.2;
+
+            public static final double defaultSpeedMultiplier    = 0.8;
+            public static final double defaultTurningMultiplier  = 0.72;
+                
+            public static final double slowSpeed                 = 0.5;
+            public static final double slowTurn                  = 0.6;
+
+            public static final double boostSpeed                = 1;
+            public static final double boostTurningSpeed         = 0.9;
+                
+            public static final double kChangeRamp               = 0.5;
+            public static final int timerLength                  = 50;
+
+            public static enum GearState {
+                kSlow,
+                kDefault,
+                kBoost
+            }
+        }
+
         public static final class kMotor {
             public static final int id_leftFrontDrive           = 20;
             public static final int id_leftCentreDrive          = 21;

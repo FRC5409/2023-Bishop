@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kMotor;
 
 public class Drivetrain extends SubsystemBase {
@@ -57,6 +58,9 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_gyroRoll;
     private final GenericEntry nt_poseMetersX;
     private final GenericEntry nt_poseMetersY;
+
+    private double speedMultiplier = kDriveteam.defaultSpeedMultiplier;
+    private double turningSpeedMultiplier = kDriveteam.defaultTurningMultiplier;
 
 
     public Drivetrain() {
@@ -188,7 +192,7 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        m_diffDrive.arcadeDrive(xSpeed, zRotation);
+        m_diffDrive.arcadeDrive(xSpeed * speedMultiplier, zRotation * turningSpeedMultiplier);
     }
 
     /**
@@ -325,6 +329,17 @@ public class Drivetrain extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
         m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
+    }
+
+    /**
+     * Sets the speed multipler applied to the drivetrain
+     * @param forwardSpeed speed going forward
+     * @param turningSpeed speeding while turning
+     */
+
+    public void setSpeedMultipliers(double forwardSpeed, double turningSpeed) {
+        speedMultiplier = forwardSpeed;
+        turningSpeedMultiplier = turningSpeed;
     }
 
     // ----------
