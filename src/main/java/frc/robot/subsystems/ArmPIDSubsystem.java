@@ -47,8 +47,8 @@ public class ArmPIDSubsystem extends PIDSubsystem {
    // kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
     // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-     angle = sb_armTab.add("Angle",0).getEntry();
-     rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
+    angle = sb_armTab.add("Angle",0).getEntry();
+    rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
