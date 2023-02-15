@@ -17,7 +17,14 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -43,10 +50,12 @@ public class RobotContainer {
     // Commands
     private final DefaultDrive cmd_defaultDrive;
 
-    // Trajectory
+    // Trajectory & autonomous path chooser
     private PathPlannerTrajectory m_placeConeWallGridAndBalance;
     private PathPlannerTrajectory m_placeConeLoadingGridAndBalance;
     private PathPlannerTrajectory m_placeConeMidGridAndBalance;
+    private ShuffleboardTab sb_driveteam;
+    private SendableChooser<PathPlannerTrajectory> sc_choosePath;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -64,18 +73,28 @@ public class RobotContainer {
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
 
-        // Trajectories
-        m_placeConeWallGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_WALL_GRID_AND_BALANCE,
-                                                            new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
-                                                            true);
-        
-        m_placeConeLoadingGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_LOADING_GRID_AND_BALANCE,
-                                                                new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
-                                                                true);
+        // Trajectory & autonomous path chooser
+        PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
+        m_placeConeWallGridAndBalance = PathPlanner.loadPath(
+                                                    kTrajectoryPath.PLACE_CONE_WALL_GRID_AND_BALANCE,
+                                                    pathConstraints,
+                                                    true);
+        m_placeConeLoadingGridAndBalance = PathPlanner.loadPath(
+                                                    kTrajectoryPath.PLACE_CONE_LOADING_GRID_AND_BALANCE,
+                                                    pathConstraints,
+                                                    true);
+        m_placeConeMidGridAndBalance = PathPlanner.loadPath(
+                                                    kTrajectoryPath.PLACE_CONE_MID_GRID_AND_BALANCE,
+                                                    pathConstraints,
+                                                    true);
 
-        m_placeConeMidGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_MID_GRID_AND_BALANCE,
-                                                            new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
-                                                            true);
+        sb_driveteam = Shuffleboard.getTab("Drive Team");
+        sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
+        sc_choosePath.setDefaultOption("Place cone wall grid and balance", m_placeConeWallGridAndBalance);
+        sc_choosePath.addOption("Place cone loading grid and balance", m_placeConeLoadingGridAndBalance);
+        sc_choosePath.addOption("Place cone mid grid and balance", m_placeConeMidGridAndBalance);
+        sb_driveteam.add("Auto path", sc_choosePath);
+        
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -109,10 +128,15 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
+        Shuffleboard.update();
+        PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
+
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
+        // Reset odometry
+        sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, m_placeConeWallGridAndBalance)
+        return new Auto(sys_drivetrain, chosenTrajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
     }

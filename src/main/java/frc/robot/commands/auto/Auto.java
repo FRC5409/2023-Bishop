@@ -10,7 +10,6 @@ public class Auto extends SequentialCommandGroup {
 
     public Auto(Drivetrain sys_drivetrain, PathPlannerTrajectory trajectory) {
         super(
-            Commands.runOnce(() -> sys_drivetrain.resetOdometry(trajectory.getInitialPose()), sys_drivetrain),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
             // new Turn90DegreesChargeStation(sys_drivetrain, TurnDirection.LEFT)

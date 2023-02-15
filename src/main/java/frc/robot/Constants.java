@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
