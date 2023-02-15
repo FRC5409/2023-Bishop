@@ -5,12 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kTrajectoryPath;
+import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,19 +44,18 @@ public class RobotContainer {
     private final DefaultDrive cmd_defaultDrive;
 
     // Trajectory
-    private PathPlannerTrajectory m_trajectory;
+    private PathPlannerTrajectory m_placeConeWallGridAndBalance;
+    private PathPlannerTrajectory m_placeConeLoadingGridAndBalance;
+    private PathPlannerTrajectory m_placeConeMidGridAndBalance;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(PathPlannerTrajectory trajectory) {
+    public RobotContainer() {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
-
-        // Trajectory paths
-        m_trajectory = trajectory;
 
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
@@ -60,6 +63,19 @@ public class RobotContainer {
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+
+        // Trajectories
+        m_placeConeWallGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_WALL_GRID_AND_BALANCE,
+                                                            new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
+                                                            true);
+        
+        m_placeConeLoadingGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_LOADING_GRID_AND_BALANCE,
+                                                                new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
+                                                                true);
+
+        m_placeConeMidGridAndBalance = PathPlanner.loadPath(kTrajectoryPath.PLACE_CONE_MID_GRID_AND_BALANCE,
+                                                            new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration),
+                                                            true);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -95,10 +111,8 @@ public class RobotContainer {
 
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
-        // Reset odometry
-        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, m_trajectory)
+        return new Auto(sys_drivetrain, m_placeConeWallGridAndBalance)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
     }

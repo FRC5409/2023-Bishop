@@ -70,8 +70,8 @@ public final class Constants {
         public static class kAuto {
             public static final double kMaxVolts                = 10;
 
-            public static final double kMaxSpeed                = 3;
-            public static final double kMaxAcceleration         = 3;
+            public static final double kMaxSpeed                = 2;
+            public static final double kMaxAcceleration         = 2;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
