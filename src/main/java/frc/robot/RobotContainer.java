@@ -10,6 +10,7 @@ import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -36,6 +37,7 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
+    public final Candle sys_candle;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -58,6 +60,7 @@ public class RobotContainer {
         // Subsystems
         sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
+        sys_candle = new Candle();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);

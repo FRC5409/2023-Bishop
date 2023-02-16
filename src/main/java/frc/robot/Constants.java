@@ -134,4 +134,45 @@ public final class Constants {
         public static final double kI_chargeStation             = 0;
         public static final double kD_chargeStation             = 0;
     }
+
+    public static class kCANdle {
+        public final static int staticTime = 750;
+
+        public static class kConfig {
+
+            public final static int CANID = 19;
+            public final static int LEDCount = 94;
+
+            public final static int LEDInnerRight = 30;
+            public final static int LEDInnerLeft = 26;
+            public final static int LEDOutter = 15;
+        }
+
+        public static class kColors {
+
+            public final static int[] idle = {255, 134 , 0};
+            public final static int[] cube = {142, 39, 245};
+            public final static int[] cone = {237, 120, 0};
+
+            public final static int LEDSinCount = 8;
+            public final static double kSpeed = 0.5;
+
+            public final static double sinFrequency = 0.025;
+            public final static double sinFrequencySpeed = 20;
+
+            public final static int chargeSpeed = 4;
+
+            public final static double gameSpeed = 0.2;
+            
+        }
+
+        public enum AnimationTypes {
+            Static,
+            ColorFlow,
+            //custom
+            SinWave,
+            SinFlow,
+            ChargedUp
+        }
+    }
 }
