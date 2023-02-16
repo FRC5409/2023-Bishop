@@ -159,5 +159,12 @@ public final class Constants
       public static final double kPivotVoltageLimit                   = 12;
       public static final double kWristVoltageLimit                   = 12;
     }
+
+    public static final class kCurrentLimits
+    {
+      public static final int kPivotCurrentLimit                      = 30;
+      public static final int kWristCurrentLimit                      = 30;
+      public static final int kRollerCurrentLimit                     = 30;
+    }
   }
 }

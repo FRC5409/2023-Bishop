@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.commands.Intake.Manual.PivotMove;
+import frc.robot.commands.Intake.Manual.WristMove;
+import frc.robot.commands.Intake.Manual.RollerMove;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
@@ -43,6 +46,12 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final PivotMove cmd_pivotUp;
+    private final PivotMove cmd_pivotDown;
+    private final WristMove cmd_wristUp;
+    private final WristMove cmd_wristDown;
+    private final RollerMove cmd_rollerCapture;
+    private final RollerMove cmd_rollerRelease;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -72,10 +81,12 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        // cmd_pivotMoveUp =  new PivotMove(sys_intake, kVoltage.kPivotVoltage, true);
-        // cmd_pivotMoveDown = new PivotMove(sys_intake, kVoltage.kPivotVoltage, false);
-        // cmd_rollerCapture = new RollerMove(sys_intake, kVoltage.kRollerVoltage, true);
-        // cmd_rollerRelease = new RollerMove(sys_intake, kVoltage.kRollerVoltage, false);
+        cmd_pivotUp =  new PivotMove(sys_intakePivot, 0.2);
+        cmd_pivotDown = new PivotMove(sys_intakePivot, -0.2);
+        cmd_wristUp = new WristMove(sys_intakeWrist, 0.2);
+        cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
+        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.5);
+        cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.5);
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
@@ -115,17 +126,23 @@ public class RobotContainer
 
     private void configureBindings()
     {
-        // joystickMain.y()
-        //     .whileTrue(cmd_pivotMoveUp);
-
-        // joystickMain.a()
-        //     .whileTrue(cmd_pivotMoveDown);
-
-        // joystickMain.x()
-        //     .whileTrue(cmd_rollerCapture);
+        joystickMain.povUp()
+            .whileTrue(cmd_pivotUp);
         
-        // joystickMain.b()
-        //     .whileTrue(cmd_rollerRelease);
+        joystickMain.povDown()
+            .whileTrue(cmd_pivotDown);
+
+        joystickMain.y()
+            .whileTrue(cmd_wristUp);
+
+        joystickMain.a()
+            .whileTrue(cmd_wristDown);
+
+        joystickMain.x()
+            .whileTrue(cmd_rollerCapture);
+        
+        joystickMain.b()
+            .whileTrue(cmd_rollerRelease);
         
         joystickMain.rightBumper()
             .whileTrue(seq_intakePickup);

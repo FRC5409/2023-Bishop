@@ -35,9 +35,9 @@ public class IntakeRoller extends SubsystemBase
     return motor.getMotorOutputPercent();
   }
 
-  public void rollerControl(double voltage)
+  public void rollerControl(double speed)
   {
-    motor.setVoltage(voltage);
+    motor.setVoltage(speed);
   }
 
   @Override

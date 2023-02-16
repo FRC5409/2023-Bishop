@@ -32,6 +32,8 @@ public class IntakePivot extends PIDSubsystem
     motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
+    motor.setSmartCurrentLimit(kIntake.kCurrentLimits.kPivotCurrentLimit);
+    motor.burnFlash();
 
     encoder = new DutyCycleEncoder(kIntake.id_encPivot);
 
@@ -63,5 +65,10 @@ public class IntakePivot extends PIDSubsystem
   public double getMeasurement()
   {
     return encoder.getAbsolutePosition();
+  }
+
+  public void pivotControl(double speed)
+  {
+    motor.set(speed);
   }
 }

@@ -32,6 +32,7 @@ public class IntakeWrist extends PIDSubsystem
     motor = new CANSparkMax(kIntake.id_motWrist, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
+    motor.burnFlash();
 
     encoder = new DutyCycleEncoder(kIntake.id_encWrist);
 
@@ -62,5 +63,10 @@ public class IntakeWrist extends PIDSubsystem
   public double getMeasurement()
   {
     return encoder.getAbsolutePosition();
+  }
+
+  public void wristControl(double speed)
+  {
+    motor.set(speed);
   }
 }
