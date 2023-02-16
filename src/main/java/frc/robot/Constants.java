@@ -156,8 +156,8 @@ public final class Constants
 
     public static final class kVoltageLimits
     {
-      public static final double kPivotVoltageLimit                   = 12;
-      public static final double kWristVoltageLimit                   = 12;
+      public static final double kPivotVoltageLimit                   = 6;
+      public static final double kWristVoltageLimit                   = 6;
     }
 
     public static final class kCurrentLimits
