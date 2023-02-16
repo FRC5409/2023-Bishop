@@ -122,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
         resetEncoders();
 
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_drive);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_accelerometer = new BuiltInAccelerometer();

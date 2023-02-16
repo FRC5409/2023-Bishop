@@ -21,7 +21,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
   private final ShuffleboardTab sb_armTab;
-  private final GenericEntry absolutePosition, angle, rawAbsolutePosition;
+  private final GenericEntry absolutePosition, angle;
   // fix the genericentry import it
 
   /** Creates a new ArmPIDSubsystem. */
@@ -35,11 +35,13 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     getController().setTolerance(Constants.kArmSubsystem.kPositionTolerance);
     m_motor1.restoreFactoryDefaults();
     m_motor1.setIdleMode(IdleMode.kBrake);
+    m_motor1.setInverted(true);
     m_motor1.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     m_motor2.restoreFactoryDefaults();
     m_motor2.follow(m_motor1);
     m_motor2.setIdleMode(IdleMode.kBrake);
+    m_motor2.setInverted(true);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
     sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
@@ -48,7 +50,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
     absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
     angle = sb_armTab.add("Angle",0).getEntry();
-    rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
+   // rawAbsolutePosition = sb_armTab.add("RawAbsolutePosition",0).getEntry();
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
@@ -56,14 +58,14 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   @Override
   public void useOutput(double voltage, double setpoint) { // outputs the voltage 
-    if (voltage > Constants.kArmSubsystem.kVoltageLimit){
-      m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit- calculateFF());
+    if (voltage > Constants.kArmSubsystem.kVoltageLimit - calculateFF()){
+      m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit - calculateFF());
     }
-    else if (voltage < -Constants.kArmSubsystem.kVoltageLimit){
-      m_motor1.setVoltage(-Constants.kArmSubsystem.kVoltageLimit - calculateFF());
+    else if (voltage < -Constants.kArmSubsystem.kVoltageLimit - calculateFF()){
+      m_motor1.setVoltage(-Constants.kArmSubsystem.kVoltageLimit - calculateFF()); 
     }
     else{
-      m_motor1.setVoltage(voltage - calculateFF());
+      m_motor1.setVoltage(voltage- calculateFF());
     }
     // System.out.println(voltage);
   }
@@ -72,12 +74,12 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   public double getMeasurement() { // gets absolute position and returns the value 
     double ecd_value = m_encoder.getAbsolutePosition(); 
 
-    if (ecd_value < 0.3){  // used to fix the weird values from encoder
-      absolutePosition.setDouble(ecd_value + 1 - Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value +1 - Constants.kArmSubsystem.knintydegreepos;
+     if (ecd_value > 0.8){  // used to fix the weird values from encoder
+        absolutePosition.setDouble(ecd_value - 1 + Constants.kArmSubsystem.knintydegreepos);
+      return ecd_value -1 + Constants.kArmSubsystem.knintydegreepos;
     }else{
-      absolutePosition.setDouble(ecd_value - Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value - Constants.kArmSubsystem.knintydegreepos;
+      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
+      return ecd_value + Constants.kArmSubsystem.knintydegreepos;
     }
     // Return the process variable measurement here 
   }
@@ -102,18 +104,16 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     return getMeasurement()*360;
   }
 
-  public double getRawEcd(){
-    double rawEcd_value = m_encoder.getAbsolutePosition();
-    return rawEcd_value;
-  }
+  // public double getRawEcd(){
+  //   double rawEcd_value = m_encoder.getAbsolutePosition();
+  //   return rawEcd_value;
+  // }
 
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
-      getRawEcd();
       angle.setDouble(getAngle());
-      rawAbsolutePosition.setDouble(getRawEcd());
 
 
   }
