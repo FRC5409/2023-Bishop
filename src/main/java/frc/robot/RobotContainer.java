@@ -38,6 +38,9 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final GearShift cmd_lowSpeed;
+    private final GearShift cmd_midSpeed;
+    private final GearShift cmd_highSpeed;
 
     // Trajectory
     private PathPlannerTrajectory m_trajectory;
@@ -83,6 +86,13 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.leftBumper()
+            .onTrue(cmd_lowSpeed)
+            .onFalse(cmd_midSpeed);
+
+        joystickMain.rightBumper()
+            .onTrue(cmd_highSpeed)
+            .onFalse(cmd_midSpeed);
     }
 
     /**
