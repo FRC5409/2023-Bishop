@@ -12,7 +12,7 @@ public class PivotInward extends CommandBase
   public PivotInward(IntakePivot subsystem)
   {
     sys_intakePivot = subsystem;
-    setpoint = kPivotSetpoints.kPivotHandoff;
+    setpoint = kPivotSetpoints.kPivotStoring;
 
     addRequirements(sys_intakePivot);
   }

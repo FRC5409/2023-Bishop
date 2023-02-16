@@ -16,8 +16,7 @@ public class IntakeHandoffSequence extends SequentialCommandGroup
   {
     addCommands
     (
-      new WristHandoff(wrist),
-      new PivotInward(pivot)
+      new WristHandoff(wrist)
     );
   }
 }

@@ -143,14 +143,15 @@ public final class Constants
     {
       public static final class kPivotSetpoints
       {
-        public static final double kPivotPickup                       = 0.0; /* placeholder */
-        public static final double kPivotHandoff                      = 0.0; /* placeholder */
+        public static final double kPivotExtended                     = 0.0; /* placeholder */
+        public static final double kPivotStoring                      = 0.0; /* placeholder */
       }
 
       public static final class kWristSetpoints
       {
         public static final double kWristPickup                       = 0.0; /* placeholder */
         public static final double kWristHandoff                      = 0.0; /* placeholder */
+        public static final double kWristStoring                      = 0.0; /* placeholder */
       }
     }
 

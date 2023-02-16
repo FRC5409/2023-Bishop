@@ -16,7 +16,7 @@ public class PivotOutward extends CommandBase
   public PivotOutward(IntakePivot subsystem)
   {
     sys_intakePivot = subsystem;
-    setpoint = kPivotSetpoints.kPivotPickup;
+    setpoint = kPivotSetpoints.kPivotExtended;
 
     addRequirements(sys_intakePivot);
   }
