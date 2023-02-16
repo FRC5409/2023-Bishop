@@ -4,26 +4,25 @@
 
 package frc.robot.commands.Intake.Sequence;
 
-import frc.robot.Constants.kIntake.kVoltage;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeRoller;
 
 public class RollerPickup extends CommandBase
 {
-  private final Intake sys_intake;
+  private final IntakeRoller sys_intakeRoller;
 
-  public RollerPickup(Intake subsystem)
+  public RollerPickup(IntakeRoller subsystem)
   {
-    sys_intake = subsystem;
+    sys_intakeRoller = subsystem;
 
-    addRequirements(sys_intake);
+    addRequirements(sys_intakeRoller);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intake.rollerControl(kVoltage.kRollerVoltage);
+    sys_intakeRoller.rollerControl(6);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +33,7 @@ public class RollerPickup extends CommandBase
   @Override
   public void end(boolean interrupted)
   {
-    sys_intake.rollerControl(0);
+    sys_intakeRoller.rollerControl(0);
   }
 
   // Returns true when the command should end.

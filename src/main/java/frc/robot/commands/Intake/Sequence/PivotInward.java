@@ -2,26 +2,26 @@ package frc.robot.commands.Intake.Sequence;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakePivot;
 
 public class PivotInward extends CommandBase
 {
-  private final Intake sys_intake;
+  private final IntakePivot sys_intakePivot;
   private final double setpoint;
 
-  public PivotInward(Intake subsystem)
+  public PivotInward(IntakePivot subsystem)
   {
-    sys_intake = subsystem;
-    setpoint = kPivotSetpoints.kPivotDefault;
+    sys_intakePivot = subsystem;
+    setpoint = kPivotSetpoints.kPivotHandoff;
 
-    addRequirements(sys_intake);
+    addRequirements(sys_intakePivot);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intake.pivotToSetpoint(setpoint);
+    sys_intakePivot.setSetpoint(setpoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

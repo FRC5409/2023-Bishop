@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Intake_old;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -45,7 +45,18 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public void useOutput(double output, double setpoint)
   {
-    motor.set(0.2);
+    if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
+    {
+      motor.setVoltage(kIntake.kVoltageLimits.kPivotVoltageLimit);
+    }
+    else if (output < -kIntake.kVoltageLimits.kPivotVoltageLimit)
+    {
+      motor.setVoltage(-kIntake.kVoltageLimits.kPivotVoltageLimit);
+    }
+    else
+    {
+      motor.setVoltage(output);
+    }
   }
 
   @Override

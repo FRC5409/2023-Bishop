@@ -5,17 +5,19 @@
 package frc.robot.commands.Intake.Sequence;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Intake.IntakeRoller;
 
 public class IntakePickupSequence extends SequentialCommandGroup
 {
-  public IntakePickupSequence(Intake intake)
+  public IntakePickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller)
   {
     addCommands
     (
-      new PivotOutward(intake),
-      new WristPickup(intake),
-      new RollerPickup(intake)
+      new PivotOutward(pivot),
+      new WristPickup(wrist),
+      new RollerPickup(roller)
     );
   }
 }

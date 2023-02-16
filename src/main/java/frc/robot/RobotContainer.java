@@ -4,18 +4,16 @@
 
 package frc.robot;
 
-import frc.robot.Constants.kIntake.kVoltage;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.Sequence.IntakeHandoffSequence;
 import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
-// import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Intake.IntakeRoller;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,14 +37,12 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final Intake sys_intake;
+    private final IntakePivot sys_intakePivot;
+    private final IntakeWrist sys_intakeWrist;
+    private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotMove cmd_pivotMoveUp;
-    private final PivotMove cmd_pivotMoveDown;
-    private final RollerMove cmd_rollerCapture;
-    private final RollerMove cmd_rollerRelease;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -70,18 +66,20 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intake = new Intake();
+        sys_intakePivot = new IntakePivot();
+        sys_intakeWrist = new IntakeWrist();
+        sys_intakeRoller = new IntakeRoller();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-        cmd_pivotMoveUp =  new PivotMove(sys_intake, kVoltage.kPivotVoltage, true);
-        cmd_pivotMoveDown = new PivotMove(sys_intake, kVoltage.kPivotVoltage, false);
-        cmd_rollerCapture = new RollerMove(sys_intake, kVoltage.kRollerVoltage, true);
-        cmd_rollerRelease = new RollerMove(sys_intake, kVoltage.kRollerVoltage, false);
+        // cmd_pivotMoveUp =  new PivotMove(sys_intake, kVoltage.kPivotVoltage, true);
+        // cmd_pivotMoveDown = new PivotMove(sys_intake, kVoltage.kPivotVoltage, false);
+        // cmd_rollerCapture = new RollerMove(sys_intake, kVoltage.kRollerVoltage, true);
+        // cmd_rollerRelease = new RollerMove(sys_intake, kVoltage.kRollerVoltage, false);
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intake);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intake);
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -117,17 +115,17 @@ public class RobotContainer
 
     private void configureBindings()
     {
-        joystickMain.y()
-            .whileTrue(cmd_pivotMoveUp);
+        // joystickMain.y()
+        //     .whileTrue(cmd_pivotMoveUp);
 
-        joystickMain.a()
-            .whileTrue(cmd_pivotMoveDown);
+        // joystickMain.a()
+        //     .whileTrue(cmd_pivotMoveDown);
 
-        joystickMain.x()
-            .whileTrue(cmd_rollerCapture);
+        // joystickMain.x()
+        //     .whileTrue(cmd_rollerCapture);
         
-        joystickMain.b()
-            .whileTrue(cmd_rollerRelease);
+        // joystickMain.b()
+        //     .whileTrue(cmd_rollerRelease);
         
         joystickMain.rightBumper()
             .whileTrue(seq_intakePickup);

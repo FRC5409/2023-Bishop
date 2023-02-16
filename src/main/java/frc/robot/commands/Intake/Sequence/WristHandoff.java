@@ -6,26 +6,26 @@ package frc.robot.commands.Intake.Sequence;
 
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeWrist;
 
 public class WristHandoff extends CommandBase
 {
-  private final Intake sys_intake;
+  private final IntakeWrist sys_intakeWrist;
   private final double setpoint;
 
-  public WristHandoff(Intake subsystem)
+  public WristHandoff(IntakeWrist subsystem)
   {
-    sys_intake = subsystem;
+    sys_intakeWrist = subsystem;
     setpoint = kWristSetpoints.kWristHandoff;
 
-    addRequirements(sys_intake);
+    addRequirements(sys_intakeWrist);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intake.wristToSetpoint(setpoint);
+    sys_intakeWrist.setSetpoint(setpoint);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

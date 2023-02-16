@@ -130,9 +130,6 @@ public final class Constants
     public static final int id_encPivot                               = 0; /* placeholder */
     public static final int id_encWrist                               = 0; /* placeholder */
 
-    public static final int id_tofRoller                              = 0; /* placeholder */
-    public static final double kDefaultTofRange                       = 0.0; /* placeholder */
-
     public static final double kPivotP                                = 0.0; /* placeholder */
     public static final double kWristP                                = 0.0; /* placeholder */
 
@@ -146,8 +143,8 @@ public final class Constants
     {
       public static final class kPivotSetpoints
       {
-        public static final double kPivotExtended                     = 0.0; /* placeholder */
-        public static final double kPivotDefault                      = 0.0; /* placeholder */
+        public static final double kPivotPickup                       = 0.0; /* placeholder */
+        public static final double kPivotHandoff                      = 0.0; /* placeholder */
       }
 
       public static final class kWristSetpoints
@@ -157,11 +154,10 @@ public final class Constants
       }
     }
 
-    public static final class kVoltage
+    public static final class kVoltageLimits
     {
-      public static final double kPivotVoltage                        = 2.4;
-      public static final double kWristVoltage                        = 2.4;
-      public static final double kRollerVoltage                       = 4;
+      public static final double kPivotVoltageLimit                   = 12;
+      public static final double kWristVoltageLimit                   = 12;
     }
   }
 }
