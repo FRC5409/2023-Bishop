@@ -160,17 +160,13 @@ public final class Constants {
             public final static double kD                       = 0;
         }
 
-        public static class Setpoints{
-            // public final static double kSetIntakeBack = 0.55;
-            // public final static double kSetIntakeFront = -0.06;
-            // public final static double kSetPlaceBack = 0.44;
-            // public final static double kSetPlaceFront = 0.057;
-            public final static double kloadingstationcone = 0.43;
+        public static class kSetpoints{
+            public final static double kpickuploadingstation = 0.43;
             public final static double kpickupconefromfloor = 0.56;
             public final static double kplacehigh = 0.39;
             public final static double kplacelow = 0.43;
-            public final static double kdrivingpos = -0.02;
+            public final static double kIdlepos = -0.02;
         }
     
-    
-}}
+    }
+}
