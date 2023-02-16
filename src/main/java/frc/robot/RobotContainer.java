@@ -6,14 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
+import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.OpenClaw;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -33,8 +34,8 @@ public class RobotContainer {
     private final CommandXboxController joystickSecondary;
 
     // Subsystems
-    private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    public final Claw sys_claw;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -55,8 +56,8 @@ public class RobotContainer {
         m_trajectory = trajectory;
 
         // Subsystems
-        sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_claw = new Claw();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -83,6 +84,13 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+
+        joystickMain.x()
+            .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
+            .onFalse(new CloseClaw(sys_claw));
+
+        joystickMain.y()
+            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
     }
 
     /**

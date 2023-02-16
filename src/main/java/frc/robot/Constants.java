@@ -80,6 +80,31 @@ public final class Constants {
         }
     }
 
+    public static final class kClaw {
+
+        public static final int clawCANID                        = 12;
+
+        public static final int ToFCANID                         = 36;
+
+        public static final int currentLimit                     = 30;
+
+        public static final double openPosition                  = -6841;
+        public static final double closePosition                 = -13923;
+
+        public static final double zeroSpeed                     = 0.1;
+
+        public static final double encoderOffset                 = 300;
+
+        public static final double kP                            = 0.1;
+        public static final double kI                            = 0;
+        public static final double kD                            = 0;
+        public static final double kF                            = 0.02;
+
+        //distance from the claw to the object in front of it
+        public static final double objectRange                   = 150;
+
+    }
+
     public static final class kGyro {
         public static final int id_gyro                         = 10;
 
