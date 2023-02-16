@@ -10,6 +10,9 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -31,9 +34,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  // Path following trajectory
-  private PathPlannerTrajectory trajectory;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,12 +41,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    // Load trajectory paths
-    trajectory = PathPlanner.loadPath(kTrajectoryPath.path1, new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration));
-
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer(trajectory);
+    m_robotContainer = new RobotContainer();
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)

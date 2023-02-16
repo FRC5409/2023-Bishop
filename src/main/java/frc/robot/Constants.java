@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
+import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
@@ -61,11 +62,11 @@ public final class Constants {
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0.08122;
-        public static final double kvVolts                      = 2.796;
-        public static final double kaVolts                      = 0.28485;
+        public static final double ksVolts                      = 0.087295;
+        public static final double kvVolts                      = 2.7618;
+        public static final double kaVolts                      = 0.31894;
 
-        public static final double kPDriveVel                   = 3.3466;
+        public static final double kPDriveVel                   = 3.4136;
 
         public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
@@ -74,8 +75,8 @@ public final class Constants {
         public static final class kAuto {
             public static final double kMaxVolts                = 10;
 
-            public static final double kMaxSpeed                = 3;
-            public static final double kMaxAcceleration         = 3;
+            public static final double kMaxSpeed                = 2;
+            public static final double kMaxAcceleration         = 2;
 
             // Default baseline values
             // https://docs.wpilib.org/en/stable/docs/software/pathplanning/trajectory-tutorial/entering-constants.html#ramsete-parameters
@@ -122,6 +123,12 @@ public final class Constants {
 
     public static final class kTrajectoryPath {
         public static final String path1 = "Path1";
+        public static final String PLACE_CONE_MID_GRID_AND_BALANCE
+            = "Place cone mid grid and balance";
+        public static final String PLACE_CONE_WALL_GRID_AND_BALANCE
+            = "Place cone wall grid and balance";
+        public static final String PLACE_CONE_LOADING_GRID_AND_BALANCE
+            = "Place cone loading grid and balance";
     }
 
     public static final class kBalancing {
