@@ -82,7 +82,7 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                        = 12;
+        public static final int clawCANID                        = 29;
 
         public static final int ToFCANID                         = 36;
 
