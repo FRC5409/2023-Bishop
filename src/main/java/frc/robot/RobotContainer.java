@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
@@ -12,6 +11,13 @@ import frc.robot.commands.OpenClaw;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.GearShift;
+import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,9 +44,14 @@ public class RobotContainer {
     public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
     public final Candle sys_candle;
+    public final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    
+    private final GearShift cmd_lowSpeed;
+    private final GearShift cmd_midSpeed;
+    private final GearShift cmd_highSpeed;
 
     // Trajectory
     private PathPlannerTrajectory m_trajectory;
@@ -61,9 +72,14 @@ public class RobotContainer {
         sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
         sys_candle = new Candle();
+        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+
+        cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
+        cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
+        cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -98,7 +114,27 @@ public class RobotContainer {
 
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+
+        joystickMain.leftBumper()
+            .onTrue(cmd_lowSpeed)
+            .onFalse(cmd_midSpeed);
+
+        joystickMain.rightBumper()
+            .onTrue(cmd_highSpeed)
+            .onFalse(cmd_midSpeed);
+
+        // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
+        // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
+        // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
+        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
+      //  joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdlepos));
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+       // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
+       // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
     }
+
+    
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -115,7 +151,10 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+
+            .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
     }
+
 }
+
 
