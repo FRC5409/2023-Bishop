@@ -6,21 +6,12 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kDrivetrain.kAuto;
-import frc.robot.commands.ArmRotation;
 import frc.robot.commands.SetCoastMode;
 
 /**
@@ -70,7 +61,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+      // m_robotContainer.sys_candle.idleAnimation();
+      Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
+    }
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -78,6 +74,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    // m_robotContainer.sys_candle.inGameAnimation();
+    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
@@ -92,10 +90,20 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if (DriverStation.getMatchTime() <= 0.1) {
+      // m_robotContainer.sys_candle.chargedUp();
+      Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
+    }
+  }
 
   @Override
   public void teleopInit() {
+    //TODO: Remove this later
+    m_robotContainer.sys_claw.zeroEncoder();
+    // Set in game animation
+    // m_robotContainer.sys_candle.inGameAnimation();
+    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
