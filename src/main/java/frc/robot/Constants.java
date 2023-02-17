@@ -235,6 +235,32 @@ public final class Constants {
             // public final static double kIdlepos = -0.02;
 
         }
-    
+    }
+
+    public static final class kTelescope {
+
+        public static final double kCentemetreSafetyFactor      = 1.0;
+
+        public static final class kDeviceID {
+            public static final int MOTOR_CAN_ID                = 24;
+
+            public static final int MAX_LIMIT_SWITCH_ID         = 1;
+            public static final int MIN_LIMIT_SWITCH_ID         = 2;
+        }
+
+        public static final class kPID {
+            public static final double kP                       = 0.1;
+            public static final double kI                       = 0.0;
+            public static final double kD                       = 0.0;
+            public static final double kF                       = 0.0;
+        }
+
+        public static final class kSprocket {
+            public static final double kGearPitchDiameter       = 3.637; // Pitch diameter of sprocket in cm
+            public static final double kGearPitchCircumfrence   = Math.PI * kGearPitchDiameter; // Pitch Circumfrence in cm
+            
+            // public static final double kNumberOfEncoderTicks        = 42;
+            public static final double kGearConversionFactor    = kGearPitchCircumfrence * 0.2;
+        }
     }
 }

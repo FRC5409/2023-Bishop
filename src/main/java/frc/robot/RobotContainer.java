@@ -8,6 +8,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
+import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -19,6 +20,8 @@ import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Telescope;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,6 +48,7 @@ public class RobotContainer {
     public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
+    public final Telescope sys_telescope;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -73,6 +77,7 @@ public class RobotContainer {
         sys_claw = new Claw();
         sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
+        sys_telescope = new Telescope();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -123,6 +128,8 @@ public class RobotContainer {
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
+        joystickMain.a().onTrue(new TelescopeTo(sys_telescope, 10));
+
         // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
         // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
         // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
@@ -132,6 +139,7 @@ public class RobotContainer {
         joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
        // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
+
     }
 
     
