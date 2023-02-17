@@ -8,10 +8,14 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.GearShift;
 import frc.robot.commands.auto.Auto;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
@@ -44,11 +48,15 @@ public class RobotContainer {
     private final CommandXboxController joystickSecondary;
 
     // Subsystems
-    private final ExampleSubsystem sys_exampleSubsystem;
     public final Drivetrain sys_drivetrain;
+    public final ArmPIDSubsystem sys_ArmPIDSubsystem;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    
+    private final GearShift cmd_lowSpeed;
+    private final GearShift cmd_midSpeed;
+    private final GearShift cmd_highSpeed;
 
     // Trajectory & autonomous path chooser
     private PathPlannerTrajectory m_placeConeWallGridAndBalance;
@@ -67,8 +75,8 @@ public class RobotContainer {
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
 
         // Subsystems
-        sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
+        sys_ArmPIDSubsystem = new ArmPIDSubsystem();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
@@ -95,6 +103,9 @@ public class RobotContainer {
         sc_choosePath.addOption("Place cone mid grid and balance", m_placeConeMidGridAndBalance);
         sb_driveteam.add("Auto path", sc_choosePath);
         
+        cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
+        cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
+        cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -118,7 +129,45 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+
+        joystickMain.leftBumper()
+            .onTrue(cmd_lowSpeed);
+
+        joystickMain.leftBumper()
+            .onFalse(cmd_midSpeed);
+
+        joystickMain.rightBumper()
+            .onTrue(cmd_highSpeed);
+
+        joystickMain.rightBumper()
+            .onFalse(cmd_midSpeed);
+        
+
+        joystickSecondary.leftBumper()
+            .onTrue(cmd_lowSpeed);
+        
+        joystickSecondary.leftBumper()
+            .onFalse(cmd_midSpeed);
+
+
+        joystickSecondary.rightBumper()
+            .onTrue(cmd_highSpeed);
+
+        joystickSecondary.rightBumper()
+            .onFalse(cmd_midSpeed);
+
+        // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
+        // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
+        // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
+        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
+      //  joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdlepos));
+        joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+        joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+       // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
+       // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
     }
+
+    
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -138,7 +187,10 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, chosenTrajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+
+            .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
     }
+
 }
+
 
