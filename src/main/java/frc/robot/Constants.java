@@ -116,5 +116,6 @@ public final class Constants {
         public static final int kAutoLightTimeout = 1000; //ms
         public static final boolean kDoAutoLight = true; 
         public static final double kALTriggerDistance = .1;
+        public static final double targetStopAngle = 1;
     }
 }

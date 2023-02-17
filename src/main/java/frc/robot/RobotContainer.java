@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
+import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
@@ -40,6 +41,7 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final ConeNodeAim cmd_coneNodeAim;
 
     // Trajectory
     private PathPlannerTrajectory m_trajectory;
@@ -59,11 +61,11 @@ public class RobotContainer {
         // Subsystems
         sys_exampleSubsystem = new ExampleSubsystem();
         sys_drivetrain = new Drivetrain();
-        sys_limelight = new Limelight();
-
+        sys_limelight = new Limelight(joystickMain);
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -87,6 +89,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        joystickMain.y().whileTrue(cmd_coneNodeAim);
     }
 
     /**
@@ -107,4 +110,3 @@ public class RobotContainer {
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
     }
 }
-
