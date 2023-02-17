@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -74,8 +75,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
-      m_robotContainer.sys_candle.idleAnimation();
-      // Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
+      // m_robotContainer.sys_candle.idleAnimation();
+      Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
     }
   }
 
@@ -85,8 +86,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_robotContainer.sys_candle.inGameAnimation();
-    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    // m_robotContainer.sys_candle.inGameAnimation();
+    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
@@ -103,16 +104,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (DriverStation.getMatchTime() <= 0.1) {
-      m_robotContainer.sys_candle.chargedUp();
-      // Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
+      // m_robotContainer.sys_candle.chargedUp();
+      Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
     }
   }
 
   @Override
   public void teleopInit() {
+    //TODO: Remove this later
+    m_robotContainer.sys_claw.zeroEncoder();
     // Set in game animation
-    m_robotContainer.sys_candle.inGameAnimation();
-    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    // m_robotContainer.sys_candle.inGameAnimation();
+    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);

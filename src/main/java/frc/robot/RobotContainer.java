@@ -88,9 +88,13 @@ public class RobotContainer {
      */
     private void configureBindings() {
 
+        // joystickMain.x()
+        //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
+        //     .onFalse(new CloseClaw(sys_claw));
         joystickMain.x()
-            .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
-            .onFalse(new CloseClaw(sys_claw));
+        .onTrue(new OpenClaw(sys_claw))
+        .onFalse(new CloseClaw(sys_claw));
+        
 
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));

@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.kClaw;
 
 public class Claw extends SubsystemBase {
@@ -19,11 +20,11 @@ public class Claw extends SubsystemBase {
     private final TimeOfFlight clawSensor;
 
     private final ShuffleboardTab clawTab;
-    private final GenericEntry encoderPosEntry/*, encoderAbsoluteEntry*/, encoderVeloEntry, isStalledEntry, tempEntry, distanceEntry;
+    private final GenericEntry encoderPosEntry/*, encoderAbsoluteEntry*/, encoderVeloEntry, isStalledEntry, tempEntry, distanceEntry, validEntry;
     // private final GenericEntry kP, kI, kD, kF;
 
     public Claw() {
-        clawMot = new WPI_TalonFX(kClaw.clawCANID);
+        clawMot = new WPI_TalonFX(kClaw.clawCANID, Constants.kCANBus.bus_rio);
 
         configMot();
 
@@ -31,7 +32,7 @@ public class Claw extends SubsystemBase {
 
         clawSensor = new TimeOfFlight(kClaw.ToFCANID);
 
-        clawSensor.setRangingMode(RangingMode.Short, 100);
+        clawSensor.setRangingMode(RangingMode.Short, 20);
 
         zeroEncoder();
 
@@ -48,6 +49,7 @@ public class Claw extends SubsystemBase {
         isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
         tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
         distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry(); 
+        validEntry = clawTab.add("Is Valid", isValid()).getEntry();
     }
 
     @Override
@@ -60,6 +62,7 @@ public class Claw extends SubsystemBase {
         isStalledEntry.setBoolean(isStalled());
         tempEntry.setDouble(getMotorTempature());
         distanceEntry.setDouble(getDistanceFromClaw());
+        validEntry.setBoolean(isValid());
 
         // setPIDF(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0), kF.getDouble(0));
     }
@@ -227,6 +230,10 @@ public class Claw extends SubsystemBase {
 
     public double getDistanceFromClaw() {
         return clawSensor.getRange();
+    }
+
+    public boolean isValid() {
+        return clawSensor.isRangeValid();
     }
 
 }

@@ -19,8 +19,9 @@ public class CloseClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
+        // m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
         m_claw.clawGoTo(kClaw.closePosition);
+        System.out.println("Close");
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +38,9 @@ public class CloseClaw extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(m_claw.getEncoderPosition()) >= 17500;
+        // return Math.abs(m_claw.getEncoderPosition()) >= 17500;
+        // return m_claw.getDistanceFromClaw() <= (kClaw.objectRange + 50) && m_claw.getDistanceFromClaw() != 0;
+        return Math.abs(kClaw.closePosition - m_claw.getEncoderPosition()) <= kClaw.encoderOffset;
     }
 
 }
