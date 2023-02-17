@@ -51,7 +51,7 @@ public class Telescope extends SubsystemBase {
 
         c_pidController = mot_extender.getPIDController();
         configPID();
-        c_pidController.setOutputRange(-0.5, 0.5);
+        c_pidController.setOutputRange(-1, 1);
         mot_extender.burnFlash();
 
         s_maxLimSwitch = new DigitalInput(Constants.kTelescope.kDeviceID.MAX_LIMIT_SWITCH_ID);

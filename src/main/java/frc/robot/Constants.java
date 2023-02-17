@@ -260,7 +260,13 @@ public final class Constants {
             public static final double kGearPitchCircumfrence   = Math.PI * kGearPitchDiameter; // Pitch Circumfrence in cm
             
             // public static final double kNumberOfEncoderTicks        = 42;
-            public static final double kGearConversionFactor    = kGearPitchCircumfrence * 0.2;
+            public static final double kGearConversionFactor    = kGearPitchCircumfrence * 0.05;
+        }
+
+        public static final class kDestinations {
+            public static final double kExtended                = 30.0;
+            public static final double kRetracted               = 2.0;
+            public static final double kMid                     = 14.0;
         }
     }
 }
