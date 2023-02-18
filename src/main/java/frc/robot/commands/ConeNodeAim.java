@@ -28,7 +28,7 @@ public class ConeNodeAim extends CommandBase {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
     }
-
+    
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
@@ -83,6 +83,6 @@ public class ConeNodeAim extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return Math.abs(sys_limelight.getXOffset()) <= Constants.kLimelight.targetStopAngle && sys_limelight.isVisible();
+        return (Math.abs(sys_limelight.getXOffset()) <= Constants.kLimelight.KretroTargetTolerance && sys_limelight.isVisible());
     }
 }

@@ -180,7 +180,7 @@ public class Limelight extends SubsystemBase {
 
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
-        System.out.println(System.currentTimeMillis() - lastLightUpdate);
+        //System.out.println(System.currentTimeMillis() - lastLightUpdate);
         if (Constants.kLimelight.kDoAutoLight) {
             lastLightUpdate = System.currentTimeMillis();
             if (targetDistance >= Constants.kLimelight.kALTriggerDistance
