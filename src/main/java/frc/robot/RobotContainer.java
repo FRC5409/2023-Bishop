@@ -6,11 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kTelescope;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.auto.Auto;
+import frc.robot.commands.sequencing.ArmToPos;
 import frc.robot.commands.sequencing.RotateArmGroup;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -18,7 +20,6 @@ import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.commands.GearShift;
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Telescope;
 
@@ -113,8 +114,8 @@ public class RobotContainer {
         //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
         //     .onFalse(new CloseClaw(sys_claw));
         joystickMain.x()
-        .onTrue(new OpenClaw(sys_claw))
-        .onFalse(new CloseClaw(sys_claw));
+            .whileTrue(new OpenClaw(sys_claw)
+            .andThen(new CloseClaw(sys_claw)));
         
 
         joystickMain.y()
@@ -128,9 +129,10 @@ public class RobotContainer {
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
-        joystickSecondary.povUp().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
-        joystickSecondary.povLeft().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
-        joystickSecondary.povDown().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+        joystickSecondary.povUp().onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToTop, kTelescope.kDestinations.kExtended));
+        joystickSecondary.povRight().onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, kTelescope.kDestinations.kMid));
+
+        joystickSecondary.povDown().onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
         // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor

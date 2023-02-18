@@ -31,7 +31,7 @@ public class Telescope extends SubsystemBase {
     private static final double kF = Constants.kTelescope.kPID.kF;
 
     public interface LimitSwitch {
-        public boolean getActiveLimitSwitch();
+        public boolean isSwitchOn();
     }
 
     private LimitSwitch activeSwitch;
@@ -57,7 +57,7 @@ public class Telescope extends SubsystemBase {
 
         c_pidController = mot_extender.getPIDController();
         configPID();
-        c_pidController.setOutputRange(-1, 1);
+        c_pidController.setOutputRange(-1.25, 1.25);
         mot_extender.burnFlash();
 
         s_maxLimSwitch = new DigitalInput(Constants.kTelescope.kDeviceID.MAX_LIMIT_SWITCH_ID);
