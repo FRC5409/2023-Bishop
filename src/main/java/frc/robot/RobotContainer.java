@@ -44,7 +44,7 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
-    public final Candle sys_candle;
+    // public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
@@ -73,7 +73,7 @@ public class RobotContainer {
         // Subsystems
         sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
-        sys_candle = new Candle();
+        // sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
 
@@ -111,8 +111,8 @@ public class RobotContainer {
         //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
         //     .onFalse(new CloseClaw(sys_claw));
         joystickMain.x()
-        .onTrue(new OpenClaw(sys_claw))
-        .onFalse(new CloseClaw(sys_claw));
+        .onTrue(new CloseClaw(sys_claw))
+        .onFalse(new OpenClaw(sys_claw));
         
 
         joystickMain.y()

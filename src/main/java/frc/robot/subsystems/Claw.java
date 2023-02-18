@@ -93,6 +93,15 @@ public class Claw extends SubsystemBase {
     }
 
     /**
+     * Sets the Neutral Mode
+     * @param newMode Brake, Coast
+     */
+
+    public void setNeutralMode(NeutralMode newMode) {
+        clawMot.setNeutralMode(newMode);
+    }
+
+    /**
      * Sets the PIDF values on the motr
      * @param p proportional
      * @param i intergral
