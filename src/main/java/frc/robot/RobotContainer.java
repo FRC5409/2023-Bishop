@@ -4,6 +4,25 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kTelescope;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.TelescopeTo;
+import frc.robot.commands.auto.Auto;
+import frc.robot.commands.sequencing.ArmToPos;
+import frc.robot.commands.sequencing.RotateArmGroup;
+import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.Claw;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.commands.GearShift;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Telescope;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -150,7 +169,7 @@ public class RobotContainer
         joystickMain.a()
             .whileTrue(seq_intakePickup)
             .whileFalse(seq_intakeHandoff);
-        
+
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
@@ -175,6 +194,13 @@ public class RobotContainer
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+
+        // joystickSecondary.povUp()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToTop, kTelescope.kDestinations.kExtended));
+        // joystickSecondary.povRight()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, kTelescope.kDestinations.kMid));
+        // joystickSecondary.povDown()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         joystickSecondary.x()
             .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
