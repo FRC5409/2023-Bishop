@@ -87,13 +87,6 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     updateRobotPosition();
     autoLight();
-    double[] cropValues = new double[4];
-    cropValues[0] = 0;
-    cropValues[1] = 1.0;
-    cropValues[2] = 0;
-    cropValues[3] = 1.0;
-
-    setCropSize(cropValues);
   }
 
   public void updateRobotPosition() {
@@ -142,5 +135,10 @@ public class Limelight extends SubsystemBase {
 
   public void setCropSize(double[] cropSize){
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
+  }
+
+  public void dynamicCrop(char targetType, double[] targetPos){
+    //Target pos is to be referenced in the following format {x, y}
+    ;    
   }
 }
