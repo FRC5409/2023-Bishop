@@ -19,9 +19,9 @@ public class ConeNodeAim extends CommandBase {
     double forwardSpeed, dirInRad, turning;
 
     /** Creates a new TargetAim. */
-    public ConeNodeAim(Limelight limelightR, Drivetrain drivetrain, CommandXboxController joystick) {
+    public ConeNodeAim(Limelight limelight, Drivetrain drivetrain, CommandXboxController joystick) {
 
-        sys_limelight = limelightR;
+        sys_limelight = limelight;
         sys_drivetrain = drivetrain;
         m_joystick = joystick;
 
@@ -44,7 +44,7 @@ public class ConeNodeAim extends CommandBase {
         forwardSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
 
         if (!sys_limelight.isVisible()) {
-            dirInRad = sys_limelight.getTurningDir() * (Math.PI / 180); // dir on the controller
+            dirInRad = sys_limelight.getTurningDir() * (Math.PI / 180); // dir on the controller converted to radians
             sys_drivetrain.arcadeDrive(forwardSpeed, m_joystick.getLeftX()); // Lets the driver drive around
         } else {
             dirInRad = sys_limelight.getXOffset() * (Math.PI / 180);
@@ -52,9 +52,9 @@ public class ConeNodeAim extends CommandBase {
         }
 
         if (dirInRad != 0) {
-            turning = (Math.pow(Math.E, (Math.abs(dirInRad))) - 0.8);
-            if (turning < 0.25) {
-                turning = 0.25;
+            turning = (Math.pow(Math.E, (Math.abs(dirInRad))) - 1);
+            if (turning < Constants.kLimelight.KretroTargetFF) {
+                turning = Constants.kLimelight.KretroTargetFF;
             }
             turning *= ((Math.abs(dirInRad) / dirInRad));
         }
@@ -83,6 +83,6 @@ public class ConeNodeAim extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false; // Math.abs(sys_limelight.getXOffset()) <= Constants.kLimelight.targetStopAngle && sys_limelight.isVisible() && turning <= 0.25;
+        return Math.abs(sys_limelight.getXOffset()) <= Constants.kLimelight.targetStopAngle && sys_limelight.isVisible();
     }
 }
