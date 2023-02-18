@@ -62,10 +62,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+    // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
       // m_robotContainer.sys_candle.idleAnimation();
-      Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
-    }
+      // Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
+    // }
   }
 
   @Override
@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_robotContainer.sys_candle.inGameAnimation();
-    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     if (DriverStation.getMatchTime() <= 0.1) {
       // m_robotContainer.sys_candle.chargedUp();
-      Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
+      // Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
     }
   }
 
@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.sys_claw.zeroEncoder();
     // Set in game animation
     // m_robotContainer.sys_candle.inGameAnimation();
-    Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);

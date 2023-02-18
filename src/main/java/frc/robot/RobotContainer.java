@@ -13,6 +13,7 @@ import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.auto.Auto;
+import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
@@ -57,18 +58,20 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
-    public final Candle sys_candle;
+    // public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
+    private final BalancingChargeStation cmd_balance;
     
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
 
     // Trajectory & autonomous path chooser
+    private PathPlannerTrajectory m_testingPath;
     private PathPlannerTrajectory m_placeConeWallGridAndBalance;
     private PathPlannerTrajectory m_placeConeLoadingGridAndBalance;
     private PathPlannerTrajectory m_placeConeMidGridAndBalance;
@@ -87,15 +90,19 @@ public class RobotContainer {
         // Subsystems
         sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
-        sys_candle = new Candle();
+        // sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
+        cmd_balance = new BalancingChargeStation(sys_drivetrain);
 
         // Trajectory & autonomous path chooser
         PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
+        m_testingPath = PathPlanner.loadPath(
+                                                    kTrajectoryPath.TESTING_PATH,
+                                                    pathConstraints);
         m_placeConeWallGridAndBalance = PathPlanner.loadPath(
                                                     kTrajectoryPath.PLACE_CONE_WALL_GRID_AND_BALANCE,
                                                     pathConstraints,
@@ -114,6 +121,7 @@ public class RobotContainer {
         sc_choosePath.setDefaultOption("Place cone wall grid and balance", m_placeConeWallGridAndBalance);
         sc_choosePath.addOption("Place cone loading grid and balance", m_placeConeLoadingGridAndBalance);
         sc_choosePath.addOption("Place cone mid grid and balance", m_placeConeMidGridAndBalance);
+        sc_choosePath.addOption("Testing path", m_testingPath);
         sb_driveteam.add("Auto path", sc_choosePath);
         
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
@@ -173,7 +181,10 @@ public class RobotContainer {
       //  joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdlepos));
         joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
         joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
-       // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
+       joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kPlaceHigh));
+
+       joystickMain.b()
+        .whileTrue(cmd_balance);
        // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
     }
 
@@ -195,7 +206,7 @@ public class RobotContainer {
         // Reset odometry
         sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, chosenTrajectory)
+        return new Auto(sys_drivetrain, sys_ArmPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
 
             .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));

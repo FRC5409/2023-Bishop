@@ -1,6 +1,9 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.kBalancing;
 import frc.robot.subsystems.Drivetrain;
@@ -22,7 +25,7 @@ public class BalancingChargeStation extends PIDCommand {
             new PIDController(kP, kI, kD),
             drivetrain::getPitch,
             kBalancing.targetPitch,
-            output -> drivetrain.arcadeDrive(-output, 0),
+            output -> drivetrain.arcadeDrive(output, 0),
             drivetrain
         );
 
@@ -42,13 +45,13 @@ public class BalancingChargeStation extends PIDCommand {
     }
 
     // Called when the command is initially scheduled.
-    // @Override
-    // public void initialize() {
-    //     // Update PID values from Shuffleboard
-    //     getController().setP(nt_kP.getDouble(0));
-    //     getController().setI(nt_kI.getDouble(0));
-    //     getController().setD(nt_kD.getDouble(0));
-    // }
+    @Override
+    public void initialize() {
+        // Update PID values from Shuffleboard
+        // getController().setP(nt_kP.getDouble(0));
+        // getController().setI(nt_kI.getDouble(0));
+        // getController().setD(nt_kD.getDouble(0));
+    }
 
     // Returns true when the command should end.
     @Override

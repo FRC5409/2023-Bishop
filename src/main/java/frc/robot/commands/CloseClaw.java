@@ -31,6 +31,7 @@ public class CloseClaw extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        System.out.println("closed claw");
         m_claw.stopMot();
         m_claw.setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, 0);
     }

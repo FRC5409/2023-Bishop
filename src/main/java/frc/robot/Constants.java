@@ -50,23 +50,23 @@ public final class Constants {
         }
 
         public static final class kCANCoder {
-            public static final int id_leftEncoder              = 30;
-            public static final int id_rightEncoder             = 29;
+            public static final int id_leftEncoder              = 29;
+            public static final int id_rightEncoder             = 30;
             public static final double enc_CountsPerRevolution  = 4096;
             public static final double enc_SensorCoefficient    = (Math.PI * kDrivetrain.kWheel.wheelDiameter) / enc_CountsPerRevolution;
             public static final String enc_UnitString           = "m";
         }
 
         public static final class kWheel {
-            public static final double wheelDiameter            = 0.1; // metres, placeholder value
+            public static final double wheelDiameter            = 0.15;
             public static final double wheelCircumference       = Math.PI * wheelDiameter; // metres
         }
 
-        public static final double ksVolts                      = 0.087295;
-        public static final double kvVolts                      = 2.7618;
-        public static final double kaVolts                      = 0.31894;
+        public static final double ksVolts                      = 0.18289;
+        public static final double kvVolts                      = 1.9159;
+        public static final double kaVolts                      = 0.29742;
 
-        public static final double kPDriveVel                   = 3.4136;
+        public static final double kPDriveVel                   = 2.5398;
 
         public static final double kTrackWidth                  = 0.6;
         public static final DifferentialDriveKinematics kDriveKinematics
@@ -147,7 +147,7 @@ public final class Constants {
     }
 
     public static final class kTrajectoryPath {
-        public static final String path1 = "Path1";
+        public static final String TESTING_PATH = "Path1";
         public static final String PLACE_CONE_MID_GRID_AND_BALANCE
             = "Place cone mid grid and balance";
         public static final String PLACE_CONE_WALL_GRID_AND_BALANCE
@@ -161,7 +161,7 @@ public final class Constants {
         public static final double maxAngle                     = 33.25;
         public static final double angleTolerance               = 1.5;
 
-        public static final double kP                           = 0.04;
+        public static final double kP                           = 0.036;
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
@@ -233,8 +233,9 @@ public final class Constants {
         }
 
         public static class kSetpoints{
-            public final static double kfront = 0.5; 
-            public final static double kback = 0.0; 
+            public final static double kfront = 0.5;
+            public final static double kback = 0.0;
+            public final static double kPlaceHigh = 0.06;
 
         }
     }
