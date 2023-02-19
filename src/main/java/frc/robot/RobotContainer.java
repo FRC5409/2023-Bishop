@@ -111,7 +111,7 @@ public class RobotContainer {
         //     .onFalse(new CloseClaw(sys_claw));
         joystickMain.x()
         .onTrue(new CloseClaw(sys_claw))
-        .onFalse(new OpenClaw(sys_claw));
+        .onFalse(new OpenClaw(sys_claw, false));
         
 
         joystickMain.y()
