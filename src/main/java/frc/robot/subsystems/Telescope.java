@@ -22,6 +22,7 @@ public class Telescope extends SubsystemBase {
     private final CANSparkMax mot_extender;
 
     private final RelativeEncoder s_encoder;
+    private double prevPos;
 
     private final SparkMaxPIDController c_pidController;
 
@@ -123,6 +124,14 @@ public class Telescope extends SubsystemBase {
         } else if (s_encoder.getVelocity() < -0.5) {
             return -1;
         } else return 0;
+    }
+
+    public double getPrevPos() {
+        return prevPos;
+    }
+
+    public void setPrevPos(double prevPos) {
+        this.prevPos = prevPos;
     }
 
     @Override
