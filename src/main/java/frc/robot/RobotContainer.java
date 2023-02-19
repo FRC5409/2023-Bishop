@@ -19,7 +19,6 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Telescope;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -44,7 +43,7 @@ public class RobotContainer {
     // Subsystems
     public final Drivetrain sys_drivetrain;
     public final Claw sys_claw;
-    // public final Candle sys_candle;
+    public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
@@ -73,7 +72,7 @@ public class RobotContainer {
         // Subsystems
         sys_drivetrain = new Drivetrain();
         sys_claw = new Claw();
-        // sys_candle = new Candle();
+        sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
 

@@ -19,7 +19,6 @@ public class OpenClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.setPIDF(kClaw.kP, 0, 0, 0);
         m_claw.clawGoTo(kClaw.openPosition);
     }
 
@@ -30,16 +29,17 @@ public class OpenClaw extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_claw.stopMot();
+        // m_claw.stopMot();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return 
-        Math.abs(kClaw.openPosition - m_claw.getEncoderPosition()) <= kClaw.encoderOffset
-        && 
-        (m_claw.getDistanceFromClaw() <= kClaw.objectRange && m_claw.getDistanceFromClaw() != 0);
+        // return 
+        // Math.abs(kClaw.openPosition - m_claw.getEncoderPosition()) <= kClaw.encoderOffset
+        // && 
+        // (m_claw.getDistanceFromClaw() <= kClaw.objectRange && m_claw.getDistanceFromClaw() != 0);
+        return true;
     }
 
 }

@@ -48,6 +48,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(trajectory);
 
+    m_robotContainer.sys_claw.zeroEncoder();
+
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
       .negate()
@@ -74,10 +76,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
-      // m_robotContainer.sys_candle.idleAnimation();
+    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+      m_robotContainer.sys_candle.idleAnimation();
       // Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
-    // }
+    }
   }
 
   @Override
@@ -86,7 +88,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_robotContainer.sys_candle.inGameAnimation();
+    m_robotContainer.sys_candle.inGameAnimation();
     // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode
@@ -104,17 +106,15 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (DriverStation.getMatchTime() <= 0.1) {
-      // m_robotContainer.sys_candle.chargedUp();
+      m_robotContainer.sys_candle.chargedUp();
       // Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
     }
   }
 
   @Override
   public void teleopInit() {
-    //TODO: Remove this later
-    m_robotContainer.sys_claw.zeroEncoder();
     // Set in game animation
-    // m_robotContainer.sys_candle.inGameAnimation();
+    m_robotContainer.sys_candle.inGameAnimation();
     // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
 
     // Set brake mode

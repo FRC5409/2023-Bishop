@@ -131,7 +131,7 @@ public final class Constants {
         public static final double kP                            = 0.1;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
-        public static final double kF                            = 0.02;
+        public static final double kF                            = 0;
 
         //distance from the claw to the object in front of it
         public static final double objectRange                   = 150;

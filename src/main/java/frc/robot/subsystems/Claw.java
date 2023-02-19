@@ -20,7 +20,7 @@ public class Claw extends SubsystemBase {
     private final TimeOfFlight clawSensor;
 
     private final ShuffleboardTab clawTab;
-    private final GenericEntry encoderPosEntry/*, encoderAbsoluteEntry*/, encoderVeloEntry, isStalledEntry, tempEntry, distanceEntry, validEntry;
+    private final GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry;
     // private final GenericEntry kP, kI, kD, kF;
 
     public Claw() {
@@ -44,12 +44,10 @@ public class Claw extends SubsystemBase {
         // kF = clawTab.add("kF", 0).getEntry();
 
         encoderPosEntry = clawTab.add("Encoder", getEncoderPosition()).getEntry();
-        // encoderAbsoluteEntry = clawTab.add("Absolute Encoder", getAbsolutePosition()).getEntry();
         encoderVeloEntry = clawTab.add("Encoder Velo", getEncoderVelocity()).getEntry();
         isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
         tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
         distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry(); 
-        validEntry = clawTab.add("Is Valid", isValid()).getEntry();
     }
 
     @Override
@@ -57,12 +55,10 @@ public class Claw extends SubsystemBase {
         // This method will be called once per scheduler run
 
         encoderPosEntry.setDouble(getEncoderPosition());
-        // encoderAbsoluteEntry.setDouble(getAbsolutePosition());
         encoderVeloEntry.setDouble(getEncoderVelocity());
         isStalledEntry.setBoolean(isStalled());
         tempEntry.setDouble(getMotorTempature());
         distanceEntry.setDouble(getDistanceFromClaw());
-        validEntry.setBoolean(isValid());
 
         // setPIDF(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0), kF.getDouble(0));
     }
@@ -74,7 +70,8 @@ public class Claw extends SubsystemBase {
     }
 
     /**
-     * Configures the motor
+     * Configures the motor (NeutralMode, Current Limiting, PIDF values)
+     * 
      */
 
     public void configMot() {
@@ -87,9 +84,8 @@ public class Claw extends SubsystemBase {
         config.currentLimit = kClaw.currentLimit;
         clawMot.configSupplyCurrentLimit(config);
 
-        setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, 0);
+        setPIDF(kClaw.kP, kClaw.kI, kClaw.kD, kClaw.kF);
 
-        // clawMot.burnFlash();
     }
 
     /**
@@ -159,15 +155,6 @@ public class Claw extends SubsystemBase {
     }
 
     /**
-     * Gets the duty cycle encoder position
-     * @return position
-     */
-
-    // public double getAbsolutePosition() {
-    //     return clawAbsoluteEncoder.getAbsolutePosition();
-    // }
-
-    /**
      * Get the encoder absolute velocity
      * @return Absolute velocity
      */
@@ -183,14 +170,6 @@ public class Claw extends SubsystemBase {
     public void zeroEncoder() {
         clawMot.setSelectedSensorPosition(0);
     }
-
-    /**
-     * Reset the Duty Cycle Encoder
-     */
-
-    // public void resetDutyEncoder() {
-    //     clawAbsoluteEncoder.reset();
-    // }
 
     /**
      * Spin the claw motor at
@@ -239,10 +218,6 @@ public class Claw extends SubsystemBase {
 
     public double getDistanceFromClaw() {
         return clawSensor.getRange();
-    }
-
-    public boolean isValid() {
-        return clawSensor.isRangeValid();
     }
 
 }
