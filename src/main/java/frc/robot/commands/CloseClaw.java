@@ -1,10 +1,10 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.Claw;
 
-public class CloseClaw extends InstantCommand {
+public class CloseClaw extends CommandBase {
 
     private final Claw m_claw;
 
@@ -21,10 +21,18 @@ public class CloseClaw extends InstantCommand {
         m_claw.clawGoTo(kClaw.closePosition);
     }
 
+    @Override
+    public void execute() {}
+
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // m_claw.stopMot();
+        m_claw.stopMot();
+    }
+
+    @Override 
+    public boolean isFinished() {
+        return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
     }
 
 }

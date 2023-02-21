@@ -32,12 +32,19 @@ public class OpenClaw extends CommandBase {
     public void end(boolean interrupted) {
         if (isAuto) {
             m_claw.closeClaw();
+        } else {
+            m_claw.stopMot();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return !isAuto || m_claw.getDistanceFromClaw() <= kClaw.objectRange;
+        // return (!isAuto) &&  || m_claw.getDistanceFromClaw() <= kClaw.objectRange;
+        if (isAuto) {
+            return m_claw.getDistanceFromClaw() <= kClaw.objectRange;
+        } else {
+            return Math.abs(m_claw.getEncoderPosition() - kClaw.openPosition) <= kClaw.encoderOffset;
+        }
     }
 
 }
