@@ -37,7 +37,7 @@ public class Limelight extends SubsystemBase {
 
     // time
     private double lastLightUpdate;
-
+    
     private double[] positionDefaults = new double[] { 0 };
 
     // Important NetworkTable values
@@ -53,25 +53,13 @@ public class Limelight extends SubsystemBase {
 
     // Shuffleboard Tab and Entries
     private ShuffleboardTab sb_limelight;
-    private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
-    // private GenericEntry cropEntry;
+    private GenericEntry xOffEntry,
+                         yOffEntry,
+                         targetAreaEntry,
+                         visibilityEntry,
+                         ledModeEntry;
 
 
-    //setting startup millis
-    lastLightUpdate = System.currentTimeMillis();
-  }
-  public void updateRobotPosition() {
-    LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
-    
-    //get the position of the robot in 3d fieldspace as calculated by fiducial targets
-    robotPos = NetworkTableInstance.getDefault()
-      .getTable("limelight")
-      .getEntry("botpose")
-      .getDoubleArray(positionDefaults); //TEMPORARY
-    
-    //updating target size data to shuffleboard 
-    targetDistance = LimelightHelpers.getTA("");
-    targetSizeWidget.setDouble(LimelightHelpers.getTA(""));
     public Limelight(CommandXboxController joystick) {
         // networktables
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -136,41 +124,6 @@ public class Limelight extends SubsystemBase {
         c_joystick = new CommandXboxController(0);
     }
 
-  public void autoLight(){
-    //MIGHT BE EXPENSIVE ON THE CPU
-    System.out.println(System.currentTimeMillis() - lastLightUpdate);
-    if (Constants.kLimelight.kDoAutoLight){
-      lastLightUpdate = System.currentTimeMillis();
-      if (targetDistance >= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout){
-        LimelightHelpers.setLEDMode_ForceOn("");
-      } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout){
-        LimelightHelpers.setLEDMode_ForceOff("");
-      }
-    @Override
-    public void periodic() {
-        updateRobotPosition();
-        autoLight();
-
-        // {Retroreflective tape} Turning direction is based on POV
-        double pov = c_joystick.getHID().getPOV();
-        if (pov == 270)
-            turningDir = -1;
-        else if (pov == 90)
-            turningDir = 1;
-
-        /* getTargetAngle();// Getting the angle to the target
-        lowTargetDist = getDistanceToTarget(0);// Getting distance to target(s) using trigonometry
-        highTargetDist = getDistanceToTarget(1); */
-
-        // {Retroreflective tape} Updating data on Shuffleboard
-        xOffEntry.setDouble(getXOffset());
-        yOffEntry.setDouble(getYOffset());
-        targetAreaEntry.setDouble(nt_targetArea.getDouble(0.0));
-        ledModeEntry.setDouble(nt_ledMode.getDouble(0.0));
-        visibilityEntry.setBoolean(isVisible());
-        // cropEntry.setDoubleArray(getCrop());
-    }
-
     public void updateRobotPosition() {
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
 
@@ -201,6 +154,9 @@ public class Limelight extends SubsystemBase {
             ryWidget.setDouble(robotPos[4]);
             rzWidget.setDouble(robotPos[5]);
         }
+
+        //setting startup millis
+        lastLightUpdate = System.currentTimeMillis();
     }
 
     public void autoLight() {
@@ -208,11 +164,9 @@ public class Limelight extends SubsystemBase {
         //System.out.println(System.currentTimeMillis() - lastLightUpdate);
         if (Constants.kLimelight.kDoAutoLight) {
             lastLightUpdate = System.currentTimeMillis();
-            if (targetDistance >= Constants.kLimelight.kALTriggerDistance
-                    && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
+            if (targetDistance >= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
                 LimelightHelpers.setLEDMode_ForceOn("");
-            } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance
-                    && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
+            } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
                 LimelightHelpers.setLEDMode_ForceOff("");
             }
         }
@@ -246,7 +200,7 @@ public class Limelight extends SubsystemBase {
 
     /** Sets data in an entry */
     public void setData(String key, double data) {
-         limelightTable.getEntry(key).setDouble(data);
+            limelightTable.getEntry(key).setDouble(data);
     }
 
     /** Gets the turning direction */
@@ -264,60 +218,17 @@ public class Limelight extends SubsystemBase {
         return  limelightTable.getEntry(key).getDouble(0);
     }
 
-    // Mostly unused code for retroreflective tape tracking
-    /* public double getTargetAngle() {
-        return (kLimelight.mountAngle + getYOffset()) * (Math.PI / 180);
+    public void setCropSize(double[] cropSize){
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
     }
 
-    public double getDistanceToTarget(int level) {
-        if (level == 0)
-            return (kLimelight.lowTargetHeight - kLimelight.heightOffFloor) / Math.tan(angleToTarget);
-        else if (level == 1)
-            return (kLimelight.highTargetHeight - kLimelight.heightOffFloor) / Math.tan(angleToTarget);
-        else
-            return -1;
+    public void dynamicCrop(char targetType, double[] targetPos){
+        ;    
     }
-
-    public double[] getCrop() {
-        return nt_crop.getDoubleArray(new double[] { 0, 0, 0, 0 });
+    
+    @Override
+    public void periodic() {
+        updateRobotPosition();
+        autoLight();
     }
-
-    public void setCrop(double xMin, double xMax, double yMin, double yMax) {
-        nt_crop.setDoubleArray(new double[] { xMin, xMax, yMin, yMax });
-    }
-
-    public int pickTarget() {
-        setCrop(
-                kLimelight.kCrop.kUpperHalf.minX, kLimelight.kCrop.kUpperHalf.maxX,
-                kLimelight.kCrop.kUpperHalf.minY, kLimelight.kCrop.kUpperHalf.maxY);
-
-        if (isVisible())
-            return 1;
-
-        setCrop(
-                kLimelight.kCrop.kLowerHalf.minX, kLimelight.kCrop.kLowerHalf.maxX,
-                kLimelight.kCrop.kLowerHalf.minY, kLimelight.kCrop.kLowerHalf.maxY);
-
-        if (isVisible())
-            return 0;
-
-        else
-            return -1;
-    } */
-}
-
-  public void setCropSize(double[] cropSize){
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
-  }
-
-  public void dynamicCrop(char targetType, double[] targetPos){
-    ;    
-  }
-  
-  @Override
-  public void periodic() {
-    updateRobotPosition();
-    autoLight();
-  }
-}
 }
