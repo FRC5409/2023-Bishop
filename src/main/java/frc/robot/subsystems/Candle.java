@@ -31,7 +31,7 @@ public class Candle extends SubsystemBase {
     public Candle() {
         candle = new CANdle(kCANdle.kConfig.CANID);
 
-        candle.configLEDType(LEDStripType.RGB);
+        candle.configLEDType(LEDStripType.GRB);
 
         candle.animate(null, 0);
 
@@ -96,6 +96,8 @@ public class Candle extends SubsystemBase {
               LEDOff[2] = b;
               break;
             case ChargedUp:
+              maxCharge = 0;
+              currentChargeLocation = 0;
               currentAnimationSlot = 4;
               LEDOff[0] = r;
               LEDOff[1] = g;
@@ -269,9 +271,9 @@ public class Candle extends SubsystemBase {
 
     public void idleAnimation() {
       if (DriverStation.getAlliance() == Alliance.Red) {
-        setAnimation(AnimationTypes.SinFlow, 150, 0, 0);
+        setAnimation(AnimationTypes.SinWave, 150, 0, 0);
       } else {
-        setAnimation(AnimationTypes.SinFlow, 0, 0, 255);
+        setAnimation(AnimationTypes.SinWave, 0, 0, 255);
       }
     }
 

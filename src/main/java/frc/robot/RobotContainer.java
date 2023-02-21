@@ -147,19 +147,19 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        // An example command will be run in autonomous
+    // public Command getAutonomousCommand() {
+    //     // An example command will be run in autonomous
 
-        // Disable ramp rate
-        sys_drivetrain.rampRate(0);
-        // Reset odometry
-        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
-        // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, m_trajectory)
-            .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
+    //     // Disable ramp rate
+    //     // sys_drivetrain.rampRate(0);
+    //     // // Reset odometry
+    //     // sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+    //     // // Run auto path, then stop and re-set ramp rate
+    //     // return new Auto(sys_drivetrain, m_trajectory)
+    //     //     .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
 
-            .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
-    }
+    //     //     .andThen(() -> sys_drivetrain.rampRate(kDriveteam.rampRate));
+    // }
 
 }
 
