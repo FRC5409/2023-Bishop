@@ -173,7 +173,7 @@ public class RobotContainer
         // Run auto path, then stop and re-set ramp rate
         return new Auto(sys_drivetrain, m_trajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kMotor.rampRate));
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
 }
 

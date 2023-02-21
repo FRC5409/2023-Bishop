@@ -165,7 +165,7 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        rampRate(kDrivetrain.kMotor.rampRate);
+        rampRate(kDrivetrain.kDriveteam.rampRate);
     }
 
     /**
