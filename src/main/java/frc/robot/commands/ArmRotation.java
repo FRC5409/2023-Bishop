@@ -4,36 +4,38 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ArmPIDSubsystem;
 
-/** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
+public class ArmRotation extends CommandBase {
+  private final ArmPIDSubsystem sys_arm;
+  private double setpoint;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+
+  /** Creates a new ArmRotation2. */
+  public ArmRotation(ArmPIDSubsystem armPIDSubsystem, double setpoint) {
+    sys_arm = armPIDSubsystem;
+    this.setpoint = setpoint;
+
+    addRequirements(sys_arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
-
+  public void initialize() {
+    sys_arm.setSetpoint(setpoint);
+    sys_arm.enable();
+  
+  }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    sys_arm.disable();
+  }
 
   // Returns true when the command should end.
   @Override

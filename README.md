@@ -23,3 +23,34 @@ Button Binding (official):
 * x - intake down while hold, back up and ready for the arm to grab the game piece from the intake. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+## CAN ID's
+| CAN | CAN Bus | Component | Subsystem(s) |
+|:---:|:--------|:----------|:-------------|
+|2|rio|PDP|-
+|3|rio|PCM|-
+|10|rio|Pigeon 2.0|*DR*
+|19|rio|CANdle|-
+|20|drive|Falcon Left 1|*DR*, *LLR*
+|21|drive|Falcon Left 2|*DR*, *LLR*
+|22|drive|Falcon Left 3|*DR*, *LLR*
+|22|rio|Shoulder spark-Max*|-
+|23|drive|Falcon Right 1|*DR*, *LLR*
+|24|drive|Falcon Right 2|*DR*, *LLR*
+|24|rio|Elevator Spark-Max|*ELA*
+|25|drive|Falcon Right 3|*DR*, *LLR*
+|29|drive|CANCoder Right|*DR*
+|30|drive|CANCoder Left|*DR*
+|34|x|Falcon Intake 1|*ITK*
+|28|x|Neo Intake 1|*ITK*
+|x|x|Neo Intake 2|*ITK*
+
+*CAN ID's are not finalized and are subject to change*
+
+## Subsystems
+|Abbrv|Subsystem|Purpose| 
+|:---:|:--------|:------|
+|DRV|Drivetrain|Driving|
+|ITK|Intake|Intake|
+|LLA|LimeLight April-Tags|Vision|
+|LLR|LimeLight Retro-Reflective|Vision|
+|ELA|ElevatorArm|Telescopic Arm|
