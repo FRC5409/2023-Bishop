@@ -28,10 +28,13 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.trajectory.Trajectory;
 import frc.robot.subsystems.Telescope;
 
-//import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -83,12 +86,12 @@ public class RobotContainer
     private final GearShift cmd_highSpeed;
 
     // // Trajectory
-    // private PathPlannerTrajectory m_trajectory;
+    private PathPlannerTrajectory m_trajectory;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(Trajectory trajectory)
+    public RobotContainer(PathPlannerTrajectory trajectory)
     {
 
         // Driver controllers
@@ -96,7 +99,7 @@ public class RobotContainer
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
 
         // // Trajectory paths
-        // m_trajectory = trajectory;
+        m_trajectory = trajectory;
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
@@ -236,14 +239,14 @@ public class RobotContainer
     {
         // An example command will be run in autonomous
 
-        // // Disable ramp rate
-        // sys_drivetrain.rampRate(0);
-        // // Reset odometry
-        // sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
-        // // Run auto path, then stop and re-set ramp rate
-        // return new Auto(sys_drivetrain, m_trajectory)
-        //     .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-        //     .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
+        // Disable ramp rate
+        sys_drivetrain.rampRate(0);
+        // Reset odometry
+        sys_drivetrain.resetOdometry(m_trajectory.getInitialPose());
+        // Run auto path, then stop and re-set ramp rate
+        return new Auto(sys_drivetrain, m_trajectory)
+            .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
 
 }
