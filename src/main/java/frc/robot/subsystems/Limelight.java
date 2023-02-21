@@ -280,3 +280,13 @@ public class Limelight extends SubsystemBase {
             return -1;
     } */
 }
+
+  public void setCropSize(double[] cropSize){
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
+  }
+
+  public void dynamicCrop(char targetType, double[] targetPos){
+    //Target pos is to be referenced in the following format {x, y}
+    ;    
+  }
+}

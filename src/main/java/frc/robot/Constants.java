@@ -115,7 +115,6 @@ public final class Constants {
         public static final int angle                           = 0; //degrees
         public static final int kAutoLightTimeout               = 1000; //ms
         public static final boolean kDoAutoLight                = true; 
-        public static final double kALTriggerDistance           = .1;
         public static final double KretroTargetFF               = 0.3;
         public static final double KretroTargetTolerance        = 0.1;
     }
