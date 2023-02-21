@@ -58,23 +58,23 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final IntakePivot sys_intakePivot;
-    private final IntakeWrist sys_intakeWrist;
+    // private final IntakePivot sys_intakePivot;
+    // private final IntakeWrist sys_intakeWrist;
     private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotMove cmd_pivotUp;
-    private final PivotMove cmd_pivotDown;
-    private final WristMove cmd_wristUp;
-    private final WristMove cmd_wristDown;
+    // private final PivotMove cmd_pivotUp;
+    // private final PivotMove cmd_pivotDown;
+    // private final WristMove cmd_wristUp;
+    // private final WristMove cmd_wristDown;
     private final RollerMove cmd_rollerCapture;
     private final RollerMove cmd_rollerRelease;
-    private final PivotZeroEncoder cmd_pivotInwardZero;
+    // private final PivotZeroEncoder cmd_pivotInwardZero;
 
     // Sequential commands
-    private final IntakePickupSequence seq_intakePickup;
-    private final IntakeHandoffSequence seq_intakeHandoff;
+    // private final IntakePickupSequence seq_intakePickup;
+    // private final IntakeHandoffSequence seq_intakeHandoff;
     public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
@@ -103,22 +103,22 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intakePivot = new IntakePivot();
-        sys_intakeWrist = new IntakeWrist();
+        // sys_intakePivot = new IntakePivot();
+        // sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
 
         // Commands
-        cmd_pivotUp =  new PivotMove(sys_intakePivot, 0.2);
-        cmd_pivotDown = new PivotMove(sys_intakePivot, -0.2);
-        cmd_wristUp = new WristMove(sys_intakeWrist, 0.2);
-        cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
-        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.5);
-        cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.5);
-        cmd_pivotInwardZero = new PivotZeroEncoder(sys_intakePivot);
+        // cmd_pivotUp =  new PivotMove(sys_intakePivot, 0.2);
+        // cmd_pivotDown = new PivotMove(sys_intakePivot, -0.2);
+        // cmd_wristUp = new WristMove(sys_intakeWrist, 0.2);
+        // cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
+        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.3);
+        cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.3);
+        // cmd_pivotInwardZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         sys_candle = new Candle();
@@ -166,17 +166,17 @@ public class RobotContainer
 
     private void configureBindings()
     {
-        joystickMain.povUp()
-            .whileTrue(cmd_pivotUp);
+        // joystickMain.povUp()
+        //     .whileTrue(cmd_pivotUp);
         
-        joystickMain.povDown()
-            .whileTrue(cmd_pivotDown);
+        // joystickMain.povDown()
+        //     .whileTrue(cmd_pivotDown);
 
-        joystickMain.y()
-            .whileTrue(cmd_wristUp);
+        // joystickMain.y()
+        //     .whileTrue(cmd_wristUp);
 
-        joystickMain.a()
-            .whileTrue(cmd_wristDown);
+        // joystickMain.a()
+        //     .whileTrue(cmd_wristDown);
 
         joystickMain.x()
             .whileTrue(cmd_rollerCapture);
@@ -184,14 +184,14 @@ public class RobotContainer
         joystickMain.b()
             .whileTrue(cmd_rollerRelease);
         
-        joystickMain.rightBumper()
-            .whileTrue(seq_intakePickup);
+        // joystickMain.rightBumper()
+        //     .whileTrue(seq_intakePickup);
 
-        joystickMain.rightBumper()
-            .whileFalse(seq_intakeHandoff);
+        // joystickMain.rightBumper()
+        //     .whileFalse(seq_intakeHandoff);
         
-        joystickMain.rightStick()
-            .onTrue(cmd_pivotInwardZero);
+        // joystickMain.rightStick()
+        //     .onTrue(cmd_pivotInwardZero);
     // private void configureBindings() {
 
     //     // joystickMain.x()

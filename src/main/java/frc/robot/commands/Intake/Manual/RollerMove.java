@@ -26,6 +26,7 @@ public class RollerMove extends CommandBase
   public void initialize()
   {
     roller.rollerControl(speed);
+    System.out.println("Roller running");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +38,7 @@ public class RollerMove extends CommandBase
   public void end(boolean interrupted)
   {
     roller.rollerControl(0);
+    System.out.println("Roller stopped");
   }
 
   // Returns true when the command should end.

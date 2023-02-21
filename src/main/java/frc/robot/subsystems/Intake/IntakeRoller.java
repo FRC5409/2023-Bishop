@@ -37,7 +37,7 @@ public class IntakeRoller extends SubsystemBase
 
   public void rollerControl(double speed)
   {
-    motor.setVoltage(speed);
+    motor.setVoltage(12*speed);
   }
 
   @Override
