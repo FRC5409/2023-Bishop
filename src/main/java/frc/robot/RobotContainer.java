@@ -71,10 +71,7 @@ public class RobotContainer {
     private final GearShift cmd_highSpeed;
 
     // Trajectory & autonomous path chooser
-    private PathPlannerTrajectory m_testingPath;
-    private PathPlannerTrajectory m_placeConeWallGridAndBalance;
-    private PathPlannerTrajectory m_placeConeLoadingGridAndBalance;
-    private PathPlannerTrajectory m_placeConeMidGridAndBalance;
+    private PathPlannerTrajectory[] m_paths = new PathPlannerTrajectory[kTrajectoryPath.paths.length];
     private ShuffleboardTab sb_driveteam;
     private SendableChooser<PathPlannerTrajectory> sc_choosePath;
 
@@ -100,28 +97,17 @@ public class RobotContainer {
 
         // Trajectory & autonomous path chooser
         PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
-        m_testingPath = PathPlanner.loadPath(
-                                                    kTrajectoryPath.TESTING_PATH,
-                                                    pathConstraints);
-        m_placeConeWallGridAndBalance = PathPlanner.loadPath(
-                                                    kTrajectoryPath.PLACE_CONE_WALL_GRID_AND_BALANCE,
-                                                    pathConstraints,
-                                                    true);
-        m_placeConeLoadingGridAndBalance = PathPlanner.loadPath(
-                                                    kTrajectoryPath.PLACE_CONE_LOADING_GRID_AND_BALANCE,
-                                                    pathConstraints,
-                                                    true);
-        m_placeConeMidGridAndBalance = PathPlanner.loadPath(
-                                                    kTrajectoryPath.PLACE_CONE_MID_GRID_AND_BALANCE,
-                                                    pathConstraints,
-                                                    true);
+
+        for (int i = 0; i < m_paths.length; i++) {
+            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints);
+        }
 
         sb_driveteam = Shuffleboard.getTab("Drive Team");
         sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
-        sc_choosePath.setDefaultOption("Place cone wall grid and balance", m_placeConeWallGridAndBalance);
-        sc_choosePath.addOption("Place cone loading grid and balance", m_placeConeLoadingGridAndBalance);
-        sc_choosePath.addOption("Place cone mid grid and balance", m_placeConeMidGridAndBalance);
-        sc_choosePath.addOption("Testing path", m_testingPath);
+        sc_choosePath.setDefaultOption(kTrajectoryPath.paths[0], m_paths[0]);
+        for (int i = 0; i < m_paths.length; i++) {
+            sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
+        }
         sb_driveteam.add("Auto path", sc_choosePath);
         
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
