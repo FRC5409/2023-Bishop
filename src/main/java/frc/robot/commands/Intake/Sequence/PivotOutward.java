@@ -10,13 +10,11 @@ import frc.robot.subsystems.Intake.IntakePivot;
 
 public class PivotOutward extends CommandBase
 {
-  private final IntakePivot sys_intakePivot;
-  private final double setpoint;
+  private final IntakePivot sys_intakePivot;;
 
   public PivotOutward(IntakePivot subsystem)
   {
     sys_intakePivot = subsystem;
-    setpoint = kPivotSetpoints.kPivotExtended;
 
     addRequirements(sys_intakePivot);
   }
@@ -25,7 +23,7 @@ public class PivotOutward extends CommandBase
   @Override
   public void initialize()
   {
-    sys_intakePivot.setSetpoint(setpoint);
+    sys_intakePivot.setSetpoint(kPivotSetpoints.kPivotExtended);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +38,11 @@ public class PivotOutward extends CommandBase
   @Override
   public boolean isFinished()
   {
+    if (Math.abs(sys_intakePivot.getPivotPos() - kPivotSetpoints.kPivotExtended) < 0.5)
+    {
+      return true;
+    }
+
     return false;
   }
 }

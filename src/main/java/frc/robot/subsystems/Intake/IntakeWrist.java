@@ -34,7 +34,7 @@ public class IntakeWrist extends PIDSubsystem
     motor.setIdleMode(IdleMode.kBrake);
     motor.burnFlash();
 
-    encoder = new DutyCycleEncoder(kIntake.id_encWrist);
+    encoder = new DutyCycleEncoder(kIntake.chnl_encWrist);
 
     tab_intake = Shuffleboard.getTab("Intake");
     kP = tab_intake.add("kWristP", kIntake.kWristP).getEntry();
@@ -61,6 +61,11 @@ public class IntakeWrist extends PIDSubsystem
   }
   @Override
   public double getMeasurement()
+  {
+    return getWristPos();
+  }
+
+  public double getWristPos()
   {
     return encoder.getAbsolutePosition();
   }

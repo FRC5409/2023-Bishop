@@ -11,12 +11,10 @@ import frc.robot.subsystems.Intake.IntakeWrist;
 public class WristHandoff extends CommandBase
 {
   private final IntakeWrist sys_intakeWrist;
-  private final double setpoint;
 
   public WristHandoff(IntakeWrist subsystem)
   {
     sys_intakeWrist = subsystem;
-    setpoint = kWristSetpoints.kWristHandoff;
 
     addRequirements(sys_intakeWrist);
   }
@@ -25,7 +23,7 @@ public class WristHandoff extends CommandBase
   @Override
   public void initialize()
   {
-    sys_intakeWrist.setSetpoint(setpoint);
+    sys_intakeWrist.setSetpoint(kWristSetpoints.kWristHandoff);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,6 +38,11 @@ public class WristHandoff extends CommandBase
   @Override
   public boolean isFinished()
   {
+    if (Math.abs(sys_intakeWrist.getWristPos() - kWristSetpoints.kWristHandoff) < 0.5)
+    {
+      return true;
+    }
+
     return false;
   }
 }

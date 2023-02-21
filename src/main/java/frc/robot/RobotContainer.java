@@ -12,6 +12,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.Intake.Sequence.IntakeHandoffSequence;
 import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
+import frc.robot.commands.Intake.Sequence.PivotZeroEncoder;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake.IntakePivot;
@@ -52,6 +53,7 @@ public class RobotContainer
     private final WristMove cmd_wristDown;
     private final RollerMove cmd_rollerCapture;
     private final RollerMove cmd_rollerRelease;
+    private final PivotZeroEncoder cmd_pivotInwardZero;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -87,6 +89,7 @@ public class RobotContainer
         cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
         cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.5);
         cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.5);
+        cmd_pivotInwardZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
@@ -149,6 +152,9 @@ public class RobotContainer
 
         joystickMain.rightBumper()
             .whileFalse(seq_intakeHandoff);
+        
+        joystickMain.rightStick()
+            .onTrue(cmd_pivotInwardZero);
     }
 
     /**

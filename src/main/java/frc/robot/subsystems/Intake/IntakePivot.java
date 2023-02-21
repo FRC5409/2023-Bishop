@@ -5,6 +5,7 @@
 package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -12,7 +13,6 @@ import frc.robot.Constants.kIntake;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 public class IntakePivot extends PIDSubsystem
 {
   private final CANSparkMax motor;
-  private final DutyCycleEncoder encoder;
+  private final RelativeEncoder encoder;
 
   private final ShuffleboardTab tab_intake;
   private final GenericEntry kP, kI, kD, encPos;
@@ -33,9 +33,10 @@ public class IntakePivot extends PIDSubsystem
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
     motor.setSmartCurrentLimit(kIntake.kCurrentLimits.kPivotCurrentLimit);
-    motor.burnFlash();
 
-    encoder = new DutyCycleEncoder(kIntake.id_encPivot);
+    encoder = motor.getEncoder();
+
+    motor.burnFlash();
 
     tab_intake = Shuffleboard.getTab("Intake");
     kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
@@ -64,11 +65,21 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public double getMeasurement()
   {
-    return encoder.getAbsolutePosition();
+    return getPivotPos();
+  }
+
+  public double getPivotPos()
+  {
+    return encoder.getPosition();
   }
 
   public void pivotControl(double speed)
   {
     motor.set(speed);
+  }
+
+  public void zeroEncoder()
+  {
+    encoder.setPosition(0);
   }
 }
