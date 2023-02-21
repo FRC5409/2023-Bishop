@@ -82,13 +82,6 @@ public class Limelight extends SubsystemBase {
     //setting startup millis
     lastLightUpdate = System.currentTimeMillis();
   }
-
-  @Override
-  public void periodic() {
-    updateRobotPosition();
-    autoLight();
-  }
-
   public void updateRobotPosition() {
     LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
     
@@ -126,10 +119,10 @@ public class Limelight extends SubsystemBase {
     if (Constants.kLimelight.kDoAutoLight){
       lastLightUpdate = System.currentTimeMillis();
       if (targetDistance >= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout){
-      LimelightHelpers.setLEDMode_ForceOn("");
-    } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout){
-      LimelightHelpers.setLEDMode_ForceOff("");
-    }
+        LimelightHelpers.setLEDMode_ForceOn("");
+      } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout){
+        LimelightHelpers.setLEDMode_ForceOff("");
+      }
     }
   }
 
@@ -138,7 +131,12 @@ public class Limelight extends SubsystemBase {
   }
 
   public void dynamicCrop(char targetType, double[] targetPos){
-    //Target pos is to be referenced in the following format {x, y}
     ;    
+  }
+  
+  @Override
+  public void periodic() {
+    updateRobotPosition();
+    autoLight();
   }
 }
