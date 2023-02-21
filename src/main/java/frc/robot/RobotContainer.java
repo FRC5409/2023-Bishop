@@ -14,6 +14,8 @@ import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.Intake.Sequence.IntakeHandoffSequence;
 import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
 import frc.robot.commands.Intake.Sequence.PivotZeroEncoder;
+import frc.robot.commands.Intake.Sequence.WristHandoff;
+import frc.robot.commands.Intake.Sequence.WristPickup;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.auto.Auto;
@@ -59,15 +61,16 @@ public class RobotContainer
     // Subsystems
     public final Drivetrain sys_drivetrain;
     // private final IntakePivot sys_intakePivot;
-    // private final IntakeWrist sys_intakeWrist;
+    private final IntakeWrist sys_intakeWrist;
     private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
     // private final PivotMove cmd_pivotUp;
     // private final PivotMove cmd_pivotDown;
-    // private final WristMove cmd_wristUp;
-    // private final WristMove cmd_wristDown;
+    private final WristPickup cmd_wristPickup;
+    private final WristHandoff cmd_wristHandoff;
+    private final WristMove cmd_wristDown;
     private final RollerMove cmd_rollerCapture;
     private final RollerMove cmd_rollerRelease;
     // private final PivotZeroEncoder cmd_pivotInwardZero;
@@ -104,14 +107,15 @@ public class RobotContainer
         // Subsystems
         sys_drivetrain = new Drivetrain();
         // sys_intakePivot = new IntakePivot();
-        // sys_intakeWrist = new IntakeWrist();
+        sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
 
         // Commands
         // cmd_pivotUp =  new PivotMove(sys_intakePivot, 0.2);
         // cmd_pivotDown = new PivotMove(sys_intakePivot, -0.2);
-        // cmd_wristUp = new WristMove(sys_intakeWrist, 0.2);
-        // cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
+        cmd_wristPickup = new WristPickup(sys_intakeWrist);
+        cmd_wristHandoff = new WristHandoff(sys_intakeWrist);
+        cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
         cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.3);
         cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.3);
         // cmd_pivotInwardZero = new PivotZeroEncoder(sys_intakePivot);
@@ -172,11 +176,11 @@ public class RobotContainer
         // joystickMain.povDown()
         //     .whileTrue(cmd_pivotDown);
 
-        // joystickMain.y()
-        //     .whileTrue(cmd_wristUp);
+        joystickMain.y()
+             .onTrue(cmd_wristPickup);
 
-        // joystickMain.a()
-        //     .whileTrue(cmd_wristDown);
+        joystickMain.a()
+             .whileTrue(cmd_wristHandoff);
 
         joystickMain.x()
             .whileTrue(cmd_rollerCapture);

@@ -274,7 +274,7 @@ public final class Constants {
       public static final int chnl_encWrist                             = 0;
 
       public static final double kPivotP                                = 0.0; /* placeholder */
-      public static final double kWristP                                = 0.0; /* placeholder */
+      public static final double kWristP                                = 10; /* placeholder */
 
       public static final double kPivotI                                = 0.0; /* placeholder */
       public static final double kWristI                                = 0.0; /* placeholder */
@@ -292,8 +292,8 @@ public final class Constants {
 
         public static final class kWristSetpoints
         {
-          public static final double kWristPickup                       = 0.0; /* placeholder */
-          public static final double kWristHandoff                      = 0.0; /* placeholder */
+          public static final double kWristPickup                       = 0.97; /* placeholder */
+          public static final double kWristHandoff                      = 0.72; /* placeholder */
           public static final double kWristStoring                      = 0.0; /* placeholder */
         }
       }

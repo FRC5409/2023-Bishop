@@ -42,7 +42,7 @@ public class IntakePivot extends PIDSubsystem
     kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
     kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
     kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
-    encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
+    encPos = tab_intake.add("Pivot Rel Pos", getMeasurement()).getEntry();
   }
 
   @Override
@@ -81,5 +81,11 @@ public class IntakePivot extends PIDSubsystem
   public void zeroEncoder()
   {
     encoder.setPosition(0);
+  }
+
+  @Override
+  public void periodic()
+  {
+    encPos.setDouble(getPivotPos());
   }
 }

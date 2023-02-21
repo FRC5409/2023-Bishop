@@ -32,31 +32,39 @@ public class IntakeWrist extends PIDSubsystem
     motor = new CANSparkMax(kIntake.id_motWrist, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
+    //TODO: Set a current limit
     motor.burnFlash();
 
     encoder = new DutyCycleEncoder(kIntake.chnl_encWrist);
+
+    getController().setTolerance(0.1);
 
     tab_intake = Shuffleboard.getTab("Intake");
     kP = tab_intake.add("kWristP", kIntake.kWristP).getEntry();
     kI = tab_intake.add("kWristI", kIntake.kWristI).getEntry();
     kD = tab_intake.add("kWristD", kIntake.kWristD).getEntry();
-    encPos = tab_intake.add("Wrist Rel Pos", getMeasurement()).getEntry();
+    encPos = tab_intake.add("Wrist Abs Pos", getMeasurement()).getEntry();
   }
 
   @Override
   public void useOutput(double output, double setpoint)
   {
+    System.out.println("Running with values: "+output + " " + setpoint);
+
     if (output > kIntake.kVoltageLimits.kWristVoltageLimit)
     {
       motor.setVoltage(kIntake.kVoltageLimits.kWristVoltageLimit);
+      System.out.println("voltage to 6");
     }
     else if (output < -kIntake.kVoltageLimits.kWristVoltageLimit)
     {
       motor.setVoltage(-kIntake.kVoltageLimits.kWristVoltageLimit);
+      System.out.println("voltage to -6");
     }
     else
     {
       motor.setVoltage(output);
+      System.out.println("voltage to " + output);
     }
   }
   @Override
@@ -67,11 +75,27 @@ public class IntakeWrist extends PIDSubsystem
 
   public double getWristPos()
   {
-    return encoder.getAbsolutePosition();
+    double currPos = encoder.getAbsolutePosition();
+
+    if (currPos < 0.25)
+    {
+      return currPos + 1;
+    }
+    else
+    {
+      return currPos;
+    }
   }
 
   public void wristControl(double speed)
   {
-    motor.set(speed);
+    motor.setVoltage(12 * speed);
+  }
+
+  @Override
+  public void periodic()
+  {
+    super.periodic();
+    encPos.setDouble(getWristPos());
   }
 }

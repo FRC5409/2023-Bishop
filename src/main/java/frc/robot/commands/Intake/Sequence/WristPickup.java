@@ -24,6 +24,9 @@ public class WristPickup extends CommandBase
   public void initialize()
   {
     sys_intakeWrist.setSetpoint(kWristSetpoints.kWristPickup);
+    sys_intakeWrist.enable();
+
+    System.out.println("Wrist set" +kWristSetpoints.kWristPickup);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,11 +41,12 @@ public class WristPickup extends CommandBase
   @Override
   public boolean isFinished()
   {
-    if (Math.abs(sys_intakeWrist.getWristPos() - kWristSetpoints.kWristPickup) < 0.5)
-    {
-      return true;
-    }
+    // if (Math.abs(sys_intakeWrist.getWristPos() - kWristSetpoints.kWristPickup) < 0.5)
+    // {
+    //   return true;
+    // }
 
     return false;
+
   }
 }
