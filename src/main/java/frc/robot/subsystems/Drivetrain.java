@@ -14,18 +14,14 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
-import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kMotor;
 
@@ -70,20 +66,10 @@ public class Drivetrain extends SubsystemBase {
     private final ShuffleboardTab sb_driveTab;
     private final GenericEntry nt_turningSpeedEntry;
     private final GenericEntry nt_forwardSpeedEntry;
-    private final GenericEntry nt_rampEntry;
-
-    private final XboxController joystickMain = new XboxController(kOperator.port_joystickMain);
 
     private int currentJoystick = 0;
 
     private double currentRampRate;
-    
-    private double lastRamp;
-
-    private boolean checkSpin = false;
-    private boolean freeSpinning = false;
-
-    private double robotSpeed = 0;
 
 
     public Drivetrain() {
@@ -148,9 +134,6 @@ public class Drivetrain extends SubsystemBase {
         sb_driveTab = Shuffleboard.getTab("Drive Team");
         nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
         nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
-        nt_rampEntry = sb_driveTab.add("Ramp Rate: ", kDriveteam.rampRate).getEntry();
-        
-        SmartDashboard.putBoolean("Free spin", checkSpin);
 
         currentJoystick = 0;
     }
@@ -239,14 +222,9 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        if (!freeSpinning) {
-            m_diffDrive.arcadeDrive(
-                xSpeed * nt_forwardSpeedEntry.getDouble(1),
-                zRotation * nt_turningSpeedEntry.getDouble(1));
-        } else {
-            freeSpinning = false;
-            rampRate(lastRamp);
-        }
+        m_diffDrive.arcadeDrive(
+            xSpeed * nt_forwardSpeedEntry.getDouble(1),
+            zRotation * nt_turningSpeedEntry.getDouble(1));
     }
 
     /**
@@ -449,28 +427,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
-     * Toggles if tracktion control is enabled
-     */
-
-    public void toggleFreeSpin() {
-        checkSpin = !checkSpin;
-    }
-
-    /**
      * Get the robot acceleration in m/s^2
      * @return robot acceleration
      */
     public double getRobotAcceleration() {
         return m_accelerometer.getY() * 9.81;
-    }
-
-    /**
-     * Gets the absoulute heading velocity using the gyro
-     * @return Robot speed in meters/s^2
-     */
-
-    public double gyroGetHeadingSpeed() {
-        return Math.abs(robotSpeed);
     }
 
     // ----------
@@ -479,8 +440,6 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update odometry
         m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
-
-        robotSpeed += getRobotAcceleration();
 
         // Push data to Shuffleboard
         nt_leftVelocity.setDouble(getLeftVelocity());
@@ -494,39 +453,6 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll.setDouble(getRoll());
         nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
         nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
-
-        //updating ramprate if the ramprate entry was updated
-
-        // if (lastRampEntry != nt_rampEntry.getDouble(0)) {
-        //     // rampRate(rampRateEntry.getDouble(-1));
-        //     lastRampEntry = nt_rampEntry.getDouble(0);
-        //     rampRate(nt_rampEntry.getDouble(0));
-        // }
-        rampRate(nt_rampEntry.getDouble(0));
-
-        //making them not bug out
-        // nt_forwardSpeedEntry.setDouble(nt_forwardSpeedEntry.getDouble(1));
-        // nt_turningSpeedEntry.setDouble(nt_turningSpeedEntry.getDouble(1));
-        // nt_rampEntry.setDouble(nt_rampEntry.getDouble(0));
-
-        //free spinning
-        SmartDashboard.putBoolean("Free spin", checkSpin);
-        SmartDashboard.putNumber("Average Wheel Velocity", getAverageVelocity());
-        if (checkSpin) {
-            if (getAverageVelocity() >= kDriveteam.maxSpinSpeed) {
-                freeSpinning = true;
-
-                lastRamp = getRampRate();
-
-                tankDriveSpeeds(kDriveteam.lowerSpinSpeed);
-                rampRate(kDriveteam.spinRamp);
-
-                joystickMain.setRumble(RumbleType.kBothRumble, kDriveteam.rumbleIntensity);
-            } else {
-                joystickMain.setRumble(RumbleType.kBothRumble, 0);
-            }
-
-        }
         
     }
 
