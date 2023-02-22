@@ -2,28 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake.Sequence;
+package frc.robot.commands.Intake;
 
-import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Intake.IntakePivot;
 
-public class WristHandoff extends CommandBase
+public class PivotMove extends CommandBase
 {
-  private final IntakeWrist sys_intakeWrist;
+  private final IntakePivot sys_intakePivot;
+  private double setpoint;
 
-  public WristHandoff(IntakeWrist subsystem)
+  public PivotMove(IntakePivot subsystem, double setpoint)
   {
-    sys_intakeWrist = subsystem;
+    sys_intakePivot = subsystem;
+    this.setpoint = setpoint;
 
-    addRequirements(sys_intakeWrist);
+    addRequirements(sys_intakePivot);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intakeWrist.setSetpoint(kWristSetpoints.kWristHandoff);
+    sys_intakePivot.setSetpoint(setpoint);
+    sys_intakePivot.enable();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,11 +40,6 @@ public class WristHandoff extends CommandBase
   @Override
   public boolean isFinished()
   {
-    if (Math.abs(sys_intakeWrist.getWristPos() - kWristSetpoints.kWristHandoff) < 0.5)
-    {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 }

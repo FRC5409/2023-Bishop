@@ -2,28 +2,29 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake.Sequence;
+package frc.robot.commands;
 
-import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake.IntakePivot;
 
-public class PivotOutward extends CommandBase
+public class PivotManualMove extends CommandBase
 {
-  private final IntakePivot sys_intakePivot;;
+  private final IntakePivot pivot;
+  private double voltage;
 
-  public PivotOutward(IntakePivot subsystem)
+  public PivotManualMove(IntakePivot subsystem, double voltage)
   {
-    sys_intakePivot = subsystem;
+    pivot = subsystem;
+    this.voltage = voltage;
 
-    addRequirements(sys_intakePivot);
+    addRequirements(pivot);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intakePivot.setSetpoint(kPivotSetpoints.kPivotExtended);
+    pivot.pivotControl(voltage);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,17 +33,15 @@ public class PivotOutward extends CommandBase
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted)
+  {
+    pivot.pivotControl(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished()
   {
-    if (Math.abs(sys_intakePivot.getPivotPos() - kPivotSetpoints.kPivotExtended) < 0.5)
-    {
-      return true;
-    }
-
     return false;
   }
 }

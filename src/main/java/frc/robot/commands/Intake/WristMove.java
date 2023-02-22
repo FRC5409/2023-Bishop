@@ -2,27 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake.Sequence;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake.IntakeRoller;
+import frc.robot.subsystems.Intake.IntakeWrist;
 
-public class RollerPickup extends CommandBase
+public class WristMove extends CommandBase
 {
-  private final IntakeRoller sys_intakeRoller;
-
-  public RollerPickup(IntakeRoller subsystem)
+  private final IntakeWrist sys_intakeWrist;
+  private double setpoint;
+  
+  public WristMove(IntakeWrist subsystem, double setpoint)
   {
-    sys_intakeRoller = subsystem;
+    sys_intakeWrist = subsystem;
+    this.setpoint = setpoint;
 
-    addRequirements(sys_intakeRoller);
+    addRequirements(sys_intakeWrist);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize()
   {
-    sys_intakeRoller.rollerControl(6);
+    sys_intakeWrist.setSetpoint(setpoint);
+    sys_intakeWrist.enable();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,15 +34,12 @@ public class RollerPickup extends CommandBase
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted)
-  {
-    sys_intakeRoller.rollerControl(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished()
   {
-    return false;
+    return true;
   }
 }

@@ -48,6 +48,8 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public void useOutput(double output, double setpoint)
   {
+    System.out.println(output + " " + setpoint);
+    
     if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
     {
       motor.setVoltage(kIntake.kVoltageLimits.kPivotVoltageLimit);
@@ -73,9 +75,9 @@ public class IntakePivot extends PIDSubsystem
     return encoder.getPosition();
   }
 
-  public void pivotControl(double speed)
+  public void pivotControl(double voltage)
   {
-    motor.set(speed);
+    motor.setVoltage(voltage);
   }
 
   public void zeroEncoder()
@@ -86,6 +88,7 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public void periodic()
   {
+    super.periodic();
     encPos.setDouble(getPivotPos());
   }
 }

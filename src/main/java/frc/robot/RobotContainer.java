@@ -4,25 +4,26 @@
 
 package frc.robot;
 
-import frc.robot.commands.Intake.Manual.PivotMove;
-import frc.robot.commands.Intake.Manual.WristMove;
-import frc.robot.commands.Intake.Manual.RollerMove;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.Intake.Sequence.IntakeHandoffSequence;
-import frc.robot.commands.Intake.Sequence.IntakePickupSequence;
-import frc.robot.commands.Intake.Sequence.PivotZeroEncoder;
-import frc.robot.commands.Intake.Sequence.WristHandoff;
-import frc.robot.commands.Intake.Sequence.WristPickup;
 import frc.robot.commands.OpenClaw;
+import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
+import frc.robot.commands.Intake.IntakeHandoffSequence;
+import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.PivotMove;
+import frc.robot.commands.Intake.PivotZeroEncoder;
+import frc.robot.commands.Intake.RollerMove;
+import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
+import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.commands.GearShift;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
@@ -60,20 +61,21 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    // private final IntakePivot sys_intakePivot;
+    private final IntakePivot sys_intakePivot;
     private final IntakeWrist sys_intakeWrist;
     private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    // private final PivotMove cmd_pivotUp;
-    // private final PivotMove cmd_pivotDown;
-    private final WristPickup cmd_wristPickup;
-    private final WristHandoff cmd_wristHandoff;
-    private final WristMove cmd_wristDown;
+    private final PivotMove cmd_pivotExtend;
+    private final PivotMove cmd_pivotStoring;
+    private final PivotManualMove cmd_pivotUp;
+    private final PivotManualMove cmd_pivotDown;
+    private final WristMove cmd_wristPickup;
+    private final WristMove cmd_wristHandoff;
     private final RollerMove cmd_rollerCapture;
     private final RollerMove cmd_rollerRelease;
-    // private final PivotZeroEncoder cmd_pivotInwardZero;
+    private final PivotZeroEncoder cmd_pivotZero;
 
     // Sequential commands
     // private final IntakePickupSequence seq_intakePickup;
@@ -106,19 +108,20 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        // sys_intakePivot = new IntakePivot();
+        sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
 
         // Commands
-        // cmd_pivotUp =  new PivotMove(sys_intakePivot, 0.2);
-        // cmd_pivotDown = new PivotMove(sys_intakePivot, -0.2);
-        cmd_wristPickup = new WristPickup(sys_intakeWrist);
-        cmd_wristHandoff = new WristHandoff(sys_intakeWrist);
-        cmd_wristDown = new WristMove(sys_intakeWrist, -0.2);
-        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 0.3);
-        cmd_rollerRelease = new RollerMove(sys_intakeRoller, -0.3);
-        // cmd_pivotInwardZero = new PivotZeroEncoder(sys_intakePivot);
+        cmd_pivotExtend = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended);
+        cmd_pivotStoring = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring);
+        cmd_pivotUp = new PivotManualMove(sys_intakePivot, 9.6);
+        cmd_pivotDown = new PivotManualMove(sys_intakePivot, -9.6);
+        cmd_wristPickup = new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup);
+        cmd_wristHandoff = new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff);
+        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 3.6);
+        cmd_rollerRelease = new RollerMove(sys_intakeRoller, 3.6);
+        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Sequential commands
         // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
@@ -131,7 +134,6 @@ public class RobotContainer
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
@@ -170,17 +172,17 @@ public class RobotContainer
 
     private void configureBindings()
     {
-        // joystickMain.povUp()
-        //     .whileTrue(cmd_pivotUp);
+        joystickMain.povUp()
+            .onTrue(cmd_pivotUp);
         
-        // joystickMain.povDown()
-        //     .whileTrue(cmd_pivotDown);
+        joystickMain.povDown()
+            .onTrue(cmd_pivotDown);
 
         joystickMain.y()
              .onTrue(cmd_wristPickup);
 
         joystickMain.a()
-             .whileTrue(cmd_wristHandoff);
+             .onTrue(cmd_wristHandoff);
 
         joystickMain.x()
             .whileTrue(cmd_rollerCapture);
@@ -194,8 +196,8 @@ public class RobotContainer
         // joystickMain.rightBumper()
         //     .whileFalse(seq_intakeHandoff);
         
-        // joystickMain.rightStick()
-        //     .onTrue(cmd_pivotInwardZero);
+        joystickMain.rightStick()
+            .onTrue(cmd_pivotZero);
     // private void configureBindings() {
 
     //     // joystickMain.x()
