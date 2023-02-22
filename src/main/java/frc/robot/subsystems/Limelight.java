@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.commands.RumbleJoystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 import java.util.Arrays;
+
+import javax.management.Notification;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -56,8 +59,12 @@ public class Limelight extends SubsystemBase {
     double timeoutTimer = 0;
     double rumbleStart = 0;
     boolean startTimeoutTimer = false; 
+    boolean connected = true; 
     boolean doRumble = false; 
-    boolean sameNotif = false; 
+    boolean sameRumble = false; 
+    boolean notifyDisconnect = false; 
+
+    double  lastTick =  0;
 
     // Joystick for Retro-reflective
     private final CommandXboxController c_joystick;
@@ -179,40 +186,15 @@ public class Limelight extends SubsystemBase {
         }
     }
 
-    public void rumbleOnDisconnect(){
-        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
-
-        // if we detect bad things
-        if (lastLatency == currentLatency && !startTimeoutTimer && !sameNotif){
-            startTimeoutTimer = true; 
-            sameNotif = true; 
-            timeoutTimer = System.currentTimeMillis();
-            //System.out.println("Started timer");
-        } else if (lastLatency != currentLatency) {
-            sameNotif = false; 
-            //System.out.println("Same notif set false");
-        }
-
-        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.kAutoLightTimeout){
-            joystickMain.setRumble(RumbleType.kBothRumble, 1);
-            rumbleStart = System.currentTimeMillis();
-            startTimeoutTimer = false;
-            doRumble = true; 
-            //System.out.println("Started rumble");
-        }
-
-        if (doRumble){
-            if ((System.currentTimeMillis() - rumbleStart) >= Constants.kLimelight.disconnectNotifLength){
-                joystickMain.setRumble(RumbleType.kBothRumble, 0);
-                doRumble = false; 
-                System.out.println("Started rumble");
-            }
-        }
-
-        System.out.println(lastLatency);
-        System.out.println(currentLatency);
-        lastLatency = currentLatency;
+    public void checkHealth() {
+         if (!isConnectionHealthy() && !notifyDisconnect){
+            (new RumbleJoystick(c_joystick, 100, 1)).schedule();
+            notifyDisconnect = true; 
+         } else if (isConnectionHealthy()){
+            notifyDisconnect = false; 
+         }
     }
+    
     // Retroreflective tape-related code
     /** Turns the limelight off */
     public void turnOff() {
@@ -271,6 +253,21 @@ public class Limelight extends SubsystemBase {
     public void periodic() {
         updateRobotPosition();
         autoLight();
-        rumbleOnDisconnect();
+        checkHealth();
+    }
+
+    private boolean isConnectionHealthy() {
+        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
+        if (lastLatency == currentLatency && !startTimeoutTimer){
+            startTimeoutTimer = true; 
+            timeoutTimer = System.currentTimeMillis();
+        } else if (lastLatency != currentLatency) {
+            startTimeoutTimer = false; 
+        }
+
+        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.limelightTimeout){
+            return false; 
+        }
+        return true; 
     }
 }
