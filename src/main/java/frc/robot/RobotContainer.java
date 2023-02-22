@@ -71,17 +71,17 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    private final IntakePivot sys_intakePivot;
-    private final IntakeWrist sys_intakeWrist;
-    private final IntakeRoller sys_intakeRoller;
+    // private final IntakePivot sys_intakePivot;
+    // private final IntakeWrist sys_intakeWrist;
+    // private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotZeroEncoder cmd_pivotZero;
+    // private final PivotZeroEncoder cmd_pivotZero;
 
     // Sequential commands
-    private final IntakePickupSequence seq_intakePickup;
-    private final IntakeHandoffSequence seq_intakeHandoff;
+    // private final IntakePickupSequence seq_intakePickup;
+    // private final IntakeHandoffSequence seq_intakeHandoff;
     public final Claw sys_claw;
     // public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
@@ -107,13 +107,13 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        sys_intakePivot = new IntakePivot();
-        sys_intakeWrist = new IntakeWrist();
-        sys_intakeRoller = new IntakeRoller();
+        // sys_intakePivot = new IntakePivot();
+        // sys_intakeWrist = new IntakeWrist();
+        // sys_intakeRoller = new IntakeRoller();
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         // sys_candle = new Candle();
@@ -141,7 +141,7 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        // cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -177,12 +177,12 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        joystickMain.a()
-            .whileTrue(seq_intakePickup)
-            .whileFalse(seq_intakeHandoff);
+        // joystickMain.a()
+            // .whileTrue(seq_intakePickup)
+            // .whileFalse(seq_intakeHandoff);
         
-        joystickMain.rightStick()
-            .onTrue(cmd_pivotZero);
+        // joystickMain.rightStick()
+        //     .onTrue(cmd_pivotZero);
 
         joystickMain.x()
             .onTrue(new OpenClaw(sys_claw))

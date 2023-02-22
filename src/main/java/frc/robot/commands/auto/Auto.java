@@ -24,16 +24,16 @@ public class Auto extends SequentialCommandGroup {
                 Claw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
-            // new CloseClaw(sys_claw),
-            // new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kPlaceHigh),
-            // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended),
+            new CloseClaw(sys_claw),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kPlaceHigh),
+            new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended)
             // Commands.waitSeconds(1),
             // new OpenClaw(sys_claw),
             // Commands.waitSeconds(1),
             // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
             // new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kback),
-            new AutoPathPlanning(sys_drivetrain, trajectory),
-            new BalancingChargeStation(sys_drivetrain)
+            // new AutoPathPlanning(sys_drivetrain, trajectory),
+            // new BalancingChargeStation(sys_drivetrain)
             // new Turn90DegreesChargeStation(sys_drivetrain, TurnDirection.LEFT)
         );
     }
