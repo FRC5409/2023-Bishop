@@ -118,5 +118,7 @@ public final class Constants {
         public static final double KretroTargetFF               = 0.3;
         public static final double KretroTargetTolerance        = 0.1;
         public static final double kALTriggerDistance           = 1; //placeholder
+        public static final double disconnectNotifLength        = 200; //rumble time in seconds
+        public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
     }
 }

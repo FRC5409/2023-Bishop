@@ -6,6 +6,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -48,16 +51,21 @@ public class Limelight extends SubsystemBase {
     double lowTargetDist, highTargetDist;
     double turningDir = 0;
 
+    //limelight timout
+    double lastLatency = 0;
+    double timeoutTimer = 0;
+    double rumbleStart = 0;
+    boolean startTimeoutTimer = false; 
+    boolean doRumble = false; 
+    boolean sameNotif = false; 
+
     // Joystick for Retro-reflective
     private final CommandXboxController c_joystick;
+    private final XboxController joystickMain = new XboxController(0); //temp port
 
     // Shuffleboard Tab and Entries
     private ShuffleboardTab sb_limelight;
-    private GenericEntry xOffEntry,
-                         yOffEntry,
-                         targetAreaEntry,
-                         visibilityEntry,
-                         ledModeEntry;
+    private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
 
 
     public Limelight(CommandXboxController joystick) {
@@ -158,7 +166,6 @@ public class Limelight extends SubsystemBase {
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
-
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
         //System.out.println(System.currentTimeMillis() - lastLightUpdate);
@@ -172,6 +179,40 @@ public class Limelight extends SubsystemBase {
         }
     }
 
+    public void rumbleOnDisconnect(){
+        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
+
+        // if we detect bad things
+        if (lastLatency == currentLatency && !startTimeoutTimer && !sameNotif){
+            startTimeoutTimer = true; 
+            sameNotif = true; 
+            timeoutTimer = System.currentTimeMillis();
+            //System.out.println("Started timer");
+        } else if (lastLatency != currentLatency) {
+            sameNotif = false; 
+            //System.out.println("Same notif set false");
+        }
+
+        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.kAutoLightTimeout){
+            joystickMain.setRumble(RumbleType.kBothRumble, 1);
+            rumbleStart = System.currentTimeMillis();
+            startTimeoutTimer = false;
+            doRumble = true; 
+            //System.out.println("Started rumble");
+        }
+
+        if (doRumble){
+            if ((System.currentTimeMillis() - rumbleStart) >= Constants.kLimelight.disconnectNotifLength){
+                joystickMain.setRumble(RumbleType.kBothRumble, 0);
+                doRumble = false; 
+                System.out.println("Started rumble");
+            }
+        }
+
+        System.out.println(lastLatency);
+        System.out.println(currentLatency);
+        lastLatency = currentLatency;
+    }
     // Retroreflective tape-related code
     /** Turns the limelight off */
     public void turnOff() {
@@ -230,5 +271,6 @@ public class Limelight extends SubsystemBase {
     public void periodic() {
         updateRobotPosition();
         autoLight();
+        rumbleOnDisconnect();
     }
 }
