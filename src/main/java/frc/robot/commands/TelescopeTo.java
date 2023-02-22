@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kTelescope;
 import frc.robot.subsystems.Telescope;
 
 public class TelescopeTo extends CommandBase {
@@ -32,6 +33,9 @@ public class TelescopeTo extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        if (setPoint == kTelescope.kDestinations.kRetracted) {
+            sys_telescope.stopExtending();
+        }
         sys_telescope.setPrevPos(setPoint);
     }
 
