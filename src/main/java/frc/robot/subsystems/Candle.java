@@ -58,7 +58,8 @@ public class Candle extends SubsystemBase {
      */
 
     public void setColor(int r, int g, int b) {
-        candle.setLEDs(0, 0, 0, 0, 8, kCANdle.kConfig.LEDCount);
+      candle.setLEDs(0, 0, 0);
+      candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
     }
 
     /**
@@ -74,6 +75,7 @@ public class Candle extends SubsystemBase {
         switch(animationType) {
             case Static:
               currentAnimationSlot = 0;
+              Timer.delay(0.1);
               setColor(r, g, b);
               break;
             case ColorFlow:
@@ -275,6 +277,7 @@ public class Candle extends SubsystemBase {
       } else {
         setAnimation(AnimationTypes.SinWave, 0, 0, 255);
       }
+      // setAnimation(AnimationTypes.Static, 255, 155, 0);
     }
 
     /**
