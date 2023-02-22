@@ -49,22 +49,18 @@ public class IntakeWrist extends PIDSubsystem
   @Override
   public void useOutput(double output, double setpoint)
   {
-    System.out.println("Running with values: "+output + " " + setpoint);
 
     if (output > kIntake.kVoltageLimits.kWristVoltageLimit)
     {
       motor.setVoltage(kIntake.kVoltageLimits.kWristVoltageLimit);
-      System.out.println("voltage to 6");
     }
     else if (output < -kIntake.kVoltageLimits.kWristVoltageLimit)
     {
       motor.setVoltage(-kIntake.kVoltageLimits.kWristVoltageLimit);
-      System.out.println("voltage to -6");
     }
     else
     {
       motor.setVoltage(output);
-      System.out.println("voltage to " + output);
     }
   }
   @Override

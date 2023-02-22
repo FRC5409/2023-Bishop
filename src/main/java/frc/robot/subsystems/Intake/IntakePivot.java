@@ -48,7 +48,6 @@ public class IntakePivot extends PIDSubsystem
   @Override
   public void useOutput(double output, double setpoint)
   {
-    System.out.println(output + " " + setpoint);
     
     if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
     {
