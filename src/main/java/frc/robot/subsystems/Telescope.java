@@ -31,12 +31,6 @@ public class Telescope extends SubsystemBase {
     private static final double kD = Constants.kTelescope.kPID.kD;
     private static final double kF = Constants.kTelescope.kPID.kF;
 
-    public interface LimitSwitch {
-        public boolean isSwitchOn();
-    }
-
-    private LimitSwitch activeSwitch;
-
     private static DigitalInput s_maxLimSwitch;
     private static DigitalInput s_minLimSwitch;
 
@@ -101,10 +95,26 @@ public class Telescope extends SubsystemBase {
         return !s_minLimSwitch.get();
     }
 
-    public LimitSwitch getSwitch() {
-        return activeSwitch;
+    public int rotationDirection() {
+        
+        if (s_encoder.getVelocity() > 0.5) {
+            return 1;
+        } else if (s_encoder.getVelocity() < -0.5) {
+            return -1;
+        }
+        return 0;
     }
-
+    
+    public boolean getSwitch() {
+        if (rotationDirection() == 1) {
+            return getMaxLimSwitch();
+        } else if (rotationDirection() == -1) {
+            return getMinLimSwitch();
+        } else {
+            return false;
+        }
+    }
+    
     public void extend(double setpoint) {
         c_pidController.setReference(setpoint, ControlType.kPosition);
     }
@@ -117,14 +127,6 @@ public class Telescope extends SubsystemBase {
         mot_extender.set(0.1);
     }
 
-    public int rotationDirection() {
-
-        if (s_encoder.getVelocity() > 0.5) {
-            return 1;
-        } else if (s_encoder.getVelocity() < -0.5) {
-            return -1;
-        } else return 0;
-    }
 
     public double getPrevPos() {
         return prevPos;
@@ -142,14 +144,6 @@ public class Telescope extends SubsystemBase {
         shuffleboardFields.get("EncoderData").setDouble(getDistance());
 
         shuffleboardFields.get("SpeedOfArm").setDouble(rotationDirection());
-
-        if (rotationDirection() == 1) {
-            activeSwitch = this::getMaxLimSwitch;
-        } else if (rotationDirection() == -1) {
-            activeSwitch = this::getMinLimSwitch;
-        }
-        // This method will be called once per scheduler run
-        
     }
 
     @Override

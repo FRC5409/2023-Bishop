@@ -38,11 +38,7 @@ public class TelescopeTo extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (sys_telescope.getSwitch().isSwitchOn()) {
-            return true;
-        }
-
-        return Math.abs(setPoint - sys_telescope.getDistance()) <= 0.2;
+        return sys_telescope.getSwitch() || Math.abs(setPoint - sys_telescope.getDistance()) <= 0.2;
     }
 
 }
