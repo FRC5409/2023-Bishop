@@ -121,8 +121,8 @@ public final class Constants {
 
         public static final int currentLimit                     = 30;
 
-        public static final double openPosition                  = -6841;
-        public static final double closePosition                 = -18000;
+        public static final double openPosition                  = -6000;
+        public static final double closePosition                 = -17500;
 
         public static final double zeroSpeed                     = 0.1;
 

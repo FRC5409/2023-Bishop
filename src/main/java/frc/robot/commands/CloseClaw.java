@@ -7,10 +7,14 @@ import frc.robot.subsystems.Claw;
 public class CloseClaw extends CommandBase {
 
     private final Claw m_claw;
+    private final boolean isAuto;
 
-    public CloseClaw(Claw claw) {
+    private boolean hasClosed = false;
+
+    public CloseClaw(Claw claw, boolean auto) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
+        isAuto = auto;
 
         addRequirements(m_claw);
     }
@@ -18,11 +22,21 @@ public class CloseClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.clawGoTo(kClaw.closePosition);
+        hasClosed = false;
+        if (!isAuto) {
+            m_claw.closeClaw();
+        }
     }
 
     @Override
-    public void execute() {}
+    public void execute() {
+        if (m_claw.getDistanceFromClaw() <= kClaw.objectRange) {
+            if (!hasClosed) {
+                m_claw.closeClaw();
+                hasClosed = true;
+            }
+        }
+    }
 
     // Called once the command ends or is interrupted.
     @Override
@@ -32,7 +46,11 @@ public class CloseClaw extends CommandBase {
 
     @Override 
     public boolean isFinished() {
-        return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
+        if (!isAuto) {
+            return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
+        } else {
+            return hasClosed && Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
+        }
     }
 
 }
