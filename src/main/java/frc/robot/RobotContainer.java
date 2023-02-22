@@ -96,8 +96,7 @@ public class RobotContainer
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    public RobotContainer(PathPlannerTrajectory trajectory)
-    {
+    public RobotContainer(PathPlannerTrajectory trajectory) {
 
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
@@ -170,8 +169,7 @@ public class RobotContainer
       */
 
 
-    private void configureBindings()
-    {
+    private void configureBindings() {
         // joystickMain.povUp()
         //     .onTrue(cmd_pivotUp);
         
@@ -242,8 +240,7 @@ public class RobotContainer
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand()
-    {
+    public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
         // Disable ramp rate
