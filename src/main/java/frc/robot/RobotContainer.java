@@ -67,14 +67,6 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotMove cmd_pivotExtend;
-    private final PivotMove cmd_pivotStoring;
-    private final PivotManualMove cmd_pivotUp;
-    private final PivotManualMove cmd_pivotDown;
-    private final WristMove cmd_wristPickup;
-    private final WristMove cmd_wristHandoff;
-    private final RollerMove cmd_rollerCapture;
-    private final RollerMove cmd_rollerRelease;
     private final PivotZeroEncoder cmd_pivotZero;
 
     // Sequential commands
@@ -111,17 +103,6 @@ public class RobotContainer
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
 
-        // Commands
-        cmd_pivotExtend = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended);
-        cmd_pivotStoring = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring);
-        cmd_pivotUp = new PivotManualMove(sys_intakePivot, 9.6);
-        cmd_pivotDown = new PivotManualMove(sys_intakePivot, -9.6);
-        cmd_wristPickup = new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup);
-        cmd_wristHandoff = new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff);
-        cmd_rollerCapture = new RollerMove(sys_intakeRoller, 3.6);
-        cmd_rollerRelease = new RollerMove(sys_intakeRoller, 3.6);
-        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
-
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
@@ -136,6 +117,7 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
+        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -170,67 +152,40 @@ public class RobotContainer
 
 
     private void configureBindings() {
-        // joystickMain.povUp()
-        //     .onTrue(cmd_pivotUp);
-        
-        // joystickMain.povDown()
-        //     .onTrue(cmd_pivotDown);
 
-        // joystickMain.y()
-        //      .onTrue(cmd_wristPickup);
-
-        // joystickMain.a()
-        //      .onTrue(cmd_wristHandoff);
-
-        // joystickMain.x()
-        //     .whileTrue(cmd_rollerCapture);
-        
-        // joystickMain.b()
-        //     .whileTrue(cmd_rollerRelease);
-
-        joystickMain.x()
+        joystickMain.a()
             .whileTrue(seq_intakePickup)
             .whileFalse(seq_intakeHandoff);
-
-        // joystickMain.rightBumper()
-        //     .whileFalse(seq_intakeHandoff);
         
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
-    // private void configureBindings() {
 
-    //     // joystickMain.x()
-    //     //     .onTrue(new OpenClaw(sys_claw).andThen(new CloseClaw(sys_claw)))
-    //     //     .onFalse(new CloseClaw(sys_claw));
-    //     joystickMain.x()
-    //     .onTrue(new OpenClaw(sys_claw))
-    //     .onFalse(new CloseClaw(sys_claw));
-        
+        joystickMain.x()
+            .onTrue(new OpenClaw(sys_claw))
+            .onFalse(new CloseClaw(sys_claw));
 
-    //     joystickMain.y()
-    //         .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+        joystickMain.y()
+            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
 
-    //     joystickMain.leftBumper()
-    //         .onTrue(cmd_lowSpeed)
-    //         .onFalse(cmd_midSpeed);
+        joystickMain.leftBumper()
+            .onTrue(cmd_lowSpeed)
+            .onFalse(cmd_midSpeed);
 
-    //     joystickMain.rightBumper()
-    //         .onTrue(cmd_highSpeed)
-    //         .onFalse(cmd_midSpeed);
+        joystickMain.rightBumper()
+            .onTrue(cmd_highSpeed)
+            .onFalse(cmd_midSpeed);
 
-    //     joystickSecondary.povUp().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
-    //     joystickSecondary.povLeft().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
-    //     joystickSecondary.povDown().onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+        joystickSecondary.povUp()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+        joystickSecondary.povLeft()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
+        joystickSecondary.povDown()
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
 
-    //     // joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.55)); // intake back
-    //     // joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, -.06)); // intake front
-    //     // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, .057)); // placement forward
-    //     // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.44)); // placement back
-    //   //  joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdlepos));
-    //     joystickSecondary.x().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
-    //     joystickSecondary.b().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
-    //    // joystickSecondary.y().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacehigh));
-    //    // joystickSecondary.a().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kplacelow));
+        joystickSecondary.x()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+        joystickSecondary.b()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
     }
 
     
