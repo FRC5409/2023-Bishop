@@ -78,14 +78,14 @@ public class RobotContainer
     private final PivotZeroEncoder cmd_pivotZero;
 
     // Sequential commands
-    // private final IntakePickupSequence seq_intakePickup;
-    // private final IntakeHandoffSequence seq_intakeHandoff;
+    private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHandoffSequence seq_intakeHandoff;
     public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
-        
+
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
@@ -124,8 +124,8 @@ public class RobotContainer
         cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
 
         // Sequential commands
-        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         sys_candle = new Candle();
@@ -172,26 +172,27 @@ public class RobotContainer
 
     private void configureBindings()
     {
-        joystickMain.povUp()
-            .onTrue(cmd_pivotUp);
+        // joystickMain.povUp()
+        //     .onTrue(cmd_pivotUp);
         
-        joystickMain.povDown()
-            .onTrue(cmd_pivotDown);
+        // joystickMain.povDown()
+        //     .onTrue(cmd_pivotDown);
 
-        joystickMain.y()
-             .onTrue(cmd_wristPickup);
+        // joystickMain.y()
+        //      .onTrue(cmd_wristPickup);
 
-        joystickMain.a()
-             .onTrue(cmd_wristHandoff);
+        // joystickMain.a()
+        //      .onTrue(cmd_wristHandoff);
+
+        // joystickMain.x()
+        //     .whileTrue(cmd_rollerCapture);
+        
+        // joystickMain.b()
+        //     .whileTrue(cmd_rollerRelease);
 
         joystickMain.x()
-            .whileTrue(cmd_rollerCapture);
-        
-        joystickMain.b()
-            .whileTrue(cmd_rollerRelease);
-        
-        // joystickMain.rightBumper()
-        //     .whileTrue(seq_intakePickup);
+            .whileTrue(seq_intakePickup)
+            .whileFalse(seq_intakeHandoff);
 
         // joystickMain.rightBumper()
         //     .whileFalse(seq_intakeHandoff);

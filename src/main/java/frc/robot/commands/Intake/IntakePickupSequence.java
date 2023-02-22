@@ -6,18 +6,18 @@ package frc.robot.commands.Intake;
 
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
-public class IntakePickupSequence extends SequentialCommandGroup
+public class IntakePickupSequence extends ParallelCommandGroup
 {
   public IntakePickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller)
   {
     addCommands
     (
-      new PivotMove(pivot, kPivotSetpoints.kPivotExtended),
+      // new PivotMove(pivot, kPivotSetpoints.kPivotExtended),
       new WristMove(wrist, kWristSetpoints.kWristPickup),
       new RollerMove(roller, 3.6)
     );
