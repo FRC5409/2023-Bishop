@@ -121,14 +121,14 @@ public final class Constants {
 
         public static final int currentLimit                     = 30;
 
-        public static final double openPosition                  = -6000;
-        public static final double closePosition                 = -17500;
+        public static final double openPosition                  = 3300;
+        public static final double closePosition                 = 22500;
 
         public static final double zeroSpeed                     = 0.1;
 
         public static final double encoderOffset                 = 400;
 
-        public static final double kP                            = 0.1;
+        public static final double kP                            = 0.2;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;

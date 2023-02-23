@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,9 +20,10 @@ public class Claw extends SubsystemBase {
 
     private final TimeOfFlight clawSensor;
 
-    private final ShuffleboardTab clawTab;
-    private final GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry;
-    // private final GenericEntry kP, kI, kD, kF;
+    private ShuffleboardTab clawTab;
+    private GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry;
+
+    private final boolean debug = true;
 
     public Claw() {
         clawMot = new WPI_TalonFX(kClaw.clawCANID, Constants.kCANBus.bus_rio);
@@ -36,31 +38,28 @@ public class Claw extends SubsystemBase {
 
         zeroEncoder();
 
-        clawTab = Shuffleboard.getTab("Claw");
+        if (debug) {
+            clawTab = Shuffleboard.getTab("Claw");
 
-        // kP = clawTab.add("kP", 0).getEntry();
-        // kI = clawTab.add("kI", 0).getEntry();
-        // kD = clawTab.add("kD", 0).getEntry();
-        // kF = clawTab.add("kF", 0).getEntry();
-
-        encoderPosEntry = clawTab.add("Encoder", getEncoderPosition()).getEntry();
-        encoderVeloEntry = clawTab.add("Encoder Velo", getEncoderVelocity()).getEntry();
-        isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
-        tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
-        distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry(); 
+            encoderPosEntry = clawTab.add("Encoder", getEncoderPosition()).getEntry();
+            encoderVeloEntry = clawTab.add("Encoder Velo", getEncoderVelocity()).getEntry();
+            isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
+            tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
+            distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry(); 
+        }
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
 
-        encoderPosEntry.setDouble(getEncoderPosition());
-        encoderVeloEntry.setDouble(getEncoderVelocity());
-        isStalledEntry.setBoolean(isStalled());
-        tempEntry.setDouble(getMotorTempature());
-        distanceEntry.setDouble(getDistanceFromClaw());
-
-        // setPIDF(kP.getDouble(0), kI.getDouble(0), kD.getDouble(0), kF.getDouble(0));
+        if (debug) {
+            encoderPosEntry.setDouble(getEncoderPosition());
+            encoderVeloEntry.setDouble(getEncoderVelocity());
+            isStalledEntry.setBoolean(isStalled());
+            tempEntry.setDouble(getMotorTempature());
+            distanceEntry.setDouble(getDistanceFromClaw());
+        }
     }
 
     @Override
@@ -187,9 +186,11 @@ public class Claw extends SubsystemBase {
 
     public boolean isStalled() {
         double velo = getEncoderVelocity();
-        if (clawMot.get() != 0) {
-            if (velo <= 0.1) {
+        if (clawMot.getSupplyCurrent() >= 0.1) {
+            if (velo <= 30) {
                 //motor stalled
+                //For the close claw command
+                Timer.delay(0.5);
                 return true;
             } else {
                 //motor not stalled

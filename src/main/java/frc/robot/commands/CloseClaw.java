@@ -47,9 +47,9 @@ public class CloseClaw extends CommandBase {
     @Override 
     public boolean isFinished() {
         if (!isAuto) {
-            return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
+            return Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset || m_claw.isStalled();
         } else {
-            return hasClosed && Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset;
+            return hasClosed && (Math.abs(m_claw.getEncoderPosition() - kClaw.closePosition) <= kClaw.encoderOffset || m_claw.isStalled());
         }
     }
 
