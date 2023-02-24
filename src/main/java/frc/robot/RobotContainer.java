@@ -25,8 +25,6 @@ import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotZeroEncoder;
 import frc.robot.commands.auto.Auto;
-import frc.robot.commands.sequencing.RotateArmGroup;
-
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
