@@ -13,9 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -48,8 +46,6 @@ public class Drivetrain extends SubsystemBase {
     private final WPI_Pigeon2 m_gyro;
     private final DifferentialDriveOdometry m_odometry;
 
-    private final Accelerometer m_accelerometer;
-
     private final ShuffleboardTab sb_drivetrainTab;
     private final GenericEntry nt_leftVelocity;
     private final GenericEntry nt_rightVelocity;
@@ -66,10 +62,6 @@ public class Drivetrain extends SubsystemBase {
     private final ShuffleboardTab sb_driveTab;
     private final GenericEntry nt_turningSpeedEntry;
     private final GenericEntry nt_forwardSpeedEntry;
-
-    private int currentJoystick = 0;
-
-    private double currentRampRate;
 
 
     public Drivetrain() {
@@ -111,8 +103,6 @@ public class Drivetrain extends SubsystemBase {
         m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_drive);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
-        m_accelerometer = new BuiltInAccelerometer();
-
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
 
         resetGyro();
@@ -134,8 +124,6 @@ public class Drivetrain extends SubsystemBase {
         sb_driveTab = Shuffleboard.getTab("Drive Team");
         nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
         nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
-
-        currentJoystick = 0;
     }
 
     /**
@@ -202,18 +190,6 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.configOpenloopRamp(seconds);
         mot_rightCentreDrive.configOpenloopRamp(seconds);
         mot_rightRearDrive.configOpenloopRamp(seconds);
-
-        currentRampRate = seconds;
-    }
-
-    /**
-     * Gets the current ramp rate applied to all the motors
-     * @return ramp rate in seconds
-     */
-
-    public double getRampRate() {
-        //gets the current ramprate applied to the motors
-        return currentRampRate;
     }
 
     /**
@@ -405,33 +381,6 @@ public class Drivetrain extends SubsystemBase {
         //updating the multipliers for the drive
         nt_forwardSpeedEntry.setDouble(speed);
         nt_turningSpeedEntry.setDouble(turningSpeed);
-    }
-
-    /**
-     * Gets the current joystick for the driver
-     * @return returns who is in control of the robot
-     */
-
-    public int getCurrentJoystick() {
-        //returns the current joystick
-        return currentJoystick;
-    }
-
-    /**
-     * switches the joystick from 0 to 1 and 1 to 0
-     */
-
-    public void changeJoystickState() {
-        //switches from 0 to 1 and 1 to 0
-        currentJoystick = (currentJoystick + 1) % 2;
-    }
-
-    /**
-     * Get the robot acceleration in m/s^2
-     * @return robot acceleration
-     */
-    public double getRobotAcceleration() {
-        return m_accelerometer.getY() * 9.81;
     }
 
     // ----------

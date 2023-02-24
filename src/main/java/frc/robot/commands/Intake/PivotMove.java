@@ -2,45 +2,44 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Intake.IntakePivot;
 
-public class ArmRotation extends CommandBase {
-  private final ArmPIDSubsystem sys_arm;
+public class PivotMove extends CommandBase
+{
+  private final IntakePivot sys_intakePivot;
   private double setpoint;
 
-
-  /** Creates a new ArmRotation2. */
-  public ArmRotation(ArmPIDSubsystem armPIDSubsystem, double setpoint) {
-    sys_arm = armPIDSubsystem;
+  public PivotMove(IntakePivot subsystem, double setpoint)
+  {
+    sys_intakePivot = subsystem;
     this.setpoint = setpoint;
 
-    addRequirements(sys_arm);
+    addRequirements(sys_intakePivot);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    sys_arm.setSetpoint(setpoint);
-    sys_arm.enable();
-  
+  public void initialize()
+  {
+    sys_intakePivot.setSetpoint(setpoint);
+    sys_intakePivot.enable();
   }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-//    sys_arm.disable();
-    sys_arm.setPrevPos(setpoint);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return Math.abs(setpoint - sys_arm.getMeasurement()) < 0.10;
+  public boolean isFinished()
+  {
+    return true;
   }
 }
