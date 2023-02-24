@@ -180,33 +180,33 @@ public final class Constants {
         public static final double kD_chargeStation             = 0;
     }
     public static class kCANdle {
-        public final static int staticTime                      = 750;
+        public static final int staticTime                      = 750;
 
         public static class kConfig {
 
-            public final static int CANID                       = 19;
-            public final static int LEDCount                    = 94;
+            public static final int CANID                       = 19;
+            public static final int LEDCount                    = 94;
 
-            public final static int LEDInnerRight               = 30;
-            public final static int LEDInnerLeft                = 26;
-            public final static int LEDOutter                   = 15;
+            public static final int LEDInnerRight               = 30;
+            public static final int LEDInnerLeft                = 26;
+            public static final int LEDOutter                   = 15;
         }
 
         public static class kColors {
 
-            public final static int[] idle                      = {255, 134 , 0};
-            public final static int[] cube                      = {142, 39, 245};
-            public final static int[] cone                      = {237, 120, 0};
+            public static final int[] idle                      = {255, 134 , 0};
+            public static final int[] cube                      = {142, 39, 245};
+            public static final int[] cone                      = {237, 120, 0};
 
-            public final static int LEDSinCount                 = 8;
-            public final static double kSpeed                   = 0.5;
+            public static final int LEDSinCount                 = 8;
+            public static final double kSpeed                   = 0.5;
 
-            public final static double sinFrequency             = 0.025;
-            public final static double sinFrequencySpeed        = 20;
+            public static final double sinFrequency             = 0.025;
+            public static final double sinFrequencySpeed        = 20;
 
-            public final static int chargeSpeed                 = 4;
+            public static final int chargeSpeed                 = 4;
 
-            public final static double gameSpeed                = 0.2;
+            public static final double gameSpeed                = 0.2;
             
         }
 
@@ -221,36 +221,32 @@ public final class Constants {
     }
 
     public static class kArmSubsystem {
-        public final static int kMotor1ID                       = 32;
-        public final static int kMotor2ID                       = 33;
-        public final static int kEncoderChannel                 = 4;
+        public static final int kMotor1ID                       = 32;
+        public static final int kMotor2ID                       = 33;
+        public static final int kEncoderChannel                 = 4;
 
-        public final static double kVoltageLimit                = 10.5;
-        public final static int kCurrentLimit                   = 30;
-        public final static double kPositionTolerance           = 0.1;
-        public final static double kg                           = 0.4;
-        public final static double knintydegreepos              = -0.042;
+        public static final double kVoltageLimit                = 10.5;
+        public static final int kCurrentLimit                   = 30;
+        public static final double kPositionTolerance           = 0.1;
+        public static final double kg                           = 0.4;
+        public static final double knintydegreepos              = -0.042;
 
         public static class kPID {
-            public final static double kP                       = 50;
-            public final static double kI                       = 0;
-            public final static double kD                       = 0;
+            public static final double kP                       = 50;
+            public static final double kI                       = 0;
+            public static final double kD                       = 0;
         }
     
         public static class kSetpoints{
-            public final static double kfront                   = 0.5; 
-            public final static double kback                    = 0.0; 
+            public static final double kfront                   = 0.5; 
+            public static final double kback                    = 0.0;
 
-            public final static double kToTop                   = 0.0; //placeholder
-            public final static double kToMid                   = 0.0; //placeholder
+            public static final double kHandoffPosition         = 0.55;
+            public static final double kGetConeFromIntake       = 0.55;
 
-            public final static double kToGroundFront           = 0.0; //placeholder
-            public final static double kToGroundBack            = 0.0; //placeholder
-            
-            public final static double kToLoading               = 0.0; //placeholder
-            public final static double kToHandoff               = 0.0; //placeholder
-
-            public final static double kIdling                  = 0.0; // placeholder
+            public static final double kScoreHighShoulderSide   = 0.077;
+            public static final double kScoreMidShoulderSide    = 0.5;
+            public static final double kScoreMidIntakeSide      = 0.47;
         }
     }
 
