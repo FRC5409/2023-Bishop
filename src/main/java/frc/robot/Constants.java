@@ -237,6 +237,8 @@ public final class Constants {
             
             public final static double kToLoading               = 0.0; //placeholder
             public final static double kToHandoff               = 0.0; //placeholder
+
+            public final static double kIdling                  = 0.0; // placeholder
         }
     }
 
