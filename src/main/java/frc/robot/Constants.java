@@ -117,6 +117,8 @@ public final class Constants {
 
         public static final int clawCANID                        = 29;
 
+        public static final int dutyCycleChannel                 = 3;
+
         public static final int ToFCANID                         = 36;
 
         public static final int currentLimit                     = 30;

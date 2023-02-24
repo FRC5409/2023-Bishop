@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,8 +21,10 @@ public class Claw extends SubsystemBase {
 
     private final TimeOfFlight clawSensor;
 
+    private final DutyCycleEncoder clawDutyEncoder;
+
     private ShuffleboardTab clawTab;
-    private GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry;
+    private GenericEntry encoderPosEntry, encoderVeloEntry, tempEntry, distanceEntry, isStalledEntry, dutyEncoderEntry;
 
     private final boolean debug = true;
 
@@ -30,7 +33,7 @@ public class Claw extends SubsystemBase {
 
         configMot();
 
-        // clawAbsoluteEncoder = new DutyCycleEncoder(kClaw.DutyCycleChannel);
+        clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
 
         clawSensor = new TimeOfFlight(kClaw.ToFCANID);
 
@@ -46,6 +49,7 @@ public class Claw extends SubsystemBase {
             isStalledEntry = clawTab.add("Is Stalled", isStalled()).getEntry();
             tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
             distanceEntry = clawTab.add("Distance", getDistanceFromClaw()).getEntry(); 
+            dutyEncoderEntry = clawTab.add("Duty", getDutyPosition()).getEntry();
         }
     }
 
@@ -59,6 +63,7 @@ public class Claw extends SubsystemBase {
             isStalledEntry.setBoolean(isStalled());
             tempEntry.setDouble(getMotorTempature());
             distanceEntry.setDouble(getDistanceFromClaw());
+            dutyEncoderEntry.setDouble(getDutyPosition());
         }
     }
 
@@ -219,6 +224,23 @@ public class Claw extends SubsystemBase {
 
     public double getDistanceFromClaw() {
         return clawSensor.getRange();
+    }
+
+    /**
+     * Gets the duty cycle encoders position
+     * @return position
+     */
+
+    public double getDutyPosition() {
+        return clawDutyEncoder.get();
+    }
+
+    /**
+     * Resets the duty cycle encoder
+     */
+
+    public void resetDutyEncoder() {
+        clawDutyEncoder.reset();
     }
 
 }
