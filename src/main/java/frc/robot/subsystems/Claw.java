@@ -8,7 +8,6 @@ import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -194,8 +193,6 @@ public class Claw extends SubsystemBase {
         if (clawMot.getSupplyCurrent() >= 0.1) {
             if (velo <= 30) {
                 //motor stalled
-                //For the close claw command
-                Timer.delay(0.5);
                 return true;
             } else {
                 //motor not stalled

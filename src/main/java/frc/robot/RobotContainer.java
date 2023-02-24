@@ -157,6 +157,8 @@ public class RobotContainer
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
+        //TODO: FIX zeroing
+
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
 

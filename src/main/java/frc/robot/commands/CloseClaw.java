@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.Claw;
@@ -33,7 +34,10 @@ public class CloseClaw extends CommandBase {
         if (m_claw.getDistanceFromClaw() <= kClaw.objectRange) {
             if (!hasClosed) {
                 m_claw.closeClaw();
-                hasClosed = true;
+                if (m_claw.isStalled()) {
+                    Timer.delay(0.5);
+                    hasClosed = true;
+                }
             }
         }
     }
