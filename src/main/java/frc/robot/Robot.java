@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.SetCoastMode;
 
@@ -36,11 +35,13 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
+    m_robotContainer.sys_claw.zeroEncoder();
+
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
       .negate()
       .debounce(5)
-      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain));
+      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_claw, m_robotContainer.sys_telescope));
   }
 
   /**
@@ -62,10 +63,9 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
-      // m_robotContainer.sys_candle.idleAnimation();
-      // Commands.runOnce(m_robotContainer.sys_candle::idleAnimation).ignoringDisable(true).schedule();
-    // }
+    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+      m_robotContainer.sys_candle.idleAnimation();
+    }
   }
 
   @Override
@@ -74,8 +74,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_robotContainer.sys_candle.inGameAnimation();
-    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    m_robotContainer.sys_candle.inGameAnimation();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
@@ -92,22 +91,17 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     if (DriverStation.getMatchTime() <= 0.1) {
-      // m_robotContainer.sys_candle.chargedUp();
-      // Commands.runOnce(m_robotContainer.sys_candle::chargedUp).ignoringDisable(true).schedule();
+      m_robotContainer.sys_candle.chargedUp();
     }
   }
 
   @Override
   public void teleopInit() {
-    //TODO: Remove this later
-    m_robotContainer.sys_claw.zeroEncoder();
     // Set in game animation
-    // m_robotContainer.sys_candle.inGameAnimation();
-    // Commands.runOnce(m_robotContainer.sys_candle::inGameAnimation).ignoringDisable(true).schedule();
+    m_robotContainer.sys_candle.inGameAnimation();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
-    //Commands.runOnce((() -> new ArmRotation(m_robotContainer.sys_ArmPIDSubsystem, Constants.kArmSubsystem.Setpoints.kdrivingpos))).schedule();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
