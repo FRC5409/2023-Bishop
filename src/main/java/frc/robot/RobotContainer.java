@@ -14,7 +14,6 @@ import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.PivotZeroEncoder;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.auto.Auto;
@@ -67,7 +66,8 @@ public class RobotContainer
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotZeroEncoder cmd_pivotZero;
+    private final PivotManualMove cmd_pivotManualUp;
+    private final PivotManualMove cmd_pivotManualDown;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -117,7 +117,8 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
+        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -155,17 +156,17 @@ public class RobotContainer
 
         joystickMain.a()
             .whileTrue(seq_intakePickup)
-            .whileFalse(seq_intakeHandoff);
-        
-        joystickMain.rightStick()
-            .onTrue(cmd_pivotZero);
+            .onFalse(seq_intakeHandoff);
 
         joystickMain.x()
             .onTrue(new OpenClaw(sys_claw))
             .onFalse(new CloseClaw(sys_claw));
-
+        
         joystickMain.y()
-            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+            .whileTrue(cmd_pivotManualUp);
+        
+        joystickMain.b()
+            .whileTrue(cmd_pivotManualDown);
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
