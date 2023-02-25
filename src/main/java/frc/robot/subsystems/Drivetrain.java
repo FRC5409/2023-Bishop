@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kGyro;
+import frc.robot.Constants.kDrivetrain.kDriveteam;
 import frc.robot.Constants.kDrivetrain.kMotor;
 
 public class Drivetrain extends SubsystemBase {
@@ -45,6 +47,8 @@ public class Drivetrain extends SubsystemBase {
     private final WPI_Pigeon2 m_gyro;
     private final DifferentialDriveOdometry m_odometry;
 
+    private double currentRampRate = kDriveteam.rampRate;
+
     private final ShuffleboardTab sb_drivetrainTab;
     private final GenericEntry nt_leftVelocity;
     private final GenericEntry nt_rightVelocity;
@@ -57,6 +61,10 @@ public class Drivetrain extends SubsystemBase {
     private final GenericEntry nt_gyroRoll;
     private final GenericEntry nt_poseMetersX;
     private final GenericEntry nt_poseMetersY;
+
+    private final ShuffleboardTab sb_driveTab;
+    private final GenericEntry nt_turningSpeedEntry;
+    private final GenericEntry nt_forwardSpeedEntry;
 
 
     public Drivetrain() {
@@ -95,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
         resetEncoders();
 
         // Gyro and odometry
-        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_rio);
+        m_gyro = new WPI_Pigeon2(kGyro.id_gyro, kCANBus.bus_drive);
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
@@ -115,6 +123,10 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll = sb_drivetrainTab.add("Gyro roll", getRoll()).getEntry();
         nt_poseMetersX = sb_drivetrainTab.add("X Pose meters", m_odometry.getPoseMeters().getX()).getEntry();
         nt_poseMetersY = sb_drivetrainTab.add("Y Pose meters", m_odometry.getPoseMeters().getY()).getEntry();
+
+        sb_driveTab = Shuffleboard.getTab("Drive Team");
+        nt_turningSpeedEntry = sb_driveTab.add("Turning Speed Multiplier: ", kDriveteam.defaultTurningMultiplier).getEntry();
+        nt_forwardSpeedEntry = sb_driveTab.add("Speed Multiplier: ", kDriveteam.defaultSpeedMultiplier).getEntry();
     }
 
     /**
@@ -165,14 +177,15 @@ public class Drivetrain extends SubsystemBase {
         setNeutralMode(m_neutralMode);
 
         // Ramp rate
-        rampRate(kDrivetrain.kMotor.rampRate);
+        rampRate(kDrivetrain.kDriveteam.rampRate);
     }
 
     /**
      * Set ramp rate on motors
-     * @param seconds time
+     * @param seconds time to get to desired speed
      */
     public void rampRate(double seconds) {
+        //sets the ramprate to all the motors
         mot_leftFrontDrive.configOpenloopRamp(seconds);
         mot_leftCentreDrive.configOpenloopRamp(seconds);
         mot_leftRearDrive.configOpenloopRamp(seconds);
@@ -180,6 +193,17 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.configOpenloopRamp(seconds);
         mot_rightCentreDrive.configOpenloopRamp(seconds);
         mot_rightRearDrive.configOpenloopRamp(seconds);
+
+        currentRampRate = seconds;
+    }
+
+    /**
+     * Gets the current ramprate
+     * @return seconds
+     */
+
+    public double getRampRate() {
+        return currentRampRate;
     }
 
     /**
@@ -188,7 +212,9 @@ public class Drivetrain extends SubsystemBase {
      * @param zRotation rotation
      */
     public void arcadeDrive(double xSpeed, double zRotation) {
-        m_diffDrive.arcadeDrive(xSpeed, zRotation);
+        m_diffDrive.arcadeDrive(
+            xSpeed * nt_forwardSpeedEntry.getDouble(1),
+            zRotation * nt_turningSpeedEntry.getDouble(1));
     }
 
     /**
@@ -199,6 +225,17 @@ public class Drivetrain extends SubsystemBase {
     public void tankDriveVoltages(double leftVolts, double rightVolts) {
         mot_leftFrontDrive.setVoltage(leftVolts);
         mot_rightFrontDrive.setVoltage(rightVolts);
+        m_diffDrive.feed();
+    }
+
+    /**
+     * Tank Drive % speeds, for setting motor speeds
+     * @param speed speed at which the drivetrain should spin at
+     */
+
+    public void tankDriveSpeeds(double speed) {
+        mot_leftFrontDrive.set(speed);
+        mot_rightFrontDrive.set(speed);
         m_diffDrive.feed();
     }
 
@@ -214,6 +251,18 @@ public class Drivetrain extends SubsystemBase {
         mot_rightFrontDrive.setNeutralMode(newMode);
         mot_rightCentreDrive.setNeutralMode(newMode);
         mot_rightRearDrive.setNeutralMode(newMode);
+    }
+
+    /**
+     * Toggles neutral mode
+     */
+
+    public void toggleNeutralMode() {
+        if (getNeutralMode() == NeutralMode.Brake) {
+            setNeutralMode(NeutralMode.Coast);
+        } else {
+            setNeutralMode(NeutralMode.Brake);
+        }
     }
 
     /**
@@ -268,6 +317,15 @@ public class Drivetrain extends SubsystemBase {
      */
     public double getRightVelocity() {
         return enc_rightDrive.getVelocity();
+    }
+
+    /**
+     * Get the absolute motor velocitys
+     * @return The absolute motor speeds
+     */
+
+    public double getAverageVelocity() {
+        return (Math.abs(getLeftVelocity()) + Math.abs(getRightVelocity())) / 2;
     }
 
     // ----------
@@ -327,6 +385,18 @@ public class Drivetrain extends SubsystemBase {
         m_odometry.resetPosition(m_gyro.getRotation2d(), 0, 0, pose);
     }
 
+    /**
+     * Sets the speed multiplier for the network table entry
+     * @param speed x speed
+     * @param turningSpeed z rotation
+     */
+
+    public void setSpeed(double speed, double turningSpeed) {
+        //updating the multipliers for the drive
+        nt_forwardSpeedEntry.setDouble(speed);
+        nt_turningSpeedEntry.setDouble(turningSpeed);
+    }
+
     // ----------
 
     @Override
@@ -346,6 +416,7 @@ public class Drivetrain extends SubsystemBase {
         nt_gyroRoll.setDouble(getRoll());
         nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
         nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
+        
     }
 
     @Override
