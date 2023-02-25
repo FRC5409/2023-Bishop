@@ -23,7 +23,7 @@ public class MidConeAuto extends SequentialCommandGroup {
                 Claw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
-            new CloseClaw(sys_claw, false, kClaw.coneClosePosition),
+            new CloseClaw(sys_claw, kClaw.coneClosePosition),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToTop),
             Commands.waitSeconds(1),
             new OpenClaw(sys_claw, false),
