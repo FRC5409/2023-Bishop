@@ -268,14 +268,12 @@ public class Limelight extends SubsystemBase {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
     }
 
-    public void dynamicCrop(char targetType, double[] targetPos){
-        ;    
-    }
+    public void dynamicCrop(char targetType, double[] targetPos) {}
     
     @Override
     public void periodic() {
         updateRobotPosition();
-        autoLight();
+        // autoLight();
         checkHealth();
     }
 }

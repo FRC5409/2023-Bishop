@@ -10,7 +10,9 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -50,7 +52,10 @@ public class Robot extends TimedRobot {
     new Trigger(this::isEnabled)
       .negate()
       .debounce(5)
-      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain));
+      .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_claw, m_robotContainer.sys_telescope));
+
+    Timer.delay(0.1);
+    m_robotContainer.sys_claw.zeroEncoder();
   }
 
   /**
@@ -71,7 +76,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
+      m_robotContainer.sys_candle.idleAnimation();
+    }
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -79,6 +88,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.sys_candle.inGameAnimation();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
@@ -93,10 +103,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if (DriverStation.getMatchTime() <= 0.1) {
+      m_robotContainer.sys_candle.chargedUp();
+    }
+  }
 
   @Override
   public void teleopInit() {
+    // Set in game animation
+    m_robotContainer.sys_candle.inGameAnimation();
+    m_robotContainer.sys_claw.zeroEncoder();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
