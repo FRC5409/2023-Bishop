@@ -247,7 +247,7 @@ public final class Constants {
             public static final double kGetConeFromIntake       = 0.55;
 
             public static final double kScoreHighShoulderSide   = 0.077;
-            public static final double kScoreMidShoulderSide    = 0.5;
+            public static final double kScoreMidShoulderSide    = 0.05;
             public static final double kScoreMidIntakeSide      = 0.47;
         }
     }

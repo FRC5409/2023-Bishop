@@ -15,22 +15,22 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Telescope;
 
-public class Auto extends SequentialCommandGroup {
+public class MidConeAuto extends SequentialCommandGroup {
 
-    public Auto(
+    public MidConeAuto(
                 Drivetrain sys_drivetrain,
                 ArmPIDSubsystem sys_armPIDSubsystem,
                 Telescope sys_telescope,
                 Claw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
-            new CloseClaw(sys_claw),
+            new CloseClaw(sys_claw, false),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kScoreMidShoulderSide),
-            new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended),
+            // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended),
             Commands.waitSeconds(1),
-            new OpenClaw(sys_claw),
+            new OpenClaw(sys_claw, false),
             Commands.waitSeconds(1),
-            new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
+            // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kback),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)

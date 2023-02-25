@@ -19,7 +19,7 @@ import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.PivotZeroEncoder;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
-import frc.robot.commands.auto.Auto;
+import frc.robot.commands.auto.MidConeAuto;
 import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -69,7 +69,7 @@ import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotZeroEncoder;
-import frc.robot.commands.auto.Auto;
+import frc.robot.commands.auto.MidConeAuto;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -154,7 +154,7 @@ public class RobotContainer
         PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
 
         for (int i = 0; i < m_paths.length; i++) {
-            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints);
+            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints, true);
         }
 
         sb_driveteam = Shuffleboard.getTab("Drive Team");
@@ -279,7 +279,7 @@ public class RobotContainer
         // Reset odometry
         sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new Auto(sys_drivetrain, sys_ArmPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
+        return new MidConeAuto(sys_drivetrain, sys_ArmPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
