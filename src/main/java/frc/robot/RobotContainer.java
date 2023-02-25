@@ -39,45 +39,15 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import edu.wpi.first.math.trajectory.Trajectory;
 import frc.robot.subsystems.Telescope;
 
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
-import frc.robot.Constants.kArmSubsystem;
-import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kDrivetrain.kDriveteam;
-import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kOperator;
-
-import frc.robot.commands.ArmRotation;
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.GearShift;
-import frc.robot.commands.OpenClaw;
-import frc.robot.commands.TelescopeTo;
-import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotZeroEncoder;
-import frc.robot.commands.auto.MidConeAuto;
-import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.Candle;
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Telescope;
-import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeRoller;
-import frc.robot.subsystems.Intake.IntakeWrist;
 
 
 /**
@@ -110,7 +80,7 @@ public class RobotContainer
     // private final IntakePickupSequence seq_intakePickup;
     // private final IntakeHandoffSequence seq_intakeHandoff;
     public final Claw sys_claw;
-    // public final Candle sys_candle;
+    public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
 
@@ -143,7 +113,7 @@ public class RobotContainer
         // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
-        // sys_candle = new Candle();
+        sys_candle = new Candle();
         sys_ArmPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
 
