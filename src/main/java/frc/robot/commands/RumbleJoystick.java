@@ -18,12 +18,13 @@ public class RumbleJoystick extends InstantCommand {
     @Override
     public void initialize() {
         m_startTime = System.currentTimeMillis();
+        System.out.println("Rumble has started");
         m_joystick.getHID().setRumble(null, m_intensity);
-        System.out.println("RUMBLING");
     }
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("Rumble has stopped");
         m_joystick.getHID().setRumble(null, 0);
     }
 
