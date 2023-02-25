@@ -125,10 +125,10 @@ public final class Constants {
         public static final int currentLimit                     = 30;
 
         public static final double openPosition                  = 3300;
-        public static final double coneClosePosition             = 23500;
+        public static final double coneClosePosition             = 24500;
         public static final double cubeClosePosition             = 16400;
         
-        public static final int stallTime                        = 10;
+        public static final int stallTime                        = 20;
 
         public static final double encoderOffset                 = 400;
 
@@ -219,7 +219,7 @@ public final class Constants {
         public final static int kMotor2ID                       = 33;
         public final static int kEncoderChannel                 = 4;
 
-        public final static double kVoltageLimit                = 10.5;
+        public final static double kVoltageLimit                = 9;
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.1;
         public final static double kg                           = 0.4;
@@ -241,7 +241,7 @@ public final class Constants {
             
             public final static double kToLoadingRamp           = 0.48; //placeholder
             public final static double kToLoadingIntake         = 0.43;
-            public final static double kToLoadingshoulder       = 0.08;
+            public final static double kToLoadingshoulder       = 0.09;
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.34; // placeholder
