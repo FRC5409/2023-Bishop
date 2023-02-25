@@ -37,9 +37,35 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import frc.robot.subsystems.Telescope;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import frc.robot.Constants.kDrivetrain;
+import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+
+import frc.robot.commands.ArmRotation;
+import frc.robot.commands.CloseClaw;
+import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.GearShift;
+import frc.robot.commands.OpenClaw;
+import frc.robot.commands.TelescopeTo;
+import frc.robot.commands.Intake.IntakeHandoffSequence;
+import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.PivotZeroEncoder;
+import frc.robot.commands.auto.Auto;
+import frc.robot.commands.ConeNodeAim;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Telescope;
+import frc.robot.subsystems.Intake.IntakePivot;
+import frc.robot.subsystems.Intake.IntakeRoller;
+import frc.robot.subsystems.Intake.IntakeWrist;
 
 
 /**
@@ -68,6 +94,8 @@ public class RobotContainer
     private final DefaultDrive cmd_defaultDrive;
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
+    private final Limelight sys_limelight;
+    private final ConeNodeAim cmd_coneNodeAim;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -119,6 +147,8 @@ public class RobotContainer
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
         cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
+        sys_limelight = new Limelight(joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -159,14 +189,12 @@ public class RobotContainer
             .onFalse(seq_intakeHandoff);
 
         joystickMain.x()
-            .onTrue(new OpenClaw(sys_claw))
-            .onFalse(new CloseClaw(sys_claw));
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
         
         joystickMain.y()
-            .whileTrue(cmd_pivotManualUp);
-        
-        joystickMain.b()
-            .whileTrue(cmd_pivotManualDown);
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
@@ -178,15 +206,33 @@ public class RobotContainer
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
-        joystickSecondary.povLeft()
-            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
+        // joystickSecondary.povLeft()
+            // .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kMid));
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
 
+        // joystickSecondary.povUp()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToTop, kTelescope.kDestinations.kExtended));
+        // joystickSecondary.povRight()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, kTelescope.kDestinations.kMid));
+        // joystickSecondary.povDown()
+        //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
+
         joystickSecondary.x()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
+            joystickSecondary.a()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
+            joystickSecondary.y()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
+        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
+
+        // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
+        // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
+
+        joystickMain.b()
+            .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
     }
 
     
@@ -210,5 +256,3 @@ public class RobotContainer
     }
 
 }
-
-

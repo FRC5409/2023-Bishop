@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -22,6 +23,7 @@ public class Telescope extends SubsystemBase {
     private final CANSparkMax mot_extender;
 
     private final RelativeEncoder s_encoder;
+    private double prevPos;
 
     private final SparkMaxPIDController c_pidController;
 
@@ -29,12 +31,6 @@ public class Telescope extends SubsystemBase {
     private static final double kI = Constants.kTelescope.kPID.kI;
     private static final double kD = Constants.kTelescope.kPID.kD;
     private static final double kF = Constants.kTelescope.kPID.kF;
-
-    public interface LimitSwitch {
-        public boolean getActiveLimitSwitch();
-    }
-
-    private LimitSwitch activeSwitch;
 
     private static DigitalInput s_maxLimSwitch;
     private static DigitalInput s_minLimSwitch;
@@ -57,7 +53,7 @@ public class Telescope extends SubsystemBase {
 
         c_pidController = mot_extender.getPIDController();
         configPID();
-        c_pidController.setOutputRange(-1, 1);
+        c_pidController.setOutputRange(-1.25, 1.25);
         mot_extender.burnFlash();
 
         s_maxLimSwitch = new DigitalInput(Constants.kTelescope.kDeviceID.MAX_LIMIT_SWITCH_ID);
@@ -100,10 +96,26 @@ public class Telescope extends SubsystemBase {
         return !s_minLimSwitch.get();
     }
 
-    public LimitSwitch getSwitch() {
-        return activeSwitch;
+    public int rotationDirection() {
+        
+        if (s_encoder.getVelocity() > 0.5) {
+            return 1;
+        } else if (s_encoder.getVelocity() < -0.5) {
+            return -1;
+        }
+        return 0;
     }
-
+    
+    public boolean getSwitch() {
+        if (rotationDirection() == 1) {
+            return getMaxLimSwitch();
+        } else if (rotationDirection() == -1) {
+            return getMinLimSwitch();
+        } else {
+            return false;
+        }
+    }
+    
     public void extend(double setpoint) {
         c_pidController.setReference(setpoint, ControlType.kPosition);
     }
@@ -116,13 +128,22 @@ public class Telescope extends SubsystemBase {
         mot_extender.set(0.1);
     }
 
-    public int rotationDirection() {
 
-        if (s_encoder.getVelocity() > 0.5) {
-            return 1;
-        } else if (s_encoder.getVelocity() < -0.5) {
-            return -1;
-        } else return 0;
+    public double getPrevPos() {
+        return prevPos;
+    }
+
+    public void setPrevPos(double prevPos) {
+        this.prevPos = prevPos;
+    }
+
+    /**
+     * Sets the Neutral Mode
+     * @param newMode Brake, Coast
+     */
+
+     public void setNeutralMode(IdleMode newMode) {
+        mot_extender.setIdleMode(newMode);
     }
 
     @Override
@@ -133,14 +154,6 @@ public class Telescope extends SubsystemBase {
         shuffleboardFields.get("EncoderData").setDouble(getDistance());
 
         shuffleboardFields.get("SpeedOfArm").setDouble(rotationDirection());
-
-        if (rotationDirection() == 1) {
-            activeSwitch = this::getMaxLimSwitch;
-        } else if (rotationDirection() == -1) {
-            activeSwitch = this::getMinLimSwitch;
-        }
-        // This method will be called once per scheduler run
-        
     }
 
     @Override

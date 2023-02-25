@@ -84,26 +84,27 @@ public final class Constants {
         }
 
         public static final class kDriveteam {
-            public static final double rampRate                  = 0.2;
+            public static final double rampRate                 = 0.3;
+            public static final double stopRamp                 = 0.6;
 
-            public static final double defaultSpeedMultiplier    = 0.8;
-            public static final double defaultTurningMultiplier  = 0.8;
+            public static final double defaultSpeedMultiplier   = 0.8;
+            public static final double defaultTurningMultiplier = 0.8;
                 
-            public static final double slowSpeed                 = 0.5;
-            public static final double slowTurn                  = 0.6;
+            public static final double slowSpeed                = 0.5;
+            public static final double slowTurn                 = 0.6;
 
-            public static final double boostSpeed                = 1;
-            public static final double boostTurningSpeed         = 1;
+            public static final double boostSpeed               = 1;
+            public static final double boostTurningSpeed        = 1;
                 
-            public static final double kChangeRamp               = 0.5;
-            public static final int timerLength                  = 50;
+            public static final double kChangeRamp              = 0.5;
+            public static final int timerLength                 = 50;
 
-            public static final double maxSpinSpeed              = 3;
-            public static final double lowerSpinSpeed            = 0.7;
-            public static final double spinRamp                  = 1;
-            public static final int lowerTimer                   = 10;
+            public static final double maxSpinSpeed             = 3;
+            public static final double lowerSpinSpeed           = 0.7;
+            public static final double spinRamp                 = 1;
+            public static final int lowerTimer                  = 10;
 
-            public static final double rumbleIntensity           = 1;
+            public static final double rumbleIntensity          = 1;
 
             public static enum GearState {
                 kSlow,
@@ -117,24 +118,29 @@ public final class Constants {
 
         public static final int clawCANID                        = 29;
 
+        public static final int dutyCycleChannel                 = 3;
+
         public static final int ToFCANID                         = 36;
 
         public static final int currentLimit                     = 30;
 
-        public static final double openPosition                  = -6841;
-        public static final double closePosition                 = -18000;
-
-        public static final double zeroSpeed                     = 0.1;
+        public static final double openPosition                  = 3300;
+        public static final double coneClosePosition             = 23500;
+        public static final double cubeClosePosition             = 16400;
+        
+        public static final int stallTime                        = 10;
 
         public static final double encoderOffset                 = 400;
 
-        public static final double kP                            = 0.1;
+        public static final double kP                            = 0.2;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
-        public static final double kF                            = 0.02;
+        public static final double kF                            = 0;
 
         //distance from the claw to the object in front of it
         public static final double objectRange                   = 150;
+
+        public static final int dutyCycleRatio                   = 111538;
 
     }
 
@@ -168,33 +174,33 @@ public final class Constants {
         public static final double kD_chargeStation             = 0;
     }
     public static class kCANdle {
-        public final static int staticTime = 750;
+        public final static int staticTime                      = 750;
 
         public static class kConfig {
 
-            public final static int CANID = 19;
-            public final static int LEDCount = 94;
+            public final static int CANID                       = 19;
+            public final static int LEDCount                    = 94;
 
-            public final static int LEDInnerRight = 30;
-            public final static int LEDInnerLeft = 26;
-            public final static int LEDOutter = 15;
+            public final static int LEDInnerRight               = 30;
+            public final static int LEDInnerLeft                = 26;
+            public final static int LEDOutter                   = 15;
         }
 
         public static class kColors {
 
-            public final static int[] idle = {255, 134 , 0};
-            public final static int[] cube = {142, 39, 245};
-            public final static int[] cone = {237, 120, 0};
+            public final static int[] idle                      = {255, 134 , 0};
+            public final static int[] cube                      = {142, 39, 245};
+            public final static int[] cone                      = {237, 120, 0};
 
-            public final static int LEDSinCount = 8;
-            public final static double kSpeed = 0.5;
+            public final static int LEDSinCount                 = 8;
+            public final static double kSpeed                   = 0.5;
 
-            public final static double sinFrequency = 0.025;
-            public final static double sinFrequencySpeed = 20;
+            public final static double sinFrequency             = 0.025;
+            public final static double sinFrequencySpeed        = 20;
 
-            public final static int chargeSpeed = 4;
+            public final static int chargeSpeed                 = 4;
 
-            public final static double gameSpeed = 0.2;
+            public final static double gameSpeed                = 0.2;
             
         }
 
@@ -224,11 +230,21 @@ public final class Constants {
             public final static double kI                       = 0;
             public final static double kD                       = 0;
         }
-
+    
         public static class kSetpoints{
-            public final static double kfront = 0.5; 
-            public final static double kback = 0.0; 
 
+            public final static double kToTop                   = 0.09; //placeholder
+            public final static double kToMid                   = 0.05; //placeholder
+
+            public final static double kToGroundFront           = 0.0; //placeholder
+            public final static double kToGroundBack            = 0.0; //placeholder
+            
+            public final static double kToLoadingRamp           = 0.48; //placeholder
+            public final static double kToLoadingIntake         = 0.43;
+            public final static double kToLoadingshoulder       = 0.08;
+            public final static double kToHandoff               = 0.0; //placeholder
+
+            public final static double kIdling                  = 0.34; // placeholder
         }
     }
 
@@ -259,9 +275,19 @@ public final class Constants {
         }
 
         public static final class kDestinations {
-            public static final double kExtended                = 30.0;
-            public static final double kRetracted               = 2.0;
-            public static final double kMid                     = 14.0;
+            public static final double kRetracted               = 0.0;
+
+            public static final double kExtended                = 32.9;
+            public static final double kMidFront                = 1.50;
+            public static final double kMidBack                 = 32.8;
+            
+            public static final double kHandoff                 = 0.0;
+
+            public static final double kGroundFront             = 0.0; // placeholder
+            public static final double kGroundBack              = 0.0; // placeholder
+            
+            public static final double kLoading                 = 0.0; // placeholder
+
         }
     }
 
@@ -301,5 +327,17 @@ public final class Constants {
             public static final double kPivotVoltageLimit       = 8; /* testing */
             public static final double kWristVoltageLimit       = 6;
         }
+    }
+
+    public static class kLimelight {
+        public static final int heightOffFloor                  = 15; //cm
+        public static final int angle                           = 0; //degrees
+        public static final int kAutoLightTimeout               = 1000; //ms
+        public static final boolean kDoAutoLight                = true; 
+        public static final double KretroTargetFF               = 0.3;
+        public static final double KretroTargetTolerance        = 0.1;
+        public static final double kALTriggerDistance           = 1; //placeholder
+        public static final double disconnectNotifLength        = 200; //rumble time in seconds
+        public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
     }
 }

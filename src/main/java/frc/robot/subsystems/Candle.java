@@ -40,18 +40,14 @@ public class Candle extends SubsystemBase {
     public Candle() {
         candle = new CANdle(kCANdle.kConfig.CANID);
 
-
         candle.configLEDType(LEDStripType.GRB);
-
 
         candle.animate(null, 0);
 
 
         candle.setLEDs(0, 0, 0, 0, 0, kCANdle.kConfig.LEDCount);
 
-
         configBrightness(1);
-
 
     }
 
@@ -76,7 +72,8 @@ public class Candle extends SubsystemBase {
 
 
     public void setColor(int r, int g, int b) {
-        candle.setLEDs(0, 0, 0, 0, 8, kCANdle.kConfig.LEDCount);
+      candle.setLEDs(0, 0, 0);
+      candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
     }
 
 
@@ -94,6 +91,7 @@ public class Candle extends SubsystemBase {
         switch(animationType) {
             case Static:
               currentAnimationSlot = 0;
+              Timer.delay(0.1);
               setColor(r, g, b);
               break;
             case ColorFlow:
@@ -126,13 +124,11 @@ public class Candle extends SubsystemBase {
         }
     }
 
-
     /**
      * Turn on LED
      * @param index at index
      * @param brightness brightness of LED
      */
-
 
     public void LEDTurnOnAt(int index) {
       candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, 1);
@@ -143,7 +139,6 @@ public class Candle extends SubsystemBase {
      * Turn off LED
      * @param index at index
      */
-
 
     public void LEDTurnOffAt(int index) {
       candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, 1);
@@ -156,7 +151,6 @@ public class Candle extends SubsystemBase {
      * @param count count to turn on
      */
 
-
     public void LEDTurnOn(int index, int count) {
       candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, count);
     }
@@ -167,7 +161,6 @@ public class Candle extends SubsystemBase {
      * @param index at index
      * @param count count to turn off
      */
-
 
     public void LEDTurnOff(int index, int count) {
       candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, count);
@@ -181,7 +174,6 @@ public class Candle extends SubsystemBase {
      * @param MIN minimum value
      * @param MAX maximum value
      */
-
 
     public void LEDTurnOn(int index, int count, int MIN, int MAX) {
       for (int i = index; i < index + count; i++) {
@@ -199,7 +191,7 @@ public class Candle extends SubsystemBase {
      * @param MIN minimum value
      * @param MAX maximum value
      */
-   
+    
     public void LEDTurnOff(int index, int count, int MIN, int MAX) {
       for (int i = index; i < index + count; i++) {
         if (i < MAX && i > MIN) {
@@ -312,6 +304,7 @@ public class Candle extends SubsystemBase {
       } else {
         setAnimation(AnimationTypes.SinWave, 0, 0, 255);
       }
+      // setAnimation(AnimationTypes.Static, 255, 155, 0);
     }
 
 
