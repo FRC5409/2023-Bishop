@@ -12,6 +12,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -54,6 +55,9 @@ public class Robot extends TimedRobot {
       .negate()
       .debounce(5)
       .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_claw, m_robotContainer.sys_telescope));
+
+    Timer.delay(0.1);
+    m_robotContainer.sys_claw.zeroEncoder();
   }
 
   /**

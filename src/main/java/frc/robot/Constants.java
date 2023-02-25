@@ -84,7 +84,8 @@ public final class Constants {
         }
 
         public static final class kDriveteam {
-            public static final double rampRate                 = 0.2;
+            public static final double rampRate                 = 0.3;
+            public static final double stopRamp                 = 0.6;
 
             public static final double defaultSpeedMultiplier   = 0.8;
             public static final double defaultTurningMultiplier = 0.8;
@@ -121,14 +122,14 @@ public final class Constants {
 
         public static final int ToFCANID                         = 36;
 
-        public static final int currentLimit                    = 30;
+        public static final int currentLimit                     = 30;
 
         public static final double openPosition                  = 3300;
-        public static final double closePosition                 = 24500;
+        public static final double closePosition                 = 23500;
 
-        public static final double zeroSpeed                    = 0.1;
+        public static final double zeroSpeed                     = 0.1;
 
-        public static final double encoderOffset                = 400;
+        public static final double encoderOffset                 = 400;
 
         public static final double kP                            = 0.2;
         public static final double kI                            = 0;
@@ -136,7 +137,9 @@ public final class Constants {
         public static final double kF                            = 0;
 
         //distance from the claw to the object in front of it
-        public static final double objectRange                  = 150;
+        public static final double objectRange                   = 150;
+
+        public static final int dutyCycleRatio                   = 111538;
 
     }
 
@@ -231,16 +234,16 @@ public final class Constants {
             public final static double kfront                   = 0.5; 
             public final static double kback                    = 0.0; 
 
-            public final static double kToTop                   = 0.0; //placeholder
-            public final static double kToMid                   = 0.0; //placeholder
+            public final static double kToTop                   = 0.077; //placeholder
+            public final static double kToMid                   = 0.05; //placeholder
 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
             
-            public final static double kToLoading               = 0.0; //placeholder
+            public final static double kToLoading               = 0.488; //placeholder
             public final static double kToHandoff               = 0.0; //placeholder
 
-            public final static double kIdling                  = 0.0; // placeholder
+            public final static double kIdling                  = 0.25; // placeholder
         }
     }
 

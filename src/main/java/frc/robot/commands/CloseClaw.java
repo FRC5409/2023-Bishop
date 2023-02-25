@@ -31,11 +31,10 @@ public class CloseClaw extends CommandBase {
 
     @Override
     public void execute() {
-        if (m_claw.getDistanceFromClaw() <= kClaw.objectRange) {
+        if (m_claw.getDistanceFromClaw() <= kClaw.objectRange && m_claw.getDistanceFromClaw() != 0) {
             if (!hasClosed) {
                 m_claw.closeClaw();
                 if (m_claw.isStalled()) {
-                    Timer.delay(0.5);
                     hasClosed = true;
                 }
             }
