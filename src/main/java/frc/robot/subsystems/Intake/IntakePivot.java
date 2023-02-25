@@ -9,7 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.kIntake;
-
+import frc.robot.Constants.kIntake.kVoltageLimits;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -33,6 +33,7 @@ public class IntakePivot extends PIDSubsystem
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
     motor.setSmartCurrentLimit(kIntake.kIntakeCurrentLimit);
+    motor.setInverted(true);
     motor.burnFlash();
 
     encoder = new DutyCycleEncoder(kIntake.port_encPivot);
