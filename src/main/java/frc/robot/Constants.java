@@ -125,7 +125,8 @@ public final class Constants {
         public static final int currentLimit                     = 30;
 
         public static final double openPosition                  = 3300;
-        public static final double closePosition                 = 23500;
+        public static final double coneClosePosition             = 23500;
+        public static final double cubeClosePosition             = 16400;
         
         public static final int stallTime                        = 10;
 
@@ -231,19 +232,19 @@ public final class Constants {
         }
     
         public static class kSetpoints{
-            public final static double kfront                   = 0.5; 
-            public final static double kback                    = 0.0; 
 
-            public final static double kToTop                   = 0.077; //placeholder
+            public final static double kToTop                   = 0.09; //placeholder
             public final static double kToMid                   = 0.05; //placeholder
 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
             
-            public final static double kToLoading               = 0.488; //placeholder
+            public final static double kToLoadingRamp           = 0.48; //placeholder
+            public final static double kToLoadingIntake         = 0.43;
+            public final static double kToLoadingshoulder       = 0.08;
             public final static double kToHandoff               = 0.0; //placeholder
 
-            public final static double kIdling                  = 0.25; // placeholder
+            public final static double kIdling                  = 0.34; // placeholder
         }
     }
 

@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // Set in game animation
     m_robotContainer.sys_candle.inGameAnimation();
+    m_robotContainer.sys_claw.zeroEncoder();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);

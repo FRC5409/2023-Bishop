@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kOperator;
@@ -153,11 +154,12 @@ public class RobotContainer
             .onTrue(cmd_pivotZero);
 
         joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, true))
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
@@ -181,14 +183,14 @@ public class RobotContainer
         // joystickSecondary.povDown()
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
-      //  joystickSecondary.x()
-        //    .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from loading station
+        joystickSecondary.x()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoading)); // pickup from floor
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
             joystickSecondary.a()
             .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
             joystickSecondary.y()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, 0.08)); // pickup from floor
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
         joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
 
         // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));

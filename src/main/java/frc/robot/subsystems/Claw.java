@@ -134,7 +134,7 @@ public class Claw extends SubsystemBase {
      */
 
     public void closeClaw() {
-        clawMot.set(ControlMode.Position, kClaw.closePosition);
+        clawMot.set(ControlMode.Position, kClaw.coneClosePosition);
     }
 
     /**
@@ -169,7 +169,7 @@ public class Claw extends SubsystemBase {
      */
 
     public void zeroEncoder() {
-        clawMot.setSelectedSensorPosition((0.74 - getDutyPosition()) * kClaw.dutyCycleRatio);
+        clawMot.setSelectedSensorPosition((0.755 - getDutyPosition()) * kClaw.dutyCycleRatio);
         // clawMot.setSelectedSensorPosition(0);
     }
 
