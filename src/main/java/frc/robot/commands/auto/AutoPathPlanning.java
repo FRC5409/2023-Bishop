@@ -26,7 +26,6 @@ public class AutoPathPlanning extends SequentialCommandGroup {
                 new PIDController(kDrivetrain.kPDriveVel, 0, 0),
                 new PIDController(kDrivetrain.kPDriveVel, 0, 0),
                 sys_drivetrain::tankDriveVoltages,
-                true,
                 sys_drivetrain)
         );
         System.out.println(DriverStation.getAlliance().toString());

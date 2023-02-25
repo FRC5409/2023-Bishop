@@ -246,8 +246,10 @@ public class RobotContainer
     public Command getAutonomousCommand() {
         // An example command will be run in autonomous
 
-        Shuffleboard.update();
+        sys_ArmPIDSubsystem.disable();
+
         PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
+
 
         // Disable ramp rate
         sys_drivetrain.rampRate(0);

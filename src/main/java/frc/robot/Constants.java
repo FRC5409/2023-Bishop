@@ -242,7 +242,8 @@ public final class Constants {
             public static final double kD                       = 0;
         }
     
-        public static class kSetpoints{
+        public static class kSetpoints {
+            public final static double kRestingOnIntake         = 0.55;
 
             public final static double kToTop                   = 0.09; //placeholder
             public final static double kToMid                   = 0.05; //placeholder
