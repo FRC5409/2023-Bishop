@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.Claw;
@@ -11,6 +10,8 @@ public class CloseClaw extends CommandBase {
     private final boolean isAuto;
 
     private boolean hasClosed = false;
+
+    private int stallTimer = 0;
 
     public CloseClaw(Claw claw, boolean auto) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -23,6 +24,7 @@ public class CloseClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        stallTimer = 0;
         hasClosed = false;
         if (!isAuto) {
             m_claw.closeClaw();
@@ -35,7 +37,10 @@ public class CloseClaw extends CommandBase {
             if (!hasClosed) {
                 m_claw.closeClaw();
                 if (m_claw.isStalled()) {
-                    hasClosed = true;
+                    stallTimer++;
+                    if (stallTimer == kClaw.stallTime) {
+                        hasClosed = true;
+                    }
                 }
             }
         }

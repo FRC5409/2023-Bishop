@@ -116,7 +116,7 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                       = 29;
+        public static final int clawCANID                        = 29;
 
         public static final int dutyCycleChannel                 = 3;
 
@@ -126,8 +126,8 @@ public final class Constants {
 
         public static final double openPosition                  = 3300;
         public static final double closePosition                 = 23500;
-
-        public static final double zeroSpeed                     = 0.1;
+        
+        public static final int stallTime                        = 10;
 
         public static final double encoderOffset                 = 400;
 

@@ -48,8 +48,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(trajectory);
 
-    m_robotContainer.sys_claw.zeroEncoder();
-
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
       .negate()

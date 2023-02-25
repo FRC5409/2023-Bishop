@@ -158,13 +158,6 @@ public class RobotContainer
 
         joystickMain.y()
             .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
-        
-            joystickMain.povLeft()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(-0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
-            joystickMain.povRight()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)

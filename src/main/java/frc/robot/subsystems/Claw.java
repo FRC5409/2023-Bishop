@@ -190,7 +190,7 @@ public class Claw extends SubsystemBase {
     public boolean isStalled() {
         double velo = getEncoderVelocity();
         if (clawMot.getSupplyCurrent() >= 0.1) {
-            if (velo <= 30) {
+            if (velo <= 20) {
                 //motor stalled
                 return true;
             } else {
