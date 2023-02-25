@@ -89,7 +89,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        joystickMain.y().whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
+        joystickMain.b().whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
     }
 
     /**

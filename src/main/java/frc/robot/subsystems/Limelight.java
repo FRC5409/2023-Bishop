@@ -148,7 +148,7 @@ public class Limelight extends SubsystemBase {
 
         // Shuffleboard robotpos update
         // System.out.println(Arrays.toString(robotPos));
-        if (robotPos.length != 0) {
+        if (robotPos.length >= 6) {
             // update Rotation and Position here
             xWidget.setDouble(robotPos[0]);
             yWidget.setDouble(robotPos[1]);
