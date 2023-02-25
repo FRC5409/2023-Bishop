@@ -5,11 +5,10 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kArmSubsystem;
-import frc.robot.Constants.kTelescope;
+import frc.robot.Constants.kClaw;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.OpenClaw;
-import frc.robot.commands.TelescopeTo;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -24,17 +23,14 @@ public class MidConeAuto extends SequentialCommandGroup {
                 Claw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
-            new CloseClaw(sys_claw, false),
-            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kScoreMidShoulderSide),
-            // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended),
+            new CloseClaw(sys_claw, false, kClaw.coneClosePosition),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToTop),
             Commands.waitSeconds(1),
             new OpenClaw(sys_claw, false),
             Commands.waitSeconds(1),
-            // new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kback),
+            new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToGroundBack),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
-            // new Turn90DegreesChargeStation(sys_drivetrain, TurnDirection.LEFT)
         );
     }
 
