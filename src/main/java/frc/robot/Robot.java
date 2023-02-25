@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,13 +36,14 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.sys_claw.zeroEncoder();
-
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
       .negate()
       .debounce(5)
       .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_claw, m_robotContainer.sys_telescope));
+
+    Timer.delay(0.1);
+    m_robotContainer.sys_claw.zeroEncoder();
   }
 
   /**
@@ -99,6 +101,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     // Set in game animation
     m_robotContainer.sys_candle.inGameAnimation();
+    m_robotContainer.sys_claw.zeroEncoder();
 
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);

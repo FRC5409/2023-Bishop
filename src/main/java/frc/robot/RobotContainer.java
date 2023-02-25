@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.CloseClaw;
+import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.PivotManualMove;
@@ -31,6 +33,7 @@ import frc.robot.commands.GearShift;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.commands.ArmRotation;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
@@ -46,9 +49,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -68,22 +69,25 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    // private final IntakePivot sys_intakePivot;
-    // private final IntakeWrist sys_intakeWrist;
-    // private final IntakeRoller sys_intakeRoller;
-
-    // Commands
-    private final DefaultDrive cmd_defaultDrive;
-    // private final PivotZeroEncoder cmd_pivotZero;
-
-    // Sequential commands
-    // private final IntakePickupSequence seq_intakePickup;
-    // private final IntakeHandoffSequence seq_intakeHandoff;
+    private final Limelight sys_limelight;
     public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_ArmPIDSubsystem;
     public final Telescope sys_telescope;
+    private final IntakePivot sys_intakePivot;
+    private final IntakeWrist sys_intakeWrist;
+    private final IntakeRoller sys_intakeRoller;
 
+    // Commands
+    private final DefaultDrive cmd_defaultDrive;
+    private final PivotZeroEncoder cmd_pivotZero;
+    private final ConeNodeAim cmd_coneNodeAim;
+
+    // Sequential commands
+    private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHandoffSequence seq_intakeHandoff;
+
+    // Gear shifting
     private final GearShift cmd_lowSpeed;
     private final GearShift cmd_midSpeed;
     private final GearShift cmd_highSpeed;
@@ -104,13 +108,13 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        // sys_intakePivot = new IntakePivot();
-        // sys_intakeWrist = new IntakeWrist();
-        // sys_intakeRoller = new IntakeRoller();
+        sys_intakePivot = new IntakePivot();
+        sys_intakeWrist = new IntakeWrist();
+        sys_intakeRoller = new IntakeRoller();
 
         // Sequential commands
-        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         sys_candle = new Candle();
@@ -138,7 +142,9 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        // cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        cmd_pivotZero = new PivotZeroEncoder(sys_intakePivot);
+        sys_limelight = new Limelight(joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -174,31 +180,20 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, false))
-            .onFalse(new OpenClaw(sys_claw, false));
-        
-        // joystickMain.a()
-        //     .whileTrue(seq_intakePickup)
-        //     .whileFalse(seq_intakeHandoff);
+        joystickMain.a()
+            .whileTrue(seq_intakePickup)
+            .whileFalse(seq_intakeHandoff);
 
         // joystickMain.rightStick()
         //     .onTrue(cmd_pivotZero);
 
-        //TODO: FIX zeroing
+        joystickMain.x()
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
-
-        joystickMain.povLeft()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(-0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
-
-        joystickMain.povRight()
-            .onTrue(Commands.runOnce(() -> sys_claw.spinAt(0.1)))
-            .onFalse(Commands.runOnce(() -> sys_claw.stopMot()));
-
-
+            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
@@ -223,12 +218,20 @@ public class RobotContainer
         //     .onTrue(new ArmToPos(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kToHandoff, 0));
 
         joystickSecondary.x()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kfront)); // pickup from loading station
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingRamp)); // pickup from loading station
         joystickSecondary.b()
-            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kback)); // pickup from floor
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToLoadingshoulder)); // pickup from floor
+            joystickSecondary.a()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToMid)); // pickup from floor
+            joystickSecondary.y()
+            .onTrue(new ArmRotation(sys_ArmPIDSubsystem,Constants.kArmSubsystem.kSetpoints.kToTop)); // pickup from floor
+        joystickSecondary.leftBumper().onTrue(new ArmRotation(sys_ArmPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kIdling));
 
         // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
         // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
+
+        joystickMain.b()
+            .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
     }
 
     
@@ -255,5 +258,3 @@ public class RobotContainer
     }
 
 }
-
-
