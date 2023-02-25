@@ -9,20 +9,38 @@
 
 [Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
+## Dependencies
+[LimelightHelpers](https://github.com/LimelightVision/limelightlib-wpijava)
 
-## About The Intake
+[Pheonix](https://store.ctr-electronics.com/software/)
 
-Button Binding (demo/testing): 
-* y - pivot ascending.
-* a - pivot descending. 
-* x - roller inwards. 
-* b - roller outwards. 
-* right_bumper - full sequence. 
+[Rev](https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information)
 
-Button Binding (official): 
-* x - intake down while hold, back up and ready for the arm to grab the game piece from the intake. 
+## Button Bindings
+**Comp Configuration**
+| Binding | Controller | Subsystem/Command | Function | Toggle/Push | 
+|:-------:|:----------:|:------------------|:---------|:-----------:|
+|RT|1|Drivetrain|Accelerate|Push|
+|LT|1|Drivetrain|Reverse|Push|
+|LB|1|Drivetrain|Precision mode|Push|
+|RB|1|Drivetrain|Precision mode|Push|
+|LSB-X|1|Drivetrain|Left-Right|Push|
+|LB|2|Limelight|Target node|Push|
+|DPAD-UP|2|Arm|Place cube top|Push|
+|DPAD-DOWN|2|Arm|Place cube bottom|Push|
+|X|1|Arm|Grab loading zone|Push|
+|A|1|Arm,Intake|Intake handoff|Push|
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+**Demo**
+| Binding | Controller | Subsystem/Command | Function |
+|:-------:|:----------:|:------------------|:---------|
+|Y|TBD|Intake|Pivot up|
+|A|TBD|Intake|Pivot down|
+|X|TBD|Intake|Roller inwards|
+|B|TBD|Intake|Roller outwards|
+
+
 ## CAN ID's
 | CAN | CAN Bus | Component | Subsystem(s) |
 |:---:|:--------|:----------|:-------------|
@@ -54,3 +72,5 @@ Button Binding (official):
 |LLA|LimeLight April-Tags|Vision|
 |LLR|LimeLight Retro-Reflective|Vision|
 |ELA|ElevatorArm|Telescopic Arm|
+
+<p align="center">(<a href="#readme-top">back to top</a>)</p>
