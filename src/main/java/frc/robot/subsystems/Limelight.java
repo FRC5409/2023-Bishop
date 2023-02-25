@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.commands.RumbleJoystick;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -53,16 +52,6 @@ public class Limelight extends SubsystemBase {
     double angleToTarget;
     double lowTargetDist, highTargetDist;
     double turningDir = 0;
-
-    //limelight timout
-    double lastLatency = 0;
-    double timeoutTimer = 0;
-    double rumbleStart = 0;
-    boolean startTimeoutTimer = false; 
-    boolean connected = true; 
-    boolean doRumble = false; 
-    boolean sameRumble = false; 
-    boolean notifyDisconnect = false; 
 
     double  lastTick =  0;
 
@@ -173,6 +162,7 @@ public class Limelight extends SubsystemBase {
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
+
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
         //System.out.println(System.currentTimeMillis() - lastLightUpdate);
@@ -184,15 +174,6 @@ public class Limelight extends SubsystemBase {
                 LimelightHelpers.setLEDMode_ForceOff("");
             }
         }
-    }
-
-    public void checkHealth() {
-         if (!isConnectionHealthy() && !notifyDisconnect){
-            (new RumbleJoystick(c_joystick, 100, 1)).schedule();
-            notifyDisconnect = true; 
-         } else if (isConnectionHealthy()){
-            notifyDisconnect = false; 
-         }
     }
     
     // Retroreflective tape-related code
@@ -252,22 +233,5 @@ public class Limelight extends SubsystemBase {
     @Override
     public void periodic() {
         updateRobotPosition();
-        autoLight();
-        checkHealth();
-    }
-
-    private boolean isConnectionHealthy() {
-        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
-        if (lastLatency == currentLatency && !startTimeoutTimer){
-            startTimeoutTimer = true; 
-            timeoutTimer = System.currentTimeMillis();
-        } else if (lastLatency != currentLatency) {
-            startTimeoutTimer = false; 
-        }
-
-        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.limelightTimeout){
-            return false; 
-        }
-        return true; 
     }
 }
