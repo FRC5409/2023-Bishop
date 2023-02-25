@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,7 +76,6 @@ public class Limelight extends SubsystemBase {
     // Shuffleboard Tab and Entries
     private ShuffleboardTab sb_limelight;
     private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
-
 
     public Limelight(CommandXboxController joystick) {
         // networktables
@@ -159,7 +161,7 @@ public class Limelight extends SubsystemBase {
 
         // Shuffleboard robotpos update
         // System.out.println(Arrays.toString(robotPos));
-        if (robotPos.length != 0) {
+        if (robotPos.length >= 6) {
             // update Rotation and Position here
             xWidget.setDouble(robotPos[0]);
             yWidget.setDouble(robotPos[1]);
@@ -187,12 +189,33 @@ public class Limelight extends SubsystemBase {
     }
 
     public void checkHealth() {
+        //System.out.println(isConnectionHealthy());
          if (!isConnectionHealthy() && !notifyDisconnect){
-            (new RumbleJoystick(c_joystick, 100, 1)).schedule();
+            System.out.println("RUUUUUUUUUMMMMMMMMMBBBBBBBLLLLLLEEEEEEEEEE");
+            Commands.run(() -> new RumbleJoystick(c_joystick, 200, 1));
             notifyDisconnect = true; 
          } else if (isConnectionHealthy()){
             notifyDisconnect = false; 
          }
+    }
+
+    private boolean isConnectionHealthy() {
+        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
+        //System.out.println("I am being run");
+        if (lastLatency == currentLatency && !startTimeoutTimer){
+            startTimeoutTimer = true; 
+            timeoutTimer = System.currentTimeMillis();
+        } else if (lastLatency != currentLatency) {
+            startTimeoutTimer = false; 
+        }
+
+        lastLatency = currentLatency;
+
+        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.limelightTimeout){
+            return false; 
+        }
+        //System.out.println("Connected");
+        return true; 
     }
     
     // Retroreflective tape-related code
@@ -254,20 +277,5 @@ public class Limelight extends SubsystemBase {
         updateRobotPosition();
         autoLight();
         checkHealth();
-    }
-
-    private boolean isConnectionHealthy() {
-        double currentLatency = LimelightHelpers.getLatency_Pipeline("limelight");
-        if (lastLatency == currentLatency && !startTimeoutTimer){
-            startTimeoutTimer = true; 
-            timeoutTimer = System.currentTimeMillis();
-        } else if (lastLatency != currentLatency) {
-            startTimeoutTimer = false; 
-        }
-
-        if (startTimeoutTimer && (System.currentTimeMillis() - timeoutTimer) >= Constants.kLimelight.limelightTimeout){
-            return false; 
-        }
-        return true; 
     }
 }

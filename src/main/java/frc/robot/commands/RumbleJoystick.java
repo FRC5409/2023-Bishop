@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-public class RumbleJoystick extends InstantCommand {
+public class RumbleJoystick extends CommandBase {
     private final CommandXboxController m_joystick;
     private final double m_time;
     private final double m_intensity;
@@ -13,6 +13,7 @@ public class RumbleJoystick extends InstantCommand {
         m_intensity = intensity;
         m_joystick = joystick;
         m_time = time;
+        System.out.println("rumble constructor called");
     }
 
     @Override
@@ -31,5 +32,11 @@ public class RumbleJoystick extends InstantCommand {
     @Override
     public boolean isFinished() {
         return (System.currentTimeMillis() - m_startTime) > m_time;
+    }
+
+    // Allow this command to run when disabled
+    @Override
+    public boolean runsWhenDisabled() {
+        return true;
     }
 }
