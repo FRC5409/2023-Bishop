@@ -146,24 +146,31 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        joystickMain.a()
-            .whileTrue(seq_intakePickup)
-            .whileFalse(seq_intakeHandoff);
+        // joystickMain.a()
+        //     .whileTrue(seq_intakePickup)
+        //     .whileFalse(seq_intakeHandoff);
 
         joystickMain.rightStick()
             .onTrue(cmd_pivotZero);
 
         joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
+        // joystickMain.y()
+        //     .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
+
+        // joystickMain.a()
+        //     .onTrue(Commands.runOnce(() -> sys_claw.zeroEncoder()));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
             .onFalse(cmd_midSpeed);
+        // joystickMain.leftBumper()
+        //     .toggleOnTrue(Commands.startEnd(cmd_lowSpeed, cmd_highSpeed, sys_drivetrain));
 
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)

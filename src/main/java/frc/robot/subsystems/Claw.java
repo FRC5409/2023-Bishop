@@ -169,7 +169,8 @@ public class Claw extends SubsystemBase {
      */
 
     public void zeroEncoder() {
-        clawMot.setSelectedSensorPosition((0.755 - getDutyPosition()) * kClaw.dutyCycleRatio);
+        //0.575
+        clawMot.setSelectedSensorPosition((0.54 - getDutyPosition()) * kClaw.dutyCycleRatio);
         // clawMot.setSelectedSensorPosition(0);
     }
 
