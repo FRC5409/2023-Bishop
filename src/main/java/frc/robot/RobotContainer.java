@@ -188,16 +188,18 @@ public class RobotContainer
         //     .onTrue(cmd_pivotZero);
 
         joystickMain.x()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.coneClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.y()
-            .onTrue(new CloseClaw(sys_claw, false, kClaw.cubeClosePosition))
+            .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))
             .onFalse(new OpenClaw(sys_claw, false));
 
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
             .onFalse(cmd_midSpeed);
+        // joystickMain.leftBumper()
+        //     .toggleOnTrue(Commands.startEnd(cmd_lowSpeed, cmd_highSpeed, sys_drivetrain));
 
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)

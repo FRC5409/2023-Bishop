@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
-import com.pathplanner.lib.PathPlanner;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
@@ -123,13 +122,13 @@ public final class Constants {
 
         public static final int ToFCANID                         = 36;
 
-        public static final int currentLimit                     = 30;
+        public static final int currentLimit                     = 20;
 
-        public static final double openPosition                  = 3300;
-        public static final double coneClosePosition             = 23500;
+        public static final double openPosition                  = 3000;
+        public static final double coneClosePosition             = 21500;
         public static final double cubeClosePosition             = 16400;
         
-        public static final int stallTime                        = 10;
+        public static final int stallTime                        = 20;
 
         public static final double encoderOffset                 = 400;
 
@@ -231,11 +230,11 @@ public final class Constants {
         public static final int kMotor2ID                       = 33;
         public static final int kEncoderChannel                 = 4;
 
-        public static final double kVoltageLimit                = 10.5;
-        public static final int kCurrentLimit                   = 30;
-        public static final double kPositionTolerance           = 0.1;
-        public static final double kg                           = 0.4;
-        public static final double knintydegreepos              = -0.042;
+        public final static double kVoltageLimit                = 7.2; //60% speed
+        public final static int kCurrentLimit                   = 30;
+        public final static double kPositionTolerance           = 0.1;
+        public final static double kg                           = 0.4;
+        public final static double knintydegreepos              = -0.042;
 
         public static class kPID {
             public static final double kP                       = 50;
@@ -253,7 +252,8 @@ public final class Constants {
             
             public final static double kToLoadingRamp           = 0.48; //placeholder
             public final static double kToLoadingIntake         = 0.43;
-            public final static double kToLoadingshoulder       = 0.08;
+
+            public final static double kToLoadingshoulder       = 0.09;
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.34; // placeholder
@@ -289,9 +289,9 @@ public final class Constants {
         public static final class kDestinations {
             public static final double kRetracted               = 0.0;
 
-            public static final double kExtended                = 32.9;
+            public static final double kExtended                = 33.1;
             public static final double kMidFront                = 1.50;
-            public static final double kMidBack                 = 32.8;
+            public static final double kMidBack                 = 33.1;
             
             public static final double kHandoff                 = 0.0;
 
