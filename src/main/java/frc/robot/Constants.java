@@ -152,18 +152,17 @@ public final class Constants {
     }
 
     public static final class kTrajectoryPath {
-        public static final String MID_GRID_PLACE_AND_BALANCE
-            = "MID Grid place and balance";
-        public static final String WALL_GRID_PLACE_AND_BALANCE
-            = "WALL Grid place and balance";
-        public static final String LOADING_GRID_PLACE_AND_BALANCE
-            = "LOADING Grid place and balance";
-        public static final String SIDE_GRIDS_PLACE_AND_LEAVE_COMMMUNITY
-            = "SIDE Grids place and leave community";
+        public static final String TURN_LEFT_PLACE_AND_BALANCE
+            = "TURN LEFT place and balance";
+        public static final String TURN_RIGHT_PLACE_AND_BALANCE
+            = "TURN RIGHT place and balance";
+        public static final String PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place and leave community no balance";
 
         public static final String[] paths = new String[] {
-            MID_GRID_PLACE_AND_BALANCE, WALL_GRID_PLACE_AND_BALANCE,
-            LOADING_GRID_PLACE_AND_BALANCE, SIDE_GRIDS_PLACE_AND_LEAVE_COMMMUNITY};
+            TURN_LEFT_PLACE_AND_BALANCE,
+            TURN_RIGHT_PLACE_AND_BALANCE,
+            PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE};
     }
 
     public static final class kBalancing {
