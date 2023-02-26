@@ -1,29 +1,47 @@
-# 2023-Bishop
+# **2023-Bishop**
 
-## Useful Documentation
+## **Useful Documentation**
 [CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit#gid=1456793576)
 
 [Motors and Gearing Ratios - Bishop](https://docs.google.com/spreadsheets/d/1mly-FWH9S1RMrAUBcaXnyuavnCqU-cXk0Q0pLDEhZ-Y/edit#gid=1544976692)
 
 [Motors and Gearing Ratios - Windsor](https://docs.google.com/spreadsheets/d/1FxBIIsZFDOvoKsso25b7TmFgGUk4gB1KhH03Lld9y3U/edit#gid=1544976692)
 
-[Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
+[Driveteam Button Mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
+## **Button Bindings**
 
-## About The Intake
+### Primary Controller
 
-Button Binding (demo/testing): 
-* y - pivot ascending.
-* a - pivot descending. 
-* x - roller inwards. 
-* b - roller outwards. 
-* right_bumper - full sequence. 
+| Button | Action | Subsystem(s) | Execution | Notes |
+| ------ | ------ | ------------ | --------- | ----- |
+RT | Drive forward | DRV | Hold; depth-controlled |
+LT | Drive backward | DRV | Hold; depth-controlled |
+LB | Enable precision driving | DRV | Hold | Release to disable |
+RB | Enable boosted driving | DRV | Hold | Release to disable |
+LSB (left-right) | Turn left-right | DRV | Hold; depth-controlled |
+A | Move intake to pickup position | ITK | Hold | Release to store cone |
+B | Align to cone node | DRV | Hold |
+Y | Capture cube | ELA | Hold | Release to let go of the cube |
+X | Capture cone | ELA | Hold | Release to let go of the cone |
+D-PAD UP | Test pivot upward | ITK | Hold | Testing only
+D-PAD DOWN | Test pivot downward | ITK | Hold | Testing only
 
-Button Binding (official): 
-* x - intake down while hold, back up and ready for the arm to grab the game piece from the intake. 
+### Secondary Controller
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-## CAN ID's
+| Button | Action | Subsystem(s) | Execution | Notes |
+| ------ | ------ | ------------ | --------- | ----- |
+| LB | Move and retract arm to idle position | ELA | Press once
+| A | Move and extend arm to middle level | ELA | Press once
+| B | Prepare and extend arm for single substation | ELA | Press once
+| Y | Move and extend arm to high level | ELA | Press once
+| X | Prepare and extend arm for double substation | ELA | Press once
+| D-PAD UP | Extend arm | ELA | Press once |
+| D-PAD DOWN | Retract arm | ELA | Press once |
+
+*Button bindings are not finalized and are subject to change*
+
+## **CAN ID's**
 | CAN | CAN Bus | Component | Subsystem(s) |
 |:---:|:--------|:----------|:-------------|
 |2|rio|PDP|-
@@ -46,8 +64,8 @@ Button Binding (official):
 
 *CAN ID's are not finalized and are subject to change*
 
-## Subsystems
-|Abbrv|Subsystem|Purpose| 
+## **Subsystems**
+|Abbreviation|Subsystem|Purpose| 
 |:---:|:--------|:------|
 |DRV|Drivetrain|Driving|
 |ITK|Intake|Intake|
