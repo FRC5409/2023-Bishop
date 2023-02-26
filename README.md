@@ -9,6 +9,8 @@
 
 [Driveteam Button Mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
+[Intake/Arm Setpoints](https://docs.google.com/document/d/1H3BSzr6iQv7rSsYxSoY_8pHKgct6spEGe-ud4h0Tcsw/edit?usp=sharing)
+
 ## **Button Bindings**
 
 ### Primary Controller
