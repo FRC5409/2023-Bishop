@@ -2,6 +2,7 @@ package frc.robot.commands.auto;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kArmSubsystem;
@@ -28,15 +29,15 @@ public class TopConeAuto extends SequentialCommandGroup {
             new CloseClaw(sys_claw, kClaw.coneClosePosition),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToTop),
             new TelescopeTo(sys_telescope, kDestinations.kExtended),
-            Commands.waitSeconds(1),
-            new OpenClaw(sys_claw, false),
             Commands.waitSeconds(0.5),
+            new OpenClaw(sys_claw, false),
             new TelescopeTo(sys_telescope, kDestinations.kRetracted),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake),
-            Commands.waitSeconds(0.5),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
         );
+
+        DriverStation.reportWarning("DO NOT RUN TOP CONE AUTO: NOT WORKING YET", null);
     }
 
 }
