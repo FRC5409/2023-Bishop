@@ -142,6 +142,11 @@ public final class Constants {
 
         public static final int dutyCycleRatio                   = 111538;
 
+        public static enum kClawState {
+            kOpen,
+            kClose
+        }
+
     }
 
     public static final class kGyro {
