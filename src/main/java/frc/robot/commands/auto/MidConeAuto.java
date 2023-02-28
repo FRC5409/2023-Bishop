@@ -18,23 +18,15 @@ import frc.robot.subsystems.Telescope;
 
 public class MidConeAuto extends SequentialCommandGroup {
 
-    public static enum GamePiece {
-        kCONE,
-        kCUBE
-    }
-
     public MidConeAuto(
                 Drivetrain sys_drivetrain,
                 ArmPIDSubsystem sys_armPIDSubsystem,
                 Telescope sys_telescope,
                 Claw sys_claw,
-                PathPlannerTrajectory trajectory,
-                GamePiece gamePieceType) {
+                PathPlannerTrajectory trajectory) {
         super(
             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-            // Check if cone or cube
-            new CloseClaw(sys_claw,
-                        gamePieceType == GamePiece.kCONE ? kClaw.coneClosePosition : kClaw.cubeClosePosition),
+            new CloseClaw(sys_claw, kClaw.coneClosePosition),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
             Commands.waitSeconds(0.5),
             new OpenClaw(sys_claw, false),
