@@ -28,7 +28,6 @@ public class AutoPathPlanning extends SequentialCommandGroup {
                 sys_drivetrain::tankDriveVoltages,
                 sys_drivetrain)
         );
-        System.out.println(DriverStation.getAlliance().toString());
     }
 
 }
