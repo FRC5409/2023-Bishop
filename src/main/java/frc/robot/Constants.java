@@ -125,7 +125,7 @@ public final class Constants {
         public static final int currentLimit                     = 20;
 
         public static final double openPosition                  = 3000;
-        public static final double coneClosePosition             = 21500;
+        public static final double coneClosePosition             = 21000;
         public static final double cubeClosePosition             = 16400;
         
         public static final int stallTime                        = 20;
@@ -170,7 +170,7 @@ public final class Constants {
         public static final double maxAngle                     = 33.25;
         public static final double angleTolerance               = 1.5;
 
-        public static final double kP                           = 0.036;
+        public static final double kP                           = 0.0365;
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
