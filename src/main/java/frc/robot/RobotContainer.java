@@ -68,21 +68,21 @@ public class RobotContainer
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_armPIDSubsystem;
     public final Telescope sys_telescope;
-    // private final IntakePivot sys_intakePivot;
-    // private final IntakeWrist sys_intakeWrist;
-    // private final IntakeRoller sys_intakeRoller;
+    private final IntakePivot sys_intakePivot;
+    private final IntakeWrist sys_intakeWrist;
+    private final IntakeRoller sys_intakeRoller;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    // private final PivotManualMove cmd_pivotManualUp;
-    // private final PivotManualMove cmd_pivotManualDown;
+    private final PivotManualMove cmd_pivotManualUp;
+    private final PivotManualMove cmd_pivotManualDown;
     private final ConeNodeAim cmd_coneNodeAim;
-    // private final PivotMove cmd_pivotTestA;
-    // private final PivotMove cmd_pivotTestB;
+    private final PivotMove cmd_pivotTestA;
+    private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
-    // private final IntakePickupSequence seq_intakePickup;
-    // private final IntakeHandoffSequence seq_intakeHandoff;
+    private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHandoffSequence seq_intakeHandoff;
 
     // Gear shifting
     private final GearShift cmd_lowSpeed;
@@ -105,13 +105,13 @@ public class RobotContainer
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
-        // sys_intakePivot = new IntakePivot();
-        // sys_intakeWrist = new IntakeWrist();
-        // sys_intakeRoller = new IntakeRoller();
+        sys_intakePivot = new IntakePivot();
+        sys_intakeWrist = new IntakeWrist();
+        sys_intakeRoller = new IntakeRoller();
 
         // Sequential commands
-        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         sys_candle = new Candle();
@@ -139,12 +139,12 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        // cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
-        // cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
+        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
+        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
-        // cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
-        // cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
+        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
+        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -180,9 +180,9 @@ public class RobotContainer
 
     private void configureBindings() {
 
-        // joystickMain.a()
-        //     .whileTrue(seq_intakePickup)
-        //     .onFalse(seq_intakeHandoff);
+        joystickMain.a()
+            .whileTrue(seq_intakePickup)
+            .onFalse(seq_intakeHandoff);
 
         joystickMain.x()
             .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
@@ -202,13 +202,13 @@ public class RobotContainer
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
         
-        // joystickMain.povUp()
-        //     .onTrue(cmd_pivotTestA);
-        //     // .whileTrue(cmd_pivotManualUp);
+        joystickMain.povUp()
+            .onTrue(cmd_pivotTestA);
+            // .whileTrue(cmd_pivotManualUp);
         
-        // joystickMain.povDown()
-        //     .onTrue(cmd_pivotTestB);
-        //     // .whileTrue(cmd_pivotManualDown);
+        joystickMain.povDown()
+            .onTrue(cmd_pivotTestB);
+            // .whileTrue(cmd_pivotManualDown);
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
