@@ -34,7 +34,8 @@ import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
-
+import frc.robot.commands.auto.TopConeAuto;
+import frc.robot.commands.auto.MidConeAuto.GamePiece;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -93,6 +94,7 @@ public class RobotContainer
     private PathPlannerTrajectory[] m_paths = new PathPlannerTrajectory[kTrajectoryPath.paths.length];
     private ShuffleboardTab sb_driveteam;
     private SendableChooser<PathPlannerTrajectory> sc_choosePath;
+    private SendableChooser<GamePiece> sc_chooseAutoGamePiece;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -128,14 +130,22 @@ public class RobotContainer
             m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints, true);
         }
 
+        // Driver choose auto path
         sb_driveteam = Shuffleboard.getTab("Drive Team");
         sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
         sc_choosePath.setDefaultOption(kTrajectoryPath.paths[0], m_paths[0]);
         for (int i = 0; i < m_paths.length; i++) {
             sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
         }
-        sb_driveteam.add("Auto path", sc_choosePath);
+        sb_driveteam.add("Auto: choose path", sc_choosePath)
+            .withSize(3, 1);
         
+        sc_chooseAutoGamePiece = new SendableChooser<GamePiece>();
+        sc_chooseAutoGamePiece.setDefaultOption("CONE", GamePiece.kCONE);
+        sc_chooseAutoGamePiece.addOption("CUBE", GamePiece.kCUBE);
+        sb_driveteam.add("Auto: game piece type", sc_chooseAutoGamePiece)
+            .withSize(2, 1);
+
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
@@ -255,13 +265,15 @@ public class RobotContainer
 
         PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
 
+        // Check trajectory name to determine cone or cube
+        GamePiece chosenGamePieceType = sc_chooseAutoGamePiece.getSelected();
 
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
         // Reset odometry
         sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
         // Run auto path, then stop and re-set ramp rate
-        return new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
+        return new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory, chosenGamePieceType)
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
