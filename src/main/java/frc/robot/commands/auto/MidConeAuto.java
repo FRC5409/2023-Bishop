@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kTelescope;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.OpenClaw;
+import frc.robot.commands.TelescopeTo;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -23,13 +25,12 @@ public class MidConeAuto extends SequentialCommandGroup {
                 Claw sys_claw,
                 PathPlannerTrajectory trajectory) {
         super(
+            new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
             new CloseClaw(sys_claw, kClaw.coneClosePosition),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid),
-            Commands.waitSeconds(1),
+            Commands.waitSeconds(0.5),
             new OpenClaw(sys_claw, false),
-            Commands.waitSeconds(0.5),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake),
-            Commands.waitSeconds(0.5),
             new AutoPathPlanning(sys_drivetrain, trajectory),
             new BalancingChargeStation(sys_drivetrain)
         );
