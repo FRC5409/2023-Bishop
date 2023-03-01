@@ -30,7 +30,7 @@ public class TopConeAuto extends SequentialCommandGroup {
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToTop),
             new TelescopeTo(sys_telescope, kDestinations.kExtended),
             Commands.waitSeconds(0.5),
-            new OpenClaw(sys_claw, false),
+            new OpenClaw(sys_claw, kClaw.openPosition, false),
             new TelescopeTo(sys_telescope, kDestinations.kRetracted),
             new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kRestingOnIntake),
             new AutoPathPlanning(sys_drivetrain, trajectory),
