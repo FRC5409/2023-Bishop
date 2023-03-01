@@ -125,6 +125,7 @@ public final class Constants {
         public static final int currentLimit                     = 20;
 
         public static final double openPosition                  = 3000;
+        public static final double fullyOpenPosition             = -8000;
         public static final double coneClosePosition             = 19000;
         public static final double cubeClosePosition             = 16400;
         

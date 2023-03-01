@@ -7,11 +7,13 @@ import frc.robot.subsystems.Claw;
 public class OpenClaw extends CommandBase {
 
     private final Claw m_claw;
+    private final double position;
     private final boolean isAuto;
 
-    public OpenClaw(Claw claw, boolean auto) {
+    public OpenClaw(Claw claw, double pos,  boolean auto) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
+        position = pos;
         isAuto = auto;
         
         addRequirements(m_claw);
@@ -21,7 +23,8 @@ public class OpenClaw extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.openClaw();
+//        m_claw.openClaw();
+        m_claw.clawGoTo(position, kClaw.kClawState.kOpen);
     }
 
     @Override
@@ -41,7 +44,7 @@ public class OpenClaw extends CommandBase {
         if (isAuto) {
             return m_claw.getDistanceFromClaw() <= kClaw.objectRange;
         } else {
-            return Math.abs(m_claw.getEncoderPosition() - kClaw.openPosition) <= kClaw.encoderOffset;
+            return Math.abs(m_claw.getEncoderPosition() - position) <= kClaw.encoderOffset;
         }
     }
 
