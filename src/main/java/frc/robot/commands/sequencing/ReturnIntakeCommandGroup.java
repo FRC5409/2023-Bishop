@@ -18,11 +18,11 @@ public class ReturnIntakeCommandGroup extends ParallelCommandGroup {
         super(
             new PivotMove(
                 sys_pivot,
-                Constants.kIntake.kSetpoints.kPivotSetpoints.kPivotHugging
+                Constants.kIntake.kSetpoints.kPivotSetpoints.kPivotResting
             ),
             new WristMove(
                 sys_wrist,
-                Constants.kIntake.kSetpoints.kWristSetpoints.kWristStoring
+                Constants.kIntake.kSetpoints.kWristSetpoints.kWristResting
             )
         );
     }

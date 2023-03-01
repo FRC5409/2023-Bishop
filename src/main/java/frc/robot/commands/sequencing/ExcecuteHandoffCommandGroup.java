@@ -3,7 +3,9 @@ package frc.robot.commands.sequencing;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.commands.OpenClaw;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.subsystems.ArmPIDSubsystem;
@@ -22,8 +24,6 @@ public class ExcecuteHandoffCommandGroup extends SequentialCommandGroup {
         IntakeWrist sys_wrist,
         IntakeRoller sys_roller
     ) {
-        // TODO: Add your sequential commands in the super() call, e.g.
-        //           super(new OpenClawCommand(), new MoveArmCommand());
         super(
             new ParallelCommandGroup(
                 new PivotMove(
@@ -34,22 +34,22 @@ public class ExcecuteHandoffCommandGroup extends SequentialCommandGroup {
                     sys_wrist,
                     Constants.kIntake.kSetpoints.kWristSetpoints.kWristHandoff
                 )
+            ),
+            new WaitCommand(3),
+            new ParallelCommandGroup(
+                new ArmToPos(
+                    sys_telescope,
+                    sys_arm,
+                    Constants.kArmSubsystem.kSetpoints.kToHandoff,
+                    Constants.kTelescope.kDestinations.kHandoff
+                ),
+                new OpenClaw(
+                    sys_claw,
+                    Constants.kClaw.fullyOpenPosition,
+                    false
+                )
             )
-//                ,
-//            new WaitCommand(3),
-//            new ParallelCommandGroup(
-//                new ArmToPos(
-//                    sys_telescope,
-//                    sys_arm,
-//                    Constants.kArmSubsystem.kSetpoints.kToHandoff,
-//                    Constants.kTelescope.kDestinations.kHandoff
-//                ),
-//                new OpenClaw(
-//                    sys_claw,
-//                    Constants.kClaw.fullyOpenPosition,
-//                    false
-//                )
-//            ),
+            // ,
 //            new WaitCommand(3),
 //            new ParallelCommandGroup(
 //                new ParallelDeadlineGroup(
@@ -75,11 +75,11 @@ public class ExcecuteHandoffCommandGroup extends SequentialCommandGroup {
 //            new ParallelCommandGroup(
 //                new PivotMove(
 //                    sys_pivot,
-//                    Constants.kIntake.kSetpoints.kPivotSetpoints.kPivotHugging
+//                    Constants.kIntake.kSetpoints.kPivotSetpoints.kPivotResting
 //                ),
 //                new WristMove(
 //                    sys_wrist,
-//                    Constants.kIntake.kSetpoints.kWristSetpoints.kWristStoring
+//                    Constants.kIntake.kSetpoints.kWristSetpoints.kWristResting
 //                )
 //            )
         );

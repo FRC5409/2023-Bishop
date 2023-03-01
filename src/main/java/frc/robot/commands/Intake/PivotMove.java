@@ -40,6 +40,6 @@ public class PivotMove extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return Math.abs(setpoint - sys_intakePivot.getMeasurement()) < 0.05;
+    return Math.abs(setpoint - sys_intakePivot.getMeasurement()) < 0.01;
   }
 }

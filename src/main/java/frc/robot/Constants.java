@@ -336,12 +336,16 @@ public final class Constants {
                 // public static final double kPivotTestB          = 0.3;
 
                 public static final double kHandoff             = 0.36;
+
+                public static final double kPivotResting        = 0.02;
             }
 
             public static final class kWristSetpoints {
                 public static final double kWristPickup         = 0.77;
                 public static final double kWristHandoff        = 0.44;
                 public static final double kWristStoring        = 0.41; /* placeholder */
+
+                public static final double kWristResting        = 1.11;
             }
         }
 
