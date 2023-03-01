@@ -18,7 +18,6 @@ import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kClaw.kClawState;
@@ -33,7 +32,6 @@ import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakeHighPickupSequence;
-import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
 
 import frc.robot.subsystems.ArmPIDSubsystem;
@@ -78,8 +76,6 @@ public class RobotContainer
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
     private final ConeNodeAim cmd_coneNodeAim;
-    private final PivotMove cmd_pivotTestA;
-    private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
     private final IntakeHighPickupSequence seq_intakePickup;
@@ -144,8 +140,6 @@ public class RobotContainer
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, 3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
-        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
-        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -218,11 +212,9 @@ public class RobotContainer
             .onFalse(cmd_midSpeed);
         
         joystickMain.povUp()
-            // .onTrue(cmd_pivotTestA);
             .whileTrue(cmd_pivotManualUp);
         
         joystickMain.povDown()
-            // .onTrue(cmd_pivotTestB);
             .whileTrue(cmd_pivotManualDown);
 
         joystickSecondary.povUp()

@@ -333,8 +333,6 @@ public final class Constants {
                 public static final double kPivotPickupGround   = 0.36;
                 public static final double kPivotHandoff        = 0.36;
                 public static final double kPivotHugging        = 0.17;
-                public static final double kPivotTestA          = 0.13; /* not used beyond testing */
-                public static final double kPivotTestB          = 0.3; /* not used beyond testing */
             }
 
             public static final class kWristSetpoints {
