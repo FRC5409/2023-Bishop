@@ -316,7 +316,7 @@ public final class Constants {
         public static final int port_encPivot                   = 5;
         public static final int port_encWrist                   = 0;
 
-        public static final double kPivotP                      = 25; /* testing */
+        public static final double kPivotP                      = 25;
         public static final double kWristP                      = 20;
 
         public static final double kPivotI                      = 0.0; /* placeholder */
@@ -329,15 +329,18 @@ public final class Constants {
 
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
-                public static final double kPivotExtended       = 0.36;
-                public static final double kPivotHugging        = 0.11;
-                public static final double kPivotTestA          = 0.13;
-                public static final double kPivotTestB          = 0.3;
+                public static final double kPivotPickupHigh     = 0.225;
+                public static final double kPivotPickupGround   = 0.36;
+                public static final double kPivotHandoff        = 0.36;
+                public static final double kPivotHugging        = 0.17;
+                public static final double kPivotTestA          = 0.13; /* not used beyond testing */
+                public static final double kPivotTestB          = 0.3; /* not used beyond testing */
             }
 
             public static final class kWristSetpoints {
-                public static final double kWristPickup         = 0.77;
-                public static final double kWristHandoff        = 0.41;
+                public static final double kWristPickupHigh     = 0.73;
+                public static final double kWristPickupGround   = 0.77;
+                public static final double kWristHandoff        = 0.44;
                 public static final double kWristStoring        = 0.0; /* placeholder */
             }
         }

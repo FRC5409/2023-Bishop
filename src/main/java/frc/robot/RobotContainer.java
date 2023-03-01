@@ -140,8 +140,8 @@ public class RobotContainer
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
-        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
+        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, -3);
+        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, 3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
@@ -218,12 +218,12 @@ public class RobotContainer
             .onFalse(cmd_midSpeed);
         
         joystickMain.povUp()
-            .onTrue(cmd_pivotTestA);
-            // .whileTrue(cmd_pivotManualUp);
+            // .onTrue(cmd_pivotTestA);
+            .whileTrue(cmd_pivotManualUp);
         
         joystickMain.povDown()
-            .onTrue(cmd_pivotTestB);
-            // .whileTrue(cmd_pivotManualDown);
+            // .onTrue(cmd_pivotTestB);
+            .whileTrue(cmd_pivotManualDown);
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));

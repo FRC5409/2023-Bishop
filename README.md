@@ -21,7 +21,7 @@ RT | Drive forward | DRV | Hold; depth-controlled |
 LT | Drive backward | DRV | Hold; depth-controlled |
 LB | Enable precision driving | DRV | Hold | Release to disable |
 RB | Enable boosted driving | DRV | Hold | Release to disable |
-LSB (left-right) | Turn left-right | DRV | Hold; depth-controlled |
+LSB (left-right) | Turn left-right | DRV | Move joystick |
 A | Move intake to pickup position | ITK | Hold | Release to store cone |
 B | Align to cone node | DRV | Hold |
 Y | Capture cube | ELA | Hold | Release to let go of the cube |
