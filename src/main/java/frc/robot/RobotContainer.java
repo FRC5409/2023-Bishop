@@ -112,15 +112,14 @@ public class RobotContainer
         sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
-
-        // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        
         sys_claw = new Claw();
         sys_candle = new Candle();
         sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
+
+        // Sequential commands
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);

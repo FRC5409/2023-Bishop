@@ -1,21 +1,17 @@
 package frc.robot.commands.sequencing;
 
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Telescope;
-
-import java.util.concurrent.ConcurrentSkipListMap;
 
 public class PrepareHandoffCommandGroup extends SequentialCommandGroup {
     public PrepareHandoffCommandGroup(
