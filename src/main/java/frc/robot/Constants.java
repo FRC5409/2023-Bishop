@@ -259,7 +259,7 @@ public final class Constants {
             public final static double kToLoadingIntake         = 0.43;
 
             public final static double kToLoadingshoulder       = 0.09;
-            public final static double kToHandoff               = 0.0; //placeholder
+            public final static double kToHandoff               = 0.556; //placeholder
 
             public final static double kIdling                  = 0.34; // placeholder
         }
@@ -330,15 +330,17 @@ public final class Constants {
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
                 public static final double kPivotExtended       = 0.36;
-                public static final double kPivotHugging        = 0.11;
-                public static final double kPivotTestA          = 0.13;
-                public static final double kPivotTestB          = 0.3;
+                public static final double kPivotHugging        = 0.17;
+                // public static final double kPivotTestA          = 0.13;
+                // public static final double kPivotTestB          = 0.3;
+
+                public static final double kHandoff             = 0.36;
             }
 
             public static final class kWristSetpoints {
                 public static final double kWristPickup         = 0.77;
-                public static final double kWristHandoff        = 0.41;
-                public static final double kWristStoring        = 0.0; /* placeholder */
+                public static final double kWristHandoff        = 0.44;
+                public static final double kWristStoring        = 0.41; /* placeholder */
             }
         }
 

@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
@@ -12,10 +13,14 @@ public class RollerMove extends CommandBase
   private final IntakeRoller sys_intakeRoller;
   private double voltage;
 
+  private boolean spittingOut;
+
   public RollerMove(IntakeRoller subsystem, double voltage)
   {
     sys_intakeRoller = subsystem;
     this.voltage = voltage;
+
+    this.spittingOut = spittingOut;
 
     addRequirements(sys_intakeRoller);
   }

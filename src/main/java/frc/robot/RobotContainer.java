@@ -36,7 +36,9 @@ import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
-
+import frc.robot.commands.sequencing.ExcecuteHandoffCommandGroup;
+import frc.robot.commands.sequencing.PrepareHandoffCommandGroup;
+import frc.robot.commands.sequencing.ReturnIntakeCommandGroup;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -79,8 +81,8 @@ public class RobotContainer
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
     private final ConeNodeAim cmd_coneNodeAim;
-    private final PivotMove cmd_pivotTestA;
-    private final PivotMove cmd_pivotTestB;
+    // private final PivotMove cmd_pivotTestA;
+    // private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -145,8 +147,8 @@ public class RobotContainer
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
-        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
-        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
+        // cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
+        // cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -183,8 +185,15 @@ public class RobotContainer
     private void configureBindings() {
 
         joystickMain.a()
-            .whileTrue(seq_intakePickup)
-            .onFalse(seq_intakeHandoff);
+            .onTrue(
+                new PrepareHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
+            )
+            .onFalse(new ReturnIntakeCommandGroup(sys_intakePivot, sys_intakeWrist, sys_intakeRoller));
+
+        joystickMain.b()
+            .onTrue(
+                new ExcecuteHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
+            );
 
         // joystickMain.x()
         //     .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
@@ -218,13 +227,13 @@ public class RobotContainer
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
         
-        joystickMain.povUp()
-            .onTrue(cmd_pivotTestA);
-            // .whileTrue(cmd_pivotManualUp);
+        // joystickMain.povUp()
+        //     .onTrue(cmd_pivotTestA);
+        //     // .whileTrue(cmd_pivotManualUp);
         
-        joystickMain.povDown()
-            .onTrue(cmd_pivotTestB);
-            // .whileTrue(cmd_pivotManualDown);
+        // joystickMain.povDown()
+        //     .onTrue(cmd_pivotTestB);
+        //     // .whileTrue(cmd_pivotManualDown);
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
