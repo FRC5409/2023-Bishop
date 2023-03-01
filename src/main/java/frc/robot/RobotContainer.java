@@ -202,7 +202,7 @@ public class RobotContainer
         joystickMain.x()
             .onTrue(Commands.either(
                 new CloseClaw(sys_claw, kClaw.coneClosePosition),
-                new OpenClaw(sys_claw, false),
+                new OpenClaw(sys_claw, kClaw.openPosition, false),
                 () -> sys_claw.getState() == kClawState.kOpen)
             );
         
@@ -213,7 +213,7 @@ public class RobotContainer
         joystickMain.y()
             .onTrue(Commands.either(
                 new CloseClaw(sys_claw, kClaw.cubeClosePosition),
-                new OpenClaw(sys_claw, false),
+                new OpenClaw(sys_claw, kClaw.openPosition, false),
                 () -> sys_claw.getState() == kClawState.kOpen)
             );
 
