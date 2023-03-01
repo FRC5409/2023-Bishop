@@ -329,17 +329,17 @@ public final class Constants {
 
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
-                public static final double kPivotPickupHigh     = 0.225;
-                public static final double kPivotPickupGround   = 0.36;
+                public static final double kPivotSubPickup      = 0.225;
+                public static final double kPivotGroundPickup   = 0.36;
                 public static final double kPivotHandoff        = 0.36;
                 public static final double kPivotHugging        = 0.17;
             }
 
             public static final class kWristSetpoints {
-                public static final double kWristPickupHigh     = 0.73;
-                public static final double kWristPickupGround   = 0.77;
+                public static final double kWristSubPickup      = 0.73;
+                public static final double kWristGroundPickup   = 0.77;
+                public static final double kWristHugging        = 0.46;
                 public static final double kWristHandoff        = 0.44;
-                public static final double kWristStoring        = 0.0; /* placeholder */
             }
         }
 

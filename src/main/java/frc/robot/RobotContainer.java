@@ -30,8 +30,8 @@ import frc.robot.commands.GearShift;
 import frc.robot.commands.OpenClaw;
 import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
-import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakeHighPickupSequence;
+import frc.robot.commands.Intake.HugCone;
+import frc.robot.commands.Intake.SubstationPickup;
 import frc.robot.commands.auto.MidConeAuto;
 
 import frc.robot.subsystems.ArmPIDSubsystem;
@@ -78,8 +78,8 @@ public class RobotContainer
     private final ConeNodeAim cmd_coneNodeAim;
 
     // Sequential commands
-    private final IntakeHighPickupSequence seq_intakePickup;
-    private final IntakeHandoffSequence seq_intakeHandoff;
+    private final SubstationPickup seq_subPickup;
+    private final HugCone seq_hugCone;
 
     // Gear shifting
     private final GearShift cmd_lowSpeed;
@@ -107,8 +107,8 @@ public class RobotContainer
         sys_intakeRoller = new IntakeRoller();
 
         // Sequential commands
-        seq_intakePickup = new IntakeHighPickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_subPickup = new SubstationPickup(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_hugCone = new HugCone(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
         sys_candle = new Candle();
@@ -176,8 +176,8 @@ public class RobotContainer
     private void configureBindings() {
 
         joystickMain.a()
-            .whileTrue(seq_intakePickup)
-            .onFalse(seq_intakeHandoff);
+            .whileTrue(seq_subPickup)
+            .onFalse(seq_hugCone);
 
         // joystickMain.x()
         //     .onTrue(new CloseClaw(sys_claw, kClaw.coneClosePosition))
