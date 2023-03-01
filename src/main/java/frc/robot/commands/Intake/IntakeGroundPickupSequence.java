@@ -11,11 +11,11 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
-public class IntakePickupSequence extends ParallelCommandGroup {
-  public IntakePickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
+public class IntakeGroundPickupSequence extends ParallelCommandGroup {
+  public IntakeGroundPickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
     addCommands(
-      new PivotMove(pivot, kPivotSetpoints.kPivotPickupHigh),
-      new WristMove(wrist, kWristSetpoints.kWristPickupHigh),
+      new PivotMove(pivot, kPivotSetpoints.kPivotPickupGround),
+      new WristMove(wrist, kWristSetpoints.kWristPickupGround),
       new RollerMove(roller, 3.6)
     );
   }

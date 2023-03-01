@@ -32,7 +32,7 @@ import frc.robot.commands.OpenClaw;
 import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.IntakeHighPickupSequence;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
 
@@ -82,7 +82,7 @@ public class RobotContainer
     private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
-    private final IntakePickupSequence seq_intakePickup;
+    private final IntakeHighPickupSequence seq_intakePickup;
     private final IntakeHandoffSequence seq_intakeHandoff;
 
     // Gear shifting
@@ -111,7 +111,7 @@ public class RobotContainer
         sys_intakeRoller = new IntakeRoller();
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakePickup = new IntakeHighPickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
         
         sys_claw = new Claw();
