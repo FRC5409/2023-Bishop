@@ -185,7 +185,7 @@ public class RobotContainer
 
         joystickMain.a()
             .onTrue(
-                new PrepareHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
+                new PrepareHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
             )
             .onFalse(new ReturnIntakeCommandGroup(sys_intakePivot, sys_intakeWrist, sys_intakeRoller));
 

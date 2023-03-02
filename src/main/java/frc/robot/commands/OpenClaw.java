@@ -25,6 +25,7 @@ public class OpenClaw extends CommandBase {
     public void initialize() {
 //        m_claw.openClaw();
         m_claw.clawGoTo(position, kClaw.kClawState.kOpen);
+        m_claw.setPrevPos(position);
     }
 
     @Override
