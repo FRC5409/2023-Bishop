@@ -50,7 +50,6 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                     Constants.kIntake.kSetpoints.kWristSetpoints.kWristHandoff
                 )
             ),
-            new WaitCommand(3),
             new ParallelCommandGroup(
                 new ArmToPos(
                     sys_telescope,
@@ -65,7 +64,6 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                     false
                 )
             ),
-            new WaitCommand(3),
             new ParallelCommandGroup(
                 new RollerMove(sys_roller,
                 -1.0
@@ -78,7 +76,6 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                     Constants.kClaw.coneClosePosition
                 )
             ),
-            new WaitCommand(3),
             new ArmToPos(
                 sys_telescope,
                 sys_arm,
@@ -86,7 +83,6 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                 Constants.kArmSubsystem.kSetpoints.kIdling,
                 Constants.kTelescope.kDestinations.kRetracted
             ),
-            new WaitCommand(3),
             new ParallelCommandGroup(
                 new PivotMove(
                     sys_pivot,

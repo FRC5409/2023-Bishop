@@ -40,6 +40,6 @@ public class WristMove extends CommandBase
   @Override
   public boolean isFinished()
   {
-    return Math.abs(setpoint - sys_intakeWrist.getWristPos()) < 0.1;
+    return sys_intakeWrist.getController().atSetpoint();
   }
 }

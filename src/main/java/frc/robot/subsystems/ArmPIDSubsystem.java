@@ -100,7 +100,6 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     
   }
 
-  
   public double getAngle(){
     return getMeasurement()*360;
   }
