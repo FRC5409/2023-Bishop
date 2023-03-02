@@ -126,7 +126,7 @@ public final class Constants {
 
         public static final double outputLimit                   = 3;
 
-        public static final double timeout                       = 1;
+        public static final double timeout                       = 3;
 
         public static final double openPosition                  = 0.55;
         public static final double fullyOpenPosition             = 0.6;
@@ -137,7 +137,7 @@ public final class Constants {
 
         public static final double encoderTolerance              = 0.01;
 
-        public static final double kP                            = 0.4;
+        public static final double kP                            = 20;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;

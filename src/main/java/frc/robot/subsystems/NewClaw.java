@@ -41,7 +41,6 @@ public class NewClaw extends PIDSubsystem {
     clawMot = new WPI_TalonFX(kClaw.clawCANID, kCANBus.bus_rio);
     getController().setTolerance(0);
 
-
     configMot();
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
@@ -63,6 +62,7 @@ public class NewClaw extends PIDSubsystem {
     config.enable = true;
     config.currentLimit = kClaw.currentLimit;
     clawMot.configSupplyCurrentLimit(config);
+    clawMot.setInverted(true);
 
     setPID(kClaw.kP, kClaw.kI, kClaw.kD);
 
@@ -77,12 +77,13 @@ public void setPID(double p, double i, double d) {
 
   @Override
   public void useOutput(double output, double setpoint) {
+    System.out.println(output + "  setpoint:"+setpoint);
     if (output >= kClaw.outputLimit) {
       output = kClaw.outputLimit;
     } else if (output <= -kClaw.outputLimit) {
       output = -kClaw.outputLimit;
     }
-    clawMot.setVoltage(output);
+    clawMot.setVoltage(output*12);
     // Use the output here
   }
 

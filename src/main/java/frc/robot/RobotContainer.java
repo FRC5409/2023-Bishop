@@ -195,7 +195,7 @@ public class RobotContainer
             .onTrue(new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout));
 
         joystickMain.y()
-            .onTrue(new ClawMovement(sys_claw, kClaw.openPosition));
+            .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
         
         // joystickMain.y()
         //     .onTrue(new CloseClaw(sys_claw, kClaw.cubeClosePosition))

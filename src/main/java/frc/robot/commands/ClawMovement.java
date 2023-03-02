@@ -7,12 +7,12 @@ import frc.robot.subsystems.NewClaw;
 public class ClawMovement extends CommandBase {
 
     private final NewClaw m_claw;
-    private final double m_setPoint;
+    private double m_setPoint; // private final
 
     public ClawMovement(NewClaw claw, double setPoint) {
         // Use addRequirements() here to declare subsystem dependencies.
         m_claw = claw;
-        m_setPoint = setPoint;
+        this.m_setPoint = setPoint;
 
         addRequirements(m_claw);
         
@@ -21,6 +21,7 @@ public class ClawMovement extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        System.out.println("ClawMovement setpoint:"+m_setPoint);
         m_claw.setSetpoint(m_setPoint);
         m_claw.enable();
     }
