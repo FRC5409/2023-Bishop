@@ -20,12 +20,12 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor1;
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
-  private final ShuffleboardTab sb_armTab;
-  private final GenericEntry absolutePosition, angle;
+  private  ShuffleboardTab sb_armTab;
+  private  GenericEntry absolutePosition, angle;
 
   private double prevPos;
 
-  private final boolean debug = true;
+  private final boolean debug = false;
 
 
   /** Creates a new ArmPIDSubsystem. */

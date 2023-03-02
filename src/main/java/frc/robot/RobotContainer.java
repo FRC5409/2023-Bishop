@@ -192,7 +192,7 @@ public class RobotContainer
         //         () -> sys_claw.getState() == kClawState.kOpen)
         //     );
         joystickMain.x()
-            .onTrue(new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(kClaw.timeout));
+            .onTrue(new ClawMovement(sys_claw, kClaw.cubeClosePosition).withTimeout(kClaw.timeout));
 
         joystickMain.y()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));

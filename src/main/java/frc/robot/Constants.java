@@ -126,12 +126,11 @@ public final class Constants {
 
         public static final double outputLimit                   = 3;
 
-        public static final double timeout                       = 3;
+        public static final double timeout                       = 2;
 
-        public static final double openPosition                  = 0.55;
-        public static final double fullyOpenPosition             = 0.6;
-        public static final double coneClosePosition             = 0.38;
-        public static final double cubeClosePosition             = 0.42;
+        public static final double openPosition                  = 0.77;
+        public static final double coneClosePosition             = 0.545;
+        public static final double cubeClosePosition             = 0.585;
         
         public static final int stallTime                        = 40;
 
@@ -241,7 +240,7 @@ public final class Constants {
 
         public final static double kVoltageLimit                = 7.2; //60% speed
         public final static int kCurrentLimit                   = 30;
-        public final static double kPositionTolerance           = 0.1;
+        public final static double kPositionTolerance           = 0.01;
         public final static double kg                           = 0.4;
         public final static double knintydegreepos              = -0.042;
 
