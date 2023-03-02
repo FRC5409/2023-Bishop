@@ -30,6 +30,8 @@ public class Claw extends SubsystemBase {
 
     private final boolean debug = true;
 
+    private double prevPos;
+
     public Claw() {
         clawMot = new WPI_TalonFX(kClaw.clawCANID, Constants.kCANBus.bus_rio);
 
@@ -247,6 +249,14 @@ public class Claw extends SubsystemBase {
 
     public kClawState getState() {
         return currentState;
+    }
+
+    public double getPrevPos() {
+        return prevPos;
+    }
+
+    public void setPrevPos(double prevPos) {
+        this.prevPos = prevPos;
     }
 
 }
