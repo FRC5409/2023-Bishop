@@ -3,10 +3,13 @@ package frc.robot.commands.sequencing;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.robot.Constants;
+
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
+
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;

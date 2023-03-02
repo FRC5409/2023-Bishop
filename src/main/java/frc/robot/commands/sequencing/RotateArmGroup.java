@@ -1,14 +1,16 @@
 package frc.robot.commands.sequencing;
 
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
+
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.TelescopeTo;
+
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
