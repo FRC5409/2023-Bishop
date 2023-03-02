@@ -22,8 +22,8 @@ import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Telescope;
 
-public class ExcecuteHandoffCommandGroup extends SequentialCommandGroup {
-    public ExcecuteHandoffCommandGroup(
+public class ExcecuteHandoff extends SequentialCommandGroup {
+    public ExcecuteHandoff (
         Telescope sys_telescope,
         ArmPIDSubsystem sys_arm,
         Claw sys_claw,

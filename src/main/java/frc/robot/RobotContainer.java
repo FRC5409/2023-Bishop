@@ -14,16 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kClaw.kClawState;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kClaw.kClawState;
-
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.CloseClaw;
 import frc.robot.commands.ConeNodeAim;
@@ -34,11 +31,10 @@ import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
-import frc.robot.commands.sequencing.ExcecuteHandoffCommandGroup;
-import frc.robot.commands.sequencing.PrepareHandoffCommandGroup;
-import frc.robot.commands.sequencing.ReturnIntakeCommandGroup;
+import frc.robot.commands.sequencing.ExcecuteHandoff;
+import frc.robot.commands.sequencing.PrepareHandoff;
+import frc.robot.commands.sequencing.ReturnIntake;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -185,13 +181,13 @@ public class RobotContainer
 
         joystickMain.a()
             .onTrue(
-                new PrepareHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
+                new PrepareHandoff(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
             )
-            .onFalse(new ReturnIntakeCommandGroup(sys_intakePivot, sys_intakeWrist, sys_intakeRoller));
+            .onFalse(new ReturnIntake(sys_intakePivot, sys_intakeWrist, sys_intakeRoller));
 
         joystickMain.b()
             .onTrue(
-                new ExcecuteHandoffCommandGroup(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
+                new ExcecuteHandoff(sys_telescope, sys_armPIDSubsystem, sys_claw, sys_intakePivot, sys_intakeWrist, sys_intakeRoller)
             );
 
         // joystickMain.x()

@@ -12,8 +12,8 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
-public class ReturnIntakeCommandGroup extends ParallelCommandGroup {
-    public ReturnIntakeCommandGroup(
+public class ReturnIntake extends ParallelCommandGroup {
+    public ReturnIntake(
             IntakePivot sys_pivot,
             IntakeWrist sys_wrist,
             IntakeRoller sys_roller

@@ -17,8 +17,8 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
-public class PrepareHandoffCommandGroup extends SequentialCommandGroup {
-    public PrepareHandoffCommandGroup(
+public class PrepareHandoff extends SequentialCommandGroup {
+    public PrepareHandoff (
             Telescope sys_telescope,
             ArmPIDSubsystem sys_arm,
             Claw sys_claw,
