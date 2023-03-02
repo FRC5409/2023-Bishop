@@ -21,7 +21,6 @@ public class ClawMovement extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        System.out.println("ClawMovement setpoint:"+m_setPoint);
         m_claw.setSetpoint(m_setPoint);
         m_claw.enable();
     }

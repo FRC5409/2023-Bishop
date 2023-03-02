@@ -47,7 +47,6 @@ public class NewClaw extends PIDSubsystem {
 
     if (debug) {
       clawTab = Shuffleboard.getTab("Claw");
-
       tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
       dutyEncoderEntry = clawTab.add("Duty", getDutyPosition()).getEntry();
     }
@@ -77,7 +76,6 @@ public void setPID(double p, double i, double d) {
 
   @Override
   public void useOutput(double output, double setpoint) {
-    System.out.println(output + "  setpoint:"+setpoint);
     if (output >= kClaw.outputLimit) {
       output = kClaw.outputLimit;
     } else if (output <= -kClaw.outputLimit) {
