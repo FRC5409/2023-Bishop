@@ -253,8 +253,8 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0.55;
 
-            public final static double kToTop                   = 0.09; //placeholder
-            public final static double kToMid                   = 0.095; //placeholder
+            public final static double kToTop                   = 0.095; //place high cube and low cones
+            public final static double kToMid                   = 0.05; //place low cube
 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
