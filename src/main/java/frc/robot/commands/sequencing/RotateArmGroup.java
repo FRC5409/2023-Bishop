@@ -2,7 +2,7 @@ package frc.robot.commands.sequencing;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
@@ -13,7 +13,7 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
-public class RotateArmGroup extends ParallelCommandGroup{
+public class RotateArmGroup extends ParallelDeadlineGroup{
 
 
     public RotateArmGroup(
@@ -26,20 +26,25 @@ public class RotateArmGroup extends ParallelCommandGroup{
 
         // Use addRequirements() here to declare subsystem dependencies.
         super(
-            Commands.either(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-                Commands.waitSeconds(0),
-                () -> Math.abs(armDirection - sys_arm.getMeasurement()) > 0.10 && sys_telescope.getDistance() >= 1),
+            new ArmRotation(sys_arm, armDirection),
+            new ConditionalCommand(
+                new TelescopeTo(
+                    sys_telescope, 
+                    kTelescope.kDestinations.kRetracted
+                ), 
+                new WaitCommand(0), 
+                () -> Math.abs(armDirection - sys_arm.getMeasurement()) > 0.10 && sys_telescope.getDistance() >= 1
+            ),
             new ConditionalCommand(
                 new CloseClaw(sys_claw, kClaw.coneClosePosition), 
                 new WaitCommand(0), 
                 () -> sys_claw.getPrevPos() == kClaw.coneClosePosition
-                ),
+            ),
             new ConditionalCommand(
                 new CloseClaw(sys_claw, kClaw.cubeClosePosition), 
                 new WaitCommand(0), 
                 () -> sys_claw.getPrevPos() == kClaw.cubeClosePosition
-            ),
-            new ArmRotation(sys_arm, armDirection)
+            )
         );
     }
 }
