@@ -114,7 +114,7 @@ public final class Constants {
         }
     }
 
-    public static final class kClaw {
+   public static final class kClaw {
 
         public static final int clawCANID                        = 29;
 
@@ -124,16 +124,16 @@ public final class Constants {
 
         public static final int currentLimit                     = 20;
 
-        public static final double openPosition                  = 3000;
-        public static final double fullyOpenPosition             = -8000;
-        public static final double coneClosePosition             = 19000;
-        public static final double cubeClosePosition             = 16400;
+        public static final double openPosition                  = 3000  * 3;
+        public static final double fullyOpenPosition             = -8000 * 3;
+        public static final double coneClosePosition             = 50000;
+        public static final double cubeClosePosition             = 16400 * 3;
         
         public static final int stallTime                        = 40;
 
-        public static final double encoderOffset                 = 400;
+        public static final double encoderOffset                 = 400 * 3;
 
-        public static final double kP                            = 0.2;
+        public static final double kP                            = 0.1;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;
@@ -141,7 +141,8 @@ public final class Constants {
         //distance from the claw to the object in front of it
         public static final double objectRange                   = 150;
 
-        public static final int dutyCycleRatio                   = 111538;
+        public static final int dutyCycleRatio                   = 111538 * 3;
+        public static final double dutyCycleZero                 = 0.54;
 
         public static enum kClawState {
             kOpen,
