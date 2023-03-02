@@ -25,6 +25,7 @@ public class CloseClaw extends CommandBase {
     public void initialize() {
         stallTimer = 0;
         m_claw.clawGoTo(position, kClawState.kClose);
+        m_claw.setPrevPos(position);
     }
 
     @Override
