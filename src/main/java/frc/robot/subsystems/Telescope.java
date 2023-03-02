@@ -98,9 +98,9 @@ public class Telescope extends SubsystemBase {
 
     public int rotationDirection() {
         
-        if (s_encoder.getVelocity() > 0.5) {
+        if (s_encoder.getVelocity() > 0.1) {
             return 1;
-        } else if (s_encoder.getVelocity() < -0.5) {
+        } else if (s_encoder.getVelocity() < -0.1) {
             return -1;
         }
         return 0;
