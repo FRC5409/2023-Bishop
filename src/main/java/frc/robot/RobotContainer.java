@@ -24,6 +24,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.ArmAdjust;
 import frc.robot.commands.ArmRotation;
 import frc.robot.commands.ClawMovement;
 import frc.robot.commands.ConeNodeAim;
@@ -263,9 +264,18 @@ public class RobotContainer
                 new ArmToPos(
                     sys_telescope, 
                     sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kToTop,
+                    kArmSubsystem.kSetpoints.kConeMid,
                     kTelescope.kDestinations.kRetracted
                 )
+            );
+
+        joystickSecondary.b()
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kConeAbove, 
+                    kTelescope.kDestinations.kRetracted)
             );
 
         joystickSecondary.a()
@@ -278,7 +288,7 @@ public class RobotContainer
                 )
             );
 
-        joystickSecondary.b()
+        joystickSecondary.rightBumper()
             .onTrue(
                 new ArmToPos(
                     sys_telescope, 
@@ -289,13 +299,19 @@ public class RobotContainer
             ); // pickup from loading station
                 
         joystickSecondary.leftBumper()
-            .onTrue(new ArmToPos(
-                sys_telescope, 
-                sys_armPIDSubsystem, 
-                kArmSubsystem.kSetpoints.kIdling, 
-                kTelescope.kDestinations.kRetracted
+            .onTrue(
+                new ArmToPos(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kIdling, 
+                    kTelescope.kDestinations.kRetracted
                 )
             );
+
+        // joystickSecondary.rightBumper()
+        //     .onTrue(
+        //         new ArmAdjust(sys_armPIDSubsystem)
+        //     );
                 
                 // joystickSecondary.x().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kfront));
                 // joystickSecondary.b().onTrue(new RotateArmGroup(sys_telescope, sys_ArmPIDSubsystem, kArmSubsystem.kSetpoints.kback));
