@@ -11,7 +11,7 @@ import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
@@ -21,7 +21,7 @@ public class PrepareHandoff extends SequentialCommandGroup {
     public PrepareHandoff (
             Telescope sys_telescope,
             ArmPIDSubsystem sys_arm,
-            Claw sys_claw,
+            NewClaw sys_claw,
             IntakePivot sys_pivot,
             IntakeWrist sys_wrist,
             IntakeRoller sys_roller
@@ -30,7 +30,6 @@ public class PrepareHandoff extends SequentialCommandGroup {
             new ArmToPos(
                 sys_telescope,
                 sys_arm,
-                sys_claw,
                 Constants.kArmSubsystem.kSetpoints.kIdling,
                 Constants.kTelescope.kDestinations.kRetracted
             ),

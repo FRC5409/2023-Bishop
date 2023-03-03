@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kClaw;
-import frc.robot.Constants.kClaw.kClawState;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
@@ -24,23 +23,18 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
-import frc.robot.commands.ArmAdjust;
-import frc.robot.commands.ArmRotation;
 import frc.robot.commands.ClawMovement;
-import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.PivotManualMove;
 import frc.robot.commands.TelescopeTo;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
-import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.auto.MidConeAuto;
 import frc.robot.commands.sequencing.ArmToPos;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
@@ -122,8 +116,8 @@ public class RobotContainer
         sys_telescope = new Telescope();
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        // seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);

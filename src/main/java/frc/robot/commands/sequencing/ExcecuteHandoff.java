@@ -4,29 +4,26 @@ package frc.robot.commands.sequencing;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
 import frc.robot.Constants;
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kTelescope;
-
-import frc.robot.commands.CloseClaw;
-import frc.robot.commands.OpenClaw;
+import frc.robot.commands.ClawMovement;
 import frc.robot.commands.Intake.PivotMove;
 import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
-
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Telescope;
 
 public class ExcecuteHandoff extends SequentialCommandGroup {
     public ExcecuteHandoff (
         Telescope sys_telescope,
         ArmPIDSubsystem sys_arm,
-        Claw sys_claw,
+        NewClaw sys_claw,
         IntakePivot sys_pivot,
         IntakeWrist sys_wrist,
         IntakeRoller sys_roller
@@ -36,7 +33,6 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                 new ArmToPos(
                     sys_telescope,
                     sys_arm, 
-                    sys_claw,
                     kArmSubsystem.kSetpoints.kIdling,
                     kTelescope.kDestinations.kRetracted)
             ),
@@ -54,14 +50,12 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                 new ArmToPos(
                     sys_telescope,
                     sys_arm,
-                    sys_claw,
                     Constants.kArmSubsystem.kSetpoints.kToHandoff,
                     Constants.kTelescope.kDestinations.kHandoff
                 ),
-                new OpenClaw(
-                    sys_claw,
-                    Constants.kClaw.fullyOpenPosition,
-                    false
+                new ClawMovement(
+                    sys_claw, 
+                    kClaw.openPosition
                 )
             ),
             new ParallelCommandGroup(
@@ -71,15 +65,14 @@ public class ExcecuteHandoff extends SequentialCommandGroup {
                 .deadlineWith(
                     new WaitCommand(2)
                 ),
-                new CloseClaw(
-                    sys_claw,
-                    Constants.kClaw.coneClosePosition
+                new ClawMovement(
+                    sys_claw, 
+                    kClaw.coneClosePosition
                 )
             ),
             new ArmToPos(
                 sys_telescope,
                 sys_arm,
-                sys_claw,
                 Constants.kArmSubsystem.kSetpoints.kIdling,
                 Constants.kTelescope.kDestinations.kRetracted
             ),
