@@ -124,16 +124,19 @@ public final class Constants {
 
         public static final int currentLimit                     = 20;
 
-        public static final double openPosition                  = 3000  * 3;
-        public static final double fullyOpenPosition             = -8000 * 3;
-        public static final double coneClosePosition             = 50000;
-        public static final double cubeClosePosition             = 16400 * 3;
+        public static final double outputLimit                   = 3;
+
+        public static final double timeout                       = 2;
+
+        public static final double openPosition                  = 0.77;
+        public static final double coneClosePosition             = 0.545;
+        public static final double cubeClosePosition             = 0.585;
         
         public static final int stallTime                        = 40;
 
-        public static final double encoderOffset                 = 400 * 3;
+        public static final double encoderTolerance              = 0.01;
 
-        public static final double kP                            = 0.1;
+        public static final double kP                            = 20;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;
@@ -238,7 +241,7 @@ public final class Constants {
 
         public final static double kVoltageLimit                = 7.2; //60% speed
         public final static int kCurrentLimit                   = 30;
-        public final static double kPositionTolerance           = 0.1;
+        public final static double kPositionTolerance           = 0.01;
         public final static double kg                           = 0.4;
         public final static double knintydegreepos              = -0.042;
 
@@ -251,8 +254,10 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0.55;
 
-            public final static double kToTop                   = 0.09; //placeholder
-            public final static double kToMid                   = 0.05; //placeholder
+            public final static double kToTop                   = 0.095; //place high cube and low cones
+            public final static double kConeMid                 = 0.1;
+            public final static double kConeAbove               = 0.13;
+            public final static double kToMid                   = 0.05; //place low cube
 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
@@ -260,12 +265,15 @@ public final class Constants {
             public final static double kToLoadingRamp           = 0.48; //placeholder
             public final static double kToLoadingIntake         = 0.43;
 
-            public final static double kToLoadingshoulder       = 0.09;
-            public final static double kToHandoff               = 0.556; //placeholder
+            public final static double kToLoadingshoulder       = 0.11;
+            public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.34; // placeholder
         }
+
     }
+
+
 
     public static final class kTelescope {
 
