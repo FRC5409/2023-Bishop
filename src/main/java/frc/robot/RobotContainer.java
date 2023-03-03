@@ -278,7 +278,7 @@ public class RobotContainer
                 )
             );
 
-        joystickSecondary.x()
+        joystickSecondary.b()
             .onTrue(
                 new ArmToPos(
                     sys_telescope, 
