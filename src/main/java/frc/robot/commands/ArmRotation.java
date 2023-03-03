@@ -41,6 +41,6 @@ public class ArmRotation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(setpoint - sys_arm.getMeasurement()) < 0.01;
+    return sys_arm.getController().atSetpoint();
   }
 }
