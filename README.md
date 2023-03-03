@@ -9,7 +9,7 @@
 
 [Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
 
-## Dependencies
+## Libraries 
 [LimelightHelpers](https://github.com/LimelightVision/limelightlib-wpijava)
 
 [Pheonix](https://store.ctr-electronics.com/software/)
@@ -17,7 +17,8 @@
 [Rev](https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information)
 
 ## Button Bindings
-**Comp Configuration**
+<p align="center"><b>Comp Configuration<b><p>
+
 | Binding | Controller | Subsystem/Command | Function | Toggle/Push | 
 |:-------:|:----------:|:------------------|:---------|:-----------:|
 |RT|1|Drivetrain|Accelerate|Push|
@@ -32,7 +33,8 @@
 |A|1|Arm,Intake|Intake handoff|Push|
 
 
-**Demo**
+<p align="center"><b>Demo Configuration<b><p>
+
 | Binding | Controller | Subsystem/Command | Function |
 |:-------:|:----------:|:------------------|:---------|
 |Y|TBD|Intake|Pivot up|
@@ -69,7 +71,7 @@
 |:---:|:--------|:------|
 |DRV|Drivetrain|Driving|
 |ITK|Intake|Intake|
-|LLA|LimeLight April-Tags|Vision|
+|LLA|LimeLight April-Tags|V/ision|
 |LLR|LimeLight Retro-Reflective|Vision|
 |ELA|ElevatorArm|Telescopic Arm|
 
