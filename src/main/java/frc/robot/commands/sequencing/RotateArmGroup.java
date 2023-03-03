@@ -25,13 +25,9 @@ public class RotateArmGroup extends ParallelCommandGroup{
         // Use addRequirements() here to declare subsystem dependencies.
         super(
             new ArmRotation(sys_arm, armDirection),
-            new ConditionalCommand(
-                new TelescopeTo(
-                    sys_telescope, 
-                    kTelescope.kDestinations.kRetracted
-                ), 
-                new WaitCommand(0), 
-                () -> Math.abs(armDirection - sys_arm.getMeasurement()) > 0.10 && sys_telescope.getDistance() >= 1
+            new TelescopeTo(
+                sys_telescope, 
+                kTelescope.kDestinations.kRetracted
             )
         );
     }
