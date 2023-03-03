@@ -1,5 +1,4 @@
-# 2023-Bishop
-![Bilby Stampede](https://cdn.discordapp.com/attachments/794885191898365975/1081014101024714762/bishopLogo_2.png)
+![Bilby Stampede](https://cdn.discordapp.com/attachments/794885191898365975/1081016440905277460/bishopLogo_3.png)
 
 ## Useful Documentation
 [CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit#gid=1456793576)
