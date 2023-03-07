@@ -358,8 +358,10 @@ public final class Constants {
     }
 
     public static class kLimelight {
-        public static final int heightOffFloor                  = 15; //cm
-        public static final int angle                           = 0; //degrees
+        public static class Kmounting {
+            public static final double limeLightHeight          = 15; //cm //PLACEHOLDER
+            public static final int angle                       = 11; //degrees
+        }
         public static final int kAutoLightTimeout               = 1000; //ms
         public static final boolean kDoAutoLight                = true; 
         public static final double KretroTargetFF               = 0.3;
@@ -367,5 +369,8 @@ public final class Constants {
         public static final double kALTriggerDistance           = 1; //placeholder
         public static final double disconnectNotifLength        = 200; //rumble time in seconds
         public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
+        public static final class KretroTarget {
+            public static final double lowNodeHeight            = 30; //cm //PLACEHOLDER
+        }
     }
 }
