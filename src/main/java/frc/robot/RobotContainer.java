@@ -65,7 +65,7 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    // private final Limelight sys_limelight;
+    private final Limelight sys_limelight;
     // public final Claw sys_claw;
     public final NewClaw sys_claw;
     public final Candle sys_candle;
@@ -79,7 +79,7 @@ public class RobotContainer
     private final DefaultDrive cmd_defaultDrive;
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
-    // private final ConeNodeAim cmd_coneNodeAim;
+    private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
 
@@ -145,8 +145,8 @@ public class RobotContainer
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
         cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
-        // sys_limelight = new Limelight(joystickMain);
-        // cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
+        sys_limelight = new Limelight(joystickMain);
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
@@ -309,8 +309,8 @@ public class RobotContainer
                 )
             );
 
-        // joystickMain.b()
-        //     .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
+         joystickMain.b()
+             .whileTrue(cmd_coneNodeAim); // Cone node auto-alignment command
 
         // joystickSecondary.rightBumper()
         //     .onTrue(
