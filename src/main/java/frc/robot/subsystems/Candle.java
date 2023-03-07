@@ -32,6 +32,8 @@ public class Candle extends SubsystemBase {
     private int timer = 0;
     private double animationTime = 0;
 
+    private int LEDColors[][] = new int[kCANdle.kConfig.LEDCount][3];
+    private int lastLEDColors[][] = new int[kCANdle.kConfig.LEDCount][3];
 
     private int currentChargeLocation = 0;
     private int maxCharge = 0;
@@ -43,7 +45,6 @@ public class Candle extends SubsystemBase {
         candle.configLEDType(LEDStripType.GRB);
 
         candle.animate(null, 0);
-
 
         candle.setLEDs(0, 0, 0, 0, 0, kCANdle.kConfig.LEDCount);
 
@@ -72,8 +73,11 @@ public class Candle extends SubsystemBase {
 
 
     public void setColor(int r, int g, int b) {
-      candle.setLEDs(0, 0, 0);
-      candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
+      // candle.setLEDs(0, 0, 0, 0, 0, 8);
+      // candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
+      for (int i = 0; i < 8; i++) {
+        setArrayLEDs(i, r, g, b);
+      }
     }
 
 
@@ -131,7 +135,8 @@ public class Candle extends SubsystemBase {
      */
 
     public void LEDTurnOnAt(int index) {
-      candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, 1);
+      // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, 1);
+      setArrayLEDs(index, kColors.idle);
     }
 
 
@@ -141,7 +146,8 @@ public class Candle extends SubsystemBase {
      */
 
     public void LEDTurnOffAt(int index) {
-      candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, 1);
+      // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, 1);
+      setArrayLEDs(index, LEDOff);
     }
 
 
@@ -152,7 +158,10 @@ public class Candle extends SubsystemBase {
      */
 
     public void LEDTurnOn(int index, int count) {
-      candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, count);
+      // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, count);
+      for (int i = index; i < index + count; i++) {
+        setArrayLEDs(i, kColors.idle);
+      }
     }
 
 
@@ -163,7 +172,10 @@ public class Candle extends SubsystemBase {
      */
 
     public void LEDTurnOff(int index, int count) {
-      candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, count);
+      // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, count);
+      for (int i = index; i < index + count; i++) {
+        setArrayLEDs(i, LEDOff);
+      }
     }
 
 
@@ -178,7 +190,10 @@ public class Candle extends SubsystemBase {
     public void LEDTurnOn(int index, int count, int MIN, int MAX) {
       for (int i = index; i < index + count; i++) {
         if (i < MAX && i > MIN) {
-          candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, i, 1);
+          // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, i, 1);
+          for (int j = index; j < index + count; j++) {
+            setArrayLEDs(j, kColors.idle);
+          }
         }
       }
     }
@@ -195,7 +210,10 @@ public class Candle extends SubsystemBase {
     public void LEDTurnOff(int index, int count, int MIN, int MAX) {
       for (int i = index; i < index + count; i++) {
         if (i < MAX && i > MIN) {
-          candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, i, 1);
+          // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, i, 1);
+          for (int j = index; j < index + count; j++) {
+            setArrayLEDs(j, LEDOff);
+          }
         }
       }
     }
@@ -268,10 +286,18 @@ public class Candle extends SubsystemBase {
           } else if (currentChargeLocation > kCANdle.kConfig.LEDInnerLeft) {
             maxCharge = 0;
             currentChargeLocation = 1;
-            candle.setLEDs(0, 0, 0, 0, 8, kCANdle.kConfig.LEDCount);
+            // candle.setLEDs(0, 0, 0, 0, 8, kCANdle.kConfig.LEDCount);
+            setColor(0, 0, 0);
           }
         }
       }
+
+      for (int i = 8; i < kCANdle.kConfig.LEDCount; i++) {
+        if (LEDColors[i][0] != lastLEDColors[i][0] || LEDColors[i][1] != lastLEDColors[i][1] || LEDColors[i][2] != lastLEDColors[i][2]) {
+          candle.setLEDs(LEDColors[i][0], LEDColors[i][1], LEDColors[i][2], 0, i, 0);
+        }
+      }
+      lastLEDColors = LEDColors;
     }
 
 
@@ -290,6 +316,16 @@ public class Candle extends SubsystemBase {
 
     public int getCurrentAnimation() {
       return currentAnimationSlot;
+    }
+
+    public void setArrayLEDs(int index, int[] arr) {
+      setArrayLEDs(index, arr[0], arr[1], arr[2]);
+    }
+
+    public void setArrayLEDs(int index, int r, int g, int b) {
+      LEDColors[index][0] = r;
+      LEDColors[index][1] = g;
+      LEDColors[index][2] = b;
     }
 
 
