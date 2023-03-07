@@ -112,6 +112,11 @@ public final class Constants {
                 kBoost
             }
         }
+
+        public static final class kSlew {
+            public static final double kForwardSlew = 0.5;
+            public static final double kSidewaysSlew = 0.3;
+        }
     }
 
     public static final class kClaw {
