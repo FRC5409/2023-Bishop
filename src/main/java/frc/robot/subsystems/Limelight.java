@@ -30,11 +30,12 @@ public class Limelight extends SubsystemBase {
     NetworkTable limelightTable;
 
     // shuffleboard
-    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget;
+    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget;
     private final GenericEntry xWidget, yWidget, zWidget;
     private final GenericEntry rxWidget, ryWidget, rzWidget;
     private final GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
-    private final GenericEntry targetSizeWidget;
+    private final GenericEntry targetSizeWidget; 
+    private final GenericEntry retroDistanceWidget; 
 
     // robot
     private double targetDistance;
@@ -105,6 +106,12 @@ public class Limelight extends SubsystemBase {
         pipelineIndexWidget = localizationPipeline.add("Pipeline", 0).getEntry();
         pipelineLatencyWidget = localizationPipeline.add("Latency", 0).getEntry();
         targetSizeWidget = localizationTarget.add("Size", 0).getEntry();
+
+        retroTarget = Shuffleboard.getTab("Field Localization")
+            .getLayout("Retro-Distance")
+            .withSize(1, 1);
+
+        retroDistanceWidget = retroTarget.add("Distance", 0).getEntry();
 
         // setting startup millis
         lastLightUpdate = System.currentTimeMillis();
@@ -237,6 +244,8 @@ public class Limelight extends SubsystemBase {
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
 
         retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.Kmounting.limeLightHeight)/Math.tan(realTargetAngleRadians); 
+        retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
+        System.out.println(retroTargetDistance);
     }
     @Override
     public void periodic() {
