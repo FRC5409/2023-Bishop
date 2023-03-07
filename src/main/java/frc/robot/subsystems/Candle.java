@@ -318,9 +318,21 @@ public class Candle extends SubsystemBase {
       return currentAnimationSlot;
     }
 
+    /**
+     * @param index array index
+     * @param arr array rgb length 3
+     * Sets the array data at index to arr length 3;
+     */
     public void setArrayLEDs(int index, int[] arr) {
       setArrayLEDs(index, arr[0], arr[1], arr[2]);
     }
+
+    /**
+     * @param index at array index
+     * @param r red value
+     * @param g green value
+     * @param b blue value
+     */
 
     public void setArrayLEDs(int index, int r, int g, int b) {
       LEDColors[index][0] = r;
@@ -357,7 +369,6 @@ public class Candle extends SubsystemBase {
     /**
      * Setting LEDs to the charged up animation
      */
-
 
     public void chargedUp() {
       setAnimation(AnimationTypes.ChargedUp, 0, 0, 0);
