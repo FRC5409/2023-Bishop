@@ -25,6 +25,7 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.AutoCloseClaw;
@@ -205,15 +206,22 @@ public class RobotContainer
         //     );
         joystickMain.x()
             .whileTrue(
-                new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                Commands.either(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                new WaitCommand(0), 
+                () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
         joystickMain.y()
-            .onTrue(
-                new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold)
+            .whileTrue(
+                Commands.either(
+                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.coneDistanceThreshold),
+                    () -> sys_armPIDSubsystem.getPrevPos() != kArmSubsystem.kSetpoints.kBalancing)
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())

@@ -330,7 +330,7 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
-            public static final double kGroundBack              = 0.0; // placeholder
+            public static final double kGroundBack              = 11.95; 
             
             public static final double kLoading                 = 0.0; // placeholder
 
