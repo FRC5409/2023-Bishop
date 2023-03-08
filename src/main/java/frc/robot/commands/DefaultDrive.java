@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 public class DefaultDrive extends CommandBase {
@@ -32,7 +33,7 @@ public class DefaultDrive extends CommandBase {
     @Override
     public void execute() {
         double xSpeed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
-        double zRotation = -m_controller.getLeftX();
+        double zRotation = (-m_controller.getLeftX()) * Math.cos(m_drivetrain.getPitch()) * Constants.kDrivetrain.kAntiTipConstant;
 
         m_drivetrain.arcadeDrive(xSpeed, zRotation);
     }
