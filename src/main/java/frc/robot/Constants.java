@@ -84,8 +84,8 @@ public final class Constants {
         }
 
         public static final class kDriveteam {
-            public static final double rampRate                 = 0.3;
-            public static final double stopRamp                 = 0.6;
+            public static final double rampRate                 = 0.0;
+            public static final double stopRamp                 = 0.0;
 
             public static final double defaultSpeedMultiplier   = 0.8;
             public static final double defaultTurningMultiplier = 0.8;
@@ -111,6 +111,11 @@ public final class Constants {
                 kDefault,
                 kBoost
             }
+        }
+
+        public static final class kSlew {
+            public static final double kForwardSlew             = 2.2;
+            public static final double kSidewaysSlew            = 3.5;
         }
     }
 
@@ -258,24 +263,24 @@ public final class Constants {
         }
     
         public static class kSetpoints {
-            public final static double kRestingOnIntake         = 0.55;
+            public final static double kRestingOnIntake         = 0;
 
-            public final static double kToTop                   = -0.135; // 41.75 inches, old setpoint: 0.095
-            public final static double kConeMid                 = -0.144; // 36 inches, old setpoint: 0.1
-            public final static double kConeAbove               = -0.1;  // 43.75 inches, old setpoint: 0.13 
-            public final static double kToMid                   = -0.18; // 28.75 inches, old setpoint: 0.05 
+            public final static double kToTop                   = 0.66; // 41.75 inches
+            public final static double kConeMid                 = 0.62; // 36 inches
+            public final static double kConeAbove               = 0.67;  // 43.75 inches
+            public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
             
-            public final static double kToLoadingRamp           = 0.48; //placeholder
-            public final static double kToLoadingIntake         = 0.43;
+            public final static double kToLoadingRamp           = 0; //placeholder
+            public final static double kToLoadingIntake         = 0;
 
-            public final static double kToLoadingshoulder       = -0.13; // 38.5 inches, old setpoint: 0.11
+            public final static double kToLoadingshoulder       = 0.672; // 38.5 inches
             public final static double kToHandoff               = 0.0; //placeholder
 
-            public final static double kIdling                  = 0.166; // 48.5 inches, old setpoint 0.34
-            public final static double kBalancing               = 0.4; // old setpoint 0.595 
+            public final static double kIdling                  = 0.96; // 48.5 inches
+            public final static double kBalancing               = 1.2; // 
 
             // setpoint of hardstop of shoulder side of robot: -0.118
             // measurement in inches is from the edge of the claw plate
