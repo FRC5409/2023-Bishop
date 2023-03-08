@@ -43,7 +43,6 @@ public class Limelight extends SubsystemBase {
 
     // time
     private double lastLightUpdate;
-    
     private double[] positionDefaults = new double[] { 0 };
 
     // Important NetworkTable values
@@ -66,6 +65,7 @@ public class Limelight extends SubsystemBase {
 
     //retrodistance
     private double retroTargetDistance;
+    private double lastRetroDistance; //DEBUGGING
 
     public Limelight(CommandXboxController joystick) {
         // networktables
@@ -171,6 +171,9 @@ public class Limelight extends SubsystemBase {
 
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
+
+        //debugging retro
+        lastRetroDistance = 0; 
     }
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
@@ -244,9 +247,21 @@ public class Limelight extends SubsystemBase {
         double realTargetAngle = Constants.kLimelight.Kmounting.angle + cameraTargetAngle;
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
         
-        retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.Kmounting.limeLightHeight)/Math.tan(realTargetAngleRadians); 
-        retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
-        System.out.println(retroTargetDistance);
+        if (cameraTargetAngle != 0){
+            retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.Kmounting.limeLightHeight)/Math.tan(realTargetAngleRadians); 
+        } else  { 
+            retroTargetDistance = 0; 
+            System.out.println("No-RetroTarget");
+        }
+
+        //Pushing readings to shuffleboard
+        if (retroTargetDistance != lastRetroDistance){
+            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                System.out.printf("[Update] Retro-Distance: %d", retroTargetDistance);
+            }
+            retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
+        }
+        lastRetroDistance = retroTargetDistance;
     }
     @Override
     public void periodic() {

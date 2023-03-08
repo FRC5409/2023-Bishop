@@ -366,11 +366,12 @@ public final class Constants {
         public static final boolean kDoAutoLight                = true; 
         public static final double KretroTargetFF               = 0.3;
         public static final double KretroTargetTolerance        = 0.1;
-        public static final double kALTriggerDistance           = 1; //placeholder
-        public static final double disconnectNotifLength        = 200; //rumble time in seconds
+        public static final double kALTriggerDistance           = 1; //PLACEHOLDER
+        public static final double disconnectNotifLength        = 200; //rumble time in ms
         public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
         public static final class KretroTarget {
-            public static final double lowNodeHeight            = 60; //cm //PLACEHOLDER
+            public static final boolean retroDistanceDebug      = true; 
+            public static final double lowNodeHeight            = 60.14; //cm
         }
     }
 }
