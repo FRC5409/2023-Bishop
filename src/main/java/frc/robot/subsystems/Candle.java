@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
+
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -174,6 +176,9 @@ public class Candle extends SubsystemBase {
      */
 
     public void LEDTurnOn(int index, int count, int MIN, int MAX) {
+      if (MAX >= kCANdle.kConfig.LEDCount) {
+        MAX = kCANdle.kConfig.LEDCount - 1;
+      }
       for (int i = index; i < index + count; i++) {
         if (i < MAX && i > MIN) {
           // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, i, 1);
@@ -193,6 +198,9 @@ public class Candle extends SubsystemBase {
      */
     
     public void LEDTurnOff(int index, int count, int MIN, int MAX) {
+      if (MAX >= kCANdle.kConfig.LEDCount) {
+        MAX = kCANdle.kConfig.LEDCount - 1;
+      }
       for (int i = index; i < index + count; i++) {
         if (i < MAX && i > MIN) {
           // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, i, 1);
