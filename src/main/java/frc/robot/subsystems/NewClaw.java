@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.io.Console;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -35,9 +33,12 @@ public class NewClaw extends PIDSubsystem {
 
     private ShuffleboardTab clawTab;
 
-    private GenericEntry tempEntry, dutyEncoderEntry;
+    private GenericEntry tempEntry, dutyEncoderEntry, tofAvgEntry, tofRealEntry;
 
     private final boolean debug = true;
+
+    private final double[] lastToFValues = new double[5];
+    private int indexCount;
   
   /** Creates a new NewClaw. */
   public NewClaw() {
@@ -48,6 +49,7 @@ public class NewClaw extends PIDSubsystem {
     configMot();
 
     s_tof = new TimeOfFlight(36);
+    s_tof.setRangingMode(RangingMode.Long, s_tof.getSampleTime());
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
 
@@ -55,6 +57,8 @@ public class NewClaw extends PIDSubsystem {
       clawTab = Shuffleboard.getTab("Claw");
       tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
       dutyEncoderEntry = clawTab.add("Duty", getDutyPosition()).getEntry();
+      tofAvgEntry = clawTab.add("Time Of Flight (Avg)", rollingToFAvg()).getEntry();
+      tofRealEntry = clawTab.add("Time Of Flight (Real)", getDistanceToF()).getEntry();
     }
   }
 
@@ -116,12 +120,48 @@ public void setPID(double p, double i, double d) {
     return clawDutyEncoder.getAbsolutePosition();
   }
 
+  public double getDistanceToF() {
+    return s_tof.getRange();
+  }
+
+  public double rollingToFAvg() {
+    int currentDist = (int) getDistanceToF();
+
+    if (indexCount > 4) {
+      indexCount = 0;
+    }
+
+    if (currentDist > 5) {
+      lastToFValues[indexCount] = currentDist;
+    }
+    
+    int sum = 0;
+    for (double value : lastToFValues) {
+      sum += value;
+    }
+    
+    int avg = sum/5;
+
+    if (avg > 300) {
+      avg = 300;
+    }
+
+    indexCount++;
+    return avg;
+  }
+
   @Override
   public void periodic() {
     super.periodic();
+
     if (debug) {
       tempEntry.setDouble(getMotorTempature());
       dutyEncoderEntry.setDouble(getMeasurement());
+      tofAvgEntry.setDouble(rollingToFAvg());
+      tofRealEntry.setDouble(getDistanceToF());
     }
+
+
+
   }
 }

@@ -280,7 +280,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.2; // 
+            public final static double kBalancing               = 1.22; // old 1.2 
 
             // setpoint of hardstop of shoulder side of robot: -0.118
             // measurement in inches is from the edge of the claw plate
