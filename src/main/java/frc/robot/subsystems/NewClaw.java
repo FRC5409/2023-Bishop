@@ -9,6 +9,7 @@ import java.io.Console;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -27,7 +28,10 @@ public class NewClaw extends PIDSubsystem {
 
     private final DutyCycleEncoder clawDutyEncoder;
 
+    private final TimeOfFlight s_tof;
+
     private kClawState currentState = kClawState.kOpen;
+
 
     private ShuffleboardTab clawTab;
 
@@ -42,6 +46,8 @@ public class NewClaw extends PIDSubsystem {
     getController().setTolerance(0);
 
     configMot();
+
+    s_tof = new TimeOfFlight(36);
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
 
