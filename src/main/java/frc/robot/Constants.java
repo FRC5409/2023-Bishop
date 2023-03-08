@@ -282,6 +282,8 @@ public final class Constants {
             public final static double kIdling                  = 0.96; // 48.5 inches
             public final static double kBalancing               = 1.2; // 
 
+            public static final double kPickupConeFromGround    = 1.21;
+
             // setpoint of hardstop of shoulder side of robot: -0.118
             // measurement in inches is from the edge of the claw plate
             // setpoints are off by 0.01 from absolute position
@@ -330,6 +332,8 @@ public final class Constants {
             public static final double kGroundBack              = 0.0; // placeholder
             
             public static final double kLoading                 = 0.0; // placeholder
+
+            public static final double kPickupConeFromGround    = 15.75;
 
         }
     }
