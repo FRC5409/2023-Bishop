@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -13,21 +12,15 @@ import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kCANdle.kColors;
 
-
 public class Candle extends SubsystemBase {
-
 
     private final CANdle candle;
 
-
     private ColorFlowAnimation colorAnimation;
-
 
     private int currentAnimationSlot = -1;
 
-
     private int[] LEDOff = {0, 0, 0};
-
 
     private int timer = 0;
     private double animationTime = 0;
@@ -42,16 +35,17 @@ public class Candle extends SubsystemBase {
     public Candle() {
         candle = new CANdle(kCANdle.kConfig.CANID);
 
+        candle.configFactoryDefault();
+
         candle.configLEDType(LEDStripType.GRB);
 
         candle.animate(null, 0);
 
-        candle.setLEDs(0, 0, 0, 0, 0, kCANdle.kConfig.LEDCount);
+        setColor(0, 0, 0);
 
         configBrightness(1);
 
     }
-
 
     /**
      * Configs the brightness of all the LEDs
@@ -63,7 +57,6 @@ public class Candle extends SubsystemBase {
         candle.configBrightnessScalar(brightness);
     }
 
-
     /**
      * Sets all of the LEDs to
      * @param r : Red 0   - 255
@@ -71,15 +64,13 @@ public class Candle extends SubsystemBase {
      * @param b : Blue 0  - 255
      */
 
-
     public void setColor(int r, int g, int b) {
       // candle.setLEDs(0, 0, 0, 0, 0, 8);
       // candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < kCANdle.kConfig.LEDCount; i++) {
         setArrayLEDs(i, r, g, b);
       }
     }
-
 
     /**
      * Sets the current animation playing and clears the LEDs
@@ -88,7 +79,6 @@ public class Candle extends SubsystemBase {
      * @param g : Green 0 - 255
      * @param b : Blue 0  - 255
      */
-
 
     public void setAnimation(AnimationTypes animationType, int r, int g, int b) {
         candle.animate(null, currentAnimationSlot);
@@ -136,9 +126,8 @@ public class Candle extends SubsystemBase {
 
     public void LEDTurnOnAt(int index) {
       // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, 1);
-      setArrayLEDs(index, kColors.idle);
+      setArrayLEDs(index, kColors.idle[0], kColors.idle[1], kColors.idle[2]);
     }
-
 
     /**
      * Turn off LED
@@ -147,9 +136,8 @@ public class Candle extends SubsystemBase {
 
     public void LEDTurnOffAt(int index) {
       // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, 1);
-      setArrayLEDs(index, LEDOff);
+      setArrayLEDs(index, LEDOff[0], LEDOff[1], LEDOff[2]);
     }
-
 
     /**
      * Turn o LnEDs
@@ -160,10 +148,9 @@ public class Candle extends SubsystemBase {
     public void LEDTurnOn(int index, int count) {
       // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, index, count);
       for (int i = index; i < index + count; i++) {
-        setArrayLEDs(i, kColors.idle);
+        setArrayLEDs(i, kColors.idle[0], kColors.idle[1], kColors.idle[2]);
       }
     }
-
 
     /**
      * Turn off LEDs
@@ -174,10 +161,9 @@ public class Candle extends SubsystemBase {
     public void LEDTurnOff(int index, int count) {
       // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, index, count);
       for (int i = index; i < index + count; i++) {
-        setArrayLEDs(i, LEDOff);
+        setArrayLEDs(i, LEDOff[0], LEDOff[1], LEDOff[2]);
       }
     }
-
 
     /**
      * Turn on LEDs
@@ -192,12 +178,11 @@ public class Candle extends SubsystemBase {
         if (i < MAX && i > MIN) {
           // candle.setLEDs(kColors.idle[0], kColors.idle[1], kColors.idle[2], 0, i, 1);
           for (int j = index; j < index + count; j++) {
-            setArrayLEDs(j, kColors.idle);
+            setArrayLEDs(j, kColors.idle[0], kColors.idle[1], kColors.idle[2]);
           }
         }
       }
     }
-
 
     /**
      * Turn off LEDs
@@ -212,12 +197,12 @@ public class Candle extends SubsystemBase {
         if (i < MAX && i > MIN) {
           // candle.setLEDs(LEDOff[0], LEDOff[1], LEDOff[2], 0, i, 1);
           for (int j = index; j < index + count; j++) {
-            setArrayLEDs(j, LEDOff);
+            // setArrayLEDs(j, LEDOff);
+              setArrayLEDs(j, LEDOff[0], LEDOff[1], LEDOff[2]);
           }
         }
       }
     }
-
 
     @Override
     public void periodic() {
@@ -300,13 +285,11 @@ public class Candle extends SubsystemBase {
       lastLEDColors = LEDColors;
     }
 
-
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
        
     }
-
 
     /**
      * Gets the current animation
@@ -316,15 +299,6 @@ public class Candle extends SubsystemBase {
 
     public int getCurrentAnimation() {
       return currentAnimationSlot;
-    }
-
-    /**
-     * @param index array index
-     * @param arr array rgb length 3
-     * Sets the array data at index to arr length 3;
-     */
-    public void setArrayLEDs(int index, int[] arr) {
-      setArrayLEDs(index, arr[0], arr[1], arr[2]);
     }
 
     /**
@@ -340,11 +314,9 @@ public class Candle extends SubsystemBase {
       LEDColors[index][2] = b;
     }
 
-
     /**
      * Setting the animation to the Custom Idle animation before the match
      */
-
 
     public void idleAnimation() {
       if (DriverStation.getAlliance() == Alliance.Red) {
@@ -355,16 +327,13 @@ public class Candle extends SubsystemBase {
       // setAnimation(AnimationTypes.Static, 255, 155, 0);
     }
 
-
     /**
      * Setting the animation to the built in animation during game
      */
 
-
     public void inGameAnimation() {
       setAnimation(AnimationTypes.ColorFlow, kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
     }
-
 
     /**
      * Setting LEDs to the charged up animation
@@ -374,6 +343,4 @@ public class Candle extends SubsystemBase {
       setAnimation(AnimationTypes.ChargedUp, 0, 0, 0);
     }
 
-
 }
-
