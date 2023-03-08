@@ -370,7 +370,7 @@ public final class Constants {
         public static final double disconnectNotifLength        = 200; //rumble time in seconds
         public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
         public static final class KretroTarget {
-            public static final double lowNodeHeight            = 30; //cm //PLACEHOLDER
+            public static final double lowNodeHeight            = 60; //cm //PLACEHOLDER
         }
     }
 }

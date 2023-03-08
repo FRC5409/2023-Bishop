@@ -78,6 +78,7 @@ public class Limelight extends SubsystemBase {
         Shuffleboard.getTab("Field Localization").add("Rotation", 0);
         Shuffleboard.getTab("Field Localization").add("Pipeline Info", 0);
         Shuffleboard.getTab("Field Localization").add("Target Size", 0);
+        Shuffleboard.getTab("Field Localization").add("Retro Distance", 0);
 
         localizationPos = Shuffleboard.getTab("Field Localization")
                 .getLayout("Position", BuiltInLayouts.kGrid)
@@ -108,7 +109,7 @@ public class Limelight extends SubsystemBase {
         targetSizeWidget = localizationTarget.add("Size", 0).getEntry();
 
         retroTarget = Shuffleboard.getTab("Field Localization")
-            .getLayout("Retro-Distance")
+            .getLayout("Retro Distance", BuiltInLayouts.kGrid)
             .withSize(1, 1);
 
         retroDistanceWidget = retroTarget.add("Distance", 0).getEntry();
@@ -242,7 +243,7 @@ public class Limelight extends SubsystemBase {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.Kmounting.angle + cameraTargetAngle;
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
-
+        
         retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.Kmounting.limeLightHeight)/Math.tan(realTargetAngleRadians); 
         retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
         System.out.println(retroTargetDistance);
