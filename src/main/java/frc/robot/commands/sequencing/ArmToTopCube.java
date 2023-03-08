@@ -1,40 +1,58 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands.sequencing;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kTelescope;
-import frc.robot.commands.ArmRotation;
-import frc.robot.commands.TelescopeTo;
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ArmToTopCube extends ParallelCommandGroup {
-  /** Creates a new ArmToTopCube. */
-  public ArmToTopCube(
-    ArmPIDSubsystem sys_arm,
-    Telescope sys_telescope,
-    NewClaw sys_claw
-  ) {
-    super();
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new ArmRotation(sys_arm, kArmSubsystem.kSetpoints.kToTop),
-      new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
-      new SequentialCommandGroup(
-        new WaitUntilCommand(() -> Math.abs(sys_arm.getController().getSetpoint() - sys_arm.getMeasurement()) < 0.10),
-        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kExtended)
-      )
-    );
-  }
+public class ArmToTopCube extends CommandBase {
+
+    private final ArmPIDSubsystem sys_arm;;
+    private final Telescope sys_telescope;
+
+    private boolean extended = false;
+
+    public ArmToTopCube(ArmPIDSubsystem sys_arm, Telescope sys_telescope) {
+        this.sys_arm = sys_arm;
+        this.sys_telescope = sys_telescope;
+
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(this.sys_arm, this.sys_telescope);
+        
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        extended = false;
+        sys_telescope.extend(kTelescope.kDestinations.kRetracted);
+        sys_arm.setSetpoint(kArmSubsystem.kSetpoints.kToTop);
+        sys_arm.enable();
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        if (!extended && Math.abs(sys_arm.getSetpoint() - sys_arm.getMeasurement()) < 0.10) {
+            extended = true;
+            sys_telescope.extend(kTelescope.kDestinations.kExtended);
+        }
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+        extended = false;
+        sys_arm.setPrevPos(kArmSubsystem.kSetpoints.kToTop);
+        sys_telescope.setPrevPos(kTelescope.kDestinations.kExtended);
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        
+        return Math.abs(sys_telescope.getDistance() - kTelescope.kDestinations.kExtended) < 0.2;
+    }
+
 }

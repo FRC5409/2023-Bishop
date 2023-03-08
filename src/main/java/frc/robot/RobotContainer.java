@@ -285,8 +285,7 @@ public class RobotContainer
         .onTrue(
             new ArmToTopCube(
                 sys_armPIDSubsystem, 
-                sys_telescope, 
-                sys_claw
+                sys_telescope
             )
         ); // pickup from floor
                 
