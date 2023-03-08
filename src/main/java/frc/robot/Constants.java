@@ -136,6 +136,9 @@ public final class Constants {
         public static final double openPosition                  = 0.77;
         public static final double coneClosePosition             = 0.545;
         public static final double cubeClosePosition             = 0.585;
+
+        public static final int coneDistanceThreshold            = 180;
+        public static final int cubeDistanceThreshold            = 70;
         
         public static final int stallTime                        = 40;
 
