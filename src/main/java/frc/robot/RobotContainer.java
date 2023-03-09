@@ -29,6 +29,7 @@ import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.ClawMovement;
+import frc.robot.commands.ConeNodeAim;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.MoveArmManual;
@@ -46,6 +47,7 @@ import frc.robot.commands.sequencing.RotateArmGroup;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
@@ -70,7 +72,7 @@ public class RobotContainer
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
-    // private final Limelight sys_limelight;
+    private final Limelight sys_limelight;
     // public final Claw sys_claw;
     public final NewClaw sys_claw;
     public final Candle sys_candle;
@@ -84,7 +86,7 @@ public class RobotContainer
     private final DefaultDrive cmd_defaultDrive;
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
-    // private final ConeNodeAim cmd_coneNodeAim;
+    private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
 
@@ -150,8 +152,8 @@ public class RobotContainer
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
         cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
-        // sys_limelight = new Limelight(joystickMain);
-        // cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
+        sys_limelight = new Limelight();
+        cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
@@ -342,6 +344,9 @@ public class RobotContainer
                     kArmSubsystem.kSetpoints.kIdling
                 )
             );
+        
+        joystickMain.rightTrigger()
+            .whileTrue(cmd_coneNodeAim);
 
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
@@ -425,5 +430,4 @@ public class RobotContainer
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
-
 }

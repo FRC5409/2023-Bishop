@@ -4,6 +4,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kLimelight;
@@ -16,7 +20,14 @@ public class ConeNodeAim extends CommandBase {
     private final Drivetrain sys_drivetrain;
     private final CommandXboxController m_joystick;
 
-    double forwardSpeed, dirInRad, turnRate;
+    boolean debugMode = true;
+
+    private ShuffleboardTab sb_coneNodeAim;
+    private GenericEntry nt_kP, nt_kI, nt_kD;
+
+    private final PIDController m_pidController;
+
+    double xSpeed, dirInRad, turnRate, calculatedOutput;
 
     /** Creates a new TargetAim. */
     public ConeNodeAim(Limelight limelight, Drivetrain drivetrain, CommandXboxController joystick) {
@@ -25,6 +36,10 @@ public class ConeNodeAim extends CommandBase {
         sys_drivetrain = drivetrain;
         m_joystick = joystick;
 
+        m_pidController = new PIDController(kLimelight.kConeNodeAim.kP, kLimelight.kConeNodeAim.kI, kLimelight.kConeNodeAim.kD);
+        m_pidController.setSetpoint(0);
+        m_pidController.setTolerance(kLimelight.KretroTargetTolerance);
+
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
     }
@@ -32,31 +47,52 @@ public class ConeNodeAim extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        sys_drivetrain.resetEncoders();
         sys_limelight.turnOn();
         sys_limelight.setData("pipeline", 1);
+
+        if (debugMode) {
+            sb_coneNodeAim = Shuffleboard.getTab("Cone node aim");
+            nt_kP = sb_coneNodeAim.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
+            nt_kI = sb_coneNodeAim.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
+            nt_kD = sb_coneNodeAim.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
+
+            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
+        }
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
+        xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+        sys_drivetrain.arcadeDrive(xSpeed, calculatedOutput);
 
-        forwardSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+        /*
+         * Older code:
+         * dir = sys_limelightR.getXOffset() / Math.abs(sys_limelightR.getXOffset());
+         * dir returns -1 or 1 depending on if it's positive or if it's negative
+         * 
+         * Since the X Offset keeps decreasing, the turning speed will decrease
+         * turning = dir * Constants.kDrivetrain.kCNodeTargetSpeed;
+         */
 
-        if (!sys_limelight.isVisible()) {
+         /* if (!sys_limelight.isVisible()) {
             dirInRad = sys_limelight.getTurningDir() * (Math.PI / 180); // dir on the controller converted to radians
-            sys_drivetrain.arcadeDrive(forwardSpeed, m_joystick.getLeftX()); // Lets the driver drive around
+            sys_drivetrain.arcadeDrive(xSpeed, m_joystick.getLeftX()); // Lets the driver drive around
         } else {
             dirInRad = sys_limelight.getXOffset() * (Math.PI / 180);
-            sys_drivetrain.arcadeDrive(forwardSpeed, (-turnRate));
+            sys_drivetrain.arcadeDrive(xSpeed, (-turning));
         }
-
         if (dirInRad != 0) {
-            turnRate = (Math.pow(Math.E, (Math.abs(dirInRad))) - 1);
-            if (turnRate < kLimelight.KretroTargetFF) {
-                turnRate = kLimelight.KretroTargetFF;
+            turning = (Math.pow(Math.E, (Math.abs(dirInRad))) - 1);
+            if (turning < kLimelight.KretroTargetFF) {
+                turning = kLimelight.KretroTargetFF;
             }
-            turnRate *= ((Math.abs(dirInRad) / dirInRad));
-        }
+            turning *= ((Math.abs(dirInRad) / dirInRad));
+        } */
+        // System.out.println("Turn Rate: " + turning);
+        // System.out.println("Executed");
     }
 
     // Called once the command ends or is interrupted.

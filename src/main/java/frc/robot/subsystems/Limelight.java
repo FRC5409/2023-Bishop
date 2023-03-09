@@ -21,11 +21,11 @@ public class Limelight extends SubsystemBase {
     NetworkTable limelightTable;
 
     // shuffleboard
-    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget;
+    private final ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget;
     private final GenericEntry xWidget, yWidget, zWidget;
     private final GenericEntry rxWidget, ryWidget, rzWidget;
     private final GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
-    private final GenericEntry targetSizeWidget;
+    private final GenericEntry targetSizeWidget, retroDistanceWidget;
     // Retroreflective-related shuffleboard
     private final ShuffleboardTab sb_limelightR;
     private final GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
@@ -36,8 +36,11 @@ public class Limelight extends SubsystemBase {
 
     // time
     private double lastLightUpdate;
-
     private double[] positionDefaults = new double[] { 0 };
+    
+    //retrodistance
+    private double retroTargetDistance;
+    private double lastRetroDistance; //DEBUGGING
 
     double lastTick = 0;
 
@@ -85,8 +88,16 @@ public class Limelight extends SubsystemBase {
         pipelineLatencyWidget = localizationPipeline.add("Latency", 0).getEntry();
         targetSizeWidget = localizationTarget.add("Size", 0).getEntry();
 
+        retroTarget = Shuffleboard.getTab("Field Localization")
+            .getLayout("Retro Distance", BuiltInLayouts.kGrid)
+            .withSize(1, 1);
+        retroDistanceWidget = retroTarget.add("Distance", 0).getEntry();
+
         // setting startup millis
         lastLightUpdate = System.currentTimeMillis();
+
+        //debugging retro
+        lastRetroDistance = 0;
 
         // Retroreflective-related Shuffleboard
         sb_limelightR = Shuffleboard.getTab("Limelight (Retro-reflective)");
@@ -102,6 +113,7 @@ public class Limelight extends SubsystemBase {
     @Override
     public void periodic() {
         updateRobotPosition();
+        updateRetroDistance();
         updateRetroReflectiveData();
         updateDirFromPOV();
     }
@@ -140,6 +152,7 @@ public class Limelight extends SubsystemBase {
         // setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
+    
 
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
@@ -154,6 +167,28 @@ public class Limelight extends SubsystemBase {
                 LimelightHelpers.setLEDMode_ForceOff("");
             }
         }
+    }
+
+    public void updateRetroDistance() {
+        double cameraTargetAngle = LimelightHelpers.getTY("");
+        double realTargetAngle = Constants.kLimelight.Kmounting.angle + cameraTargetAngle;
+        double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
+
+        if (cameraTargetAngle != 0){
+            retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.Kmounting.limeLightHeight)/Math.tan(realTargetAngleRadians); 
+        } else  { 
+            retroTargetDistance = 0; 
+            System.out.println("No-RetroTarget");
+        }
+
+        //Pushing readings to shuffleboard
+        if (retroTargetDistance != lastRetroDistance){
+            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                System.out.printf("[Update] Retro-Distance: %d", retroTargetDistance);
+            }
+            retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
+        }
+        lastRetroDistance = retroTargetDistance;
     }
 
     /** Updates retroreflective related data to relevant Shuffleboard entries */
