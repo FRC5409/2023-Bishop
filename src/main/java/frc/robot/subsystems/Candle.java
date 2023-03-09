@@ -317,9 +317,11 @@ public class Candle extends SubsystemBase {
      */
 
     public void setArrayLEDs(int index, int r, int g, int b) {
-      LEDColors[index][0] = r;
-      LEDColors[index][1] = g;
-      LEDColors[index][2] = b;
+      if (index < kCANdle.kConfig.LEDCount) {
+        LEDColors[index][0] = r;
+        LEDColors[index][1] = g;
+        LEDColors[index][2] = b;
+      }
     }
 
     /**
