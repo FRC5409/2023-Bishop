@@ -28,6 +28,8 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kTrajectoryPath;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.AutoCloseClaw;
+import frc.robot.commands.ClawMovement;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
@@ -356,6 +358,22 @@ public class RobotContainer
             )
         );
 
+        joystickSecondary.back()
+            .onTrue(
+                new RotateArmGroup(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kBalancing
+                )
+            );
+        joystickSecondary.start()
+            .onTrue(
+                new RotateArmGroup(
+                    sys_telescope, 
+                    sys_armPIDSubsystem, 
+                    kArmSubsystem.kSetpoints.kToLoadingRamp
+                )
+            );
                    
     }
 
