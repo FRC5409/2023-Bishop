@@ -9,51 +9,87 @@ import frc.robot.commands.RumbleJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RumblePattern extends CommandBase {
-  /** Creates a new RumblePattern. */
-  boolean validConfig;
-  boolean activeRumble;
+  private final CommandXboxController m_joystick; 
   private final double[] m_pulseTime;
   private final double[] m_intervalTime; 
-  private final int rumbleIndex; 
+  private final double m_intensity;
+  private double timerStart;
+  private double timerWaitStart; 
+  private boolean isRumbling; 
+  private boolean isWaiting;
+  boolean validConfig;
 
-  //millis
-  double pulseBegin;
-
-  public RumblePattern(CommandXboxController joystick, double[] pulseTime, double[] intervalTime) {
-    validConfig = true;
-    activeRumble = false; 
-    rumbleIndex = 0;
+  public RumblePattern(CommandXboxController joystick, double[] pulseTime, double[] intervalTime, double intensity) {
     m_pulseTime = pulseTime;
     m_intervalTime = intervalTime;
+    m_intensity = intensity;
+    m_joystick = joystick;
 
+    validConfig = true;
+    isRumbling = false; 
+    timerStart = System.currentTimeMillis();
+    timerWaitStart = System.currentTimeMillis();
   }
 
-  // Called when the command is initially scheduled.
+  public int doRumble(double length){
+    if (!isRumbling){
+      timerStart = System.currentTimeMillis();
+      m_joystick.getHID().setRumble(null, m_intensity);
+    } else {
+      if ((System.currentTimeMillis() - timerStart) >= length){
+        m_joystick.getHID().setRumble(null, m_intensity);
+        isRumbling = false;
+        return 1; 
+      }
+    }
+
+    return 0; 
+  }
+
+public void doPattern() {
+  for (int i = 0; i <= m_pulseTime.length;){
+    if (!rumblePause(m_intervalTime[i])){
+      i += doRumble(m_pulseTime[i]); //only itterates to the next index once the pulse has been completed 
+    }
+  }
+}
+
+private boolean rumblePause(double length){
+  if (!isWaiting){
+    timerWaitStart = System.currentTimeMillis();
+    isWaiting = true;
+  } else {
+    if ((System.currentTimeMillis() - timerWaitStart) >= length){
+      isWaiting = false; 
+      return false; 
+    }
+  }
+  return true;
+}
+
+private void checkConfig(){
+  if (m_pulseTime.length != m_intervalTime.length){
+    validConfig = false; 
+  }
+}
   @Override
   public void initialize() {
-    //check config
-    if (m_pulseTime.length == m_intervalTime.length){
-
-    } else {
-      validConfig = false; 
-      System.out.println("RumblePatter.java | Invalid configuration");
+    checkConfig();
+    if (validConfig){
+      doPattern();
     }
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
 
-  // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_joystick.getHID().setRumble(null, 0); //SAFETY
+  }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!validConfig){
-      return true; 
-    }
-    return false;
+    return (validConfig ? false: true);  
   }
 }
