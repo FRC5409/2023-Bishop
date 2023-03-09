@@ -84,8 +84,8 @@ public final class Constants {
         }
 
         public static final class kDriveteam {
-            public static final double rampRate                 = 0.3;
-            public static final double stopRamp                 = 0.6;
+            public static final double rampRate                 = 0.0;
+            public static final double stopRamp                 = 0.0;
 
             public static final double defaultSpeedMultiplier   = 0.8;
             public static final double defaultTurningMultiplier = 0.8;
@@ -112,6 +112,11 @@ public final class Constants {
                 kBoost
             }
         }
+
+        public static final class kSlew {
+            public static final double kForwardSlew             = 2.2;
+            public static final double kSidewaysSlew            = 3.5;
+        }
     }
 
     public static final class kClaw {
@@ -124,15 +129,22 @@ public final class Constants {
 
         public static final int currentLimit                     = 20;
 
-        public static final double openPosition                  = 3000;
-        public static final double coneClosePosition             = 19000;
-        public static final double cubeClosePosition             = 16400;
+        public static final double outputLimit                   = 3;
+
+        public static final double timeout                       = 2;
+
+        public static final double openPosition                  = 0.77;
+        public static final double coneClosePosition             = 0.545;
+        public static final double cubeClosePosition             = 0.585;
+
+        public static final int coneDistanceThreshold            = 180;
+        public static final int cubeDistanceThreshold            = 70;
         
         public static final int stallTime                        = 40;
 
-        public static final double encoderOffset                 = 400;
+        public static final double encoderTolerance              = 0.01;
 
-        public static final double kP                            = 0.2;
+        public static final double kP                            = 20;
         public static final double kI                            = 0;
         public static final double kD                            = 0;
         public static final double kF                            = 0;
@@ -161,13 +173,19 @@ public final class Constants {
             = "TURN LEFT place and balance";
         public static final String TURN_RIGHT_PLACE_AND_BALANCE
             = "TURN RIGHT place and balance";
-        public static final String PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE
-            = "Place and leave community no balance";
+        public static final String PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place side and leave community no balance";
+        public static final String PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place centre and TURN RIGHT leave community no balance";
+        public static final String PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE
+            = "Place centre and TURN LEFT leave community no balance";
 
         public static final String[] paths = new String[] {
             TURN_LEFT_PLACE_AND_BALANCE,
             TURN_RIGHT_PLACE_AND_BALANCE,
-            PLACE_AND_LEAVE_COMMUNITY_NO_BALANCE};
+            PLACE_SIDE_AND_LEAVE_COMMUNITY_NO_BALANCE,
+            PLACE_CENTRE_AND_TURN_LEFT_LEAVE_COMMUNITY_NO_BALANCE,
+            PLACE_CENTRE_AND_TURN_RIGHT_LEAVE_COMMUNITY_NO_BALANCE};
     }
 
     public static final class kBalancing {
@@ -175,7 +193,7 @@ public final class Constants {
         public static final double maxAngle                     = 33.25;
         public static final double angleTolerance               = 1.5;
 
-        public static final double kP                           = 0.0365;
+        public static final double kP                           = 0.0319;
         public static final double kI                           = 0;
         public static final double kD                           = 0;
     }
@@ -234,11 +252,12 @@ public final class Constants {
         public static final int kMotor2ID                       = 33;
         public static final int kEncoderChannel                 = 4;
 
-        public final static double kVoltageLimit                = 7.2; //60% speed
+        public final static double kVoltageLimit                = 6; //50% speed
+        public final static double kVoltageManual               = 2;
         public final static int kCurrentLimit                   = 30;
-        public final static double kPositionTolerance           = 0.1;
+        public final static double kPositionTolerance           = 0.001;
         public final static double kg                           = 0.4;
-        public final static double knintydegreepos              = -0.042;
+        public final static double knintydegreepos              = 0; // old setpoint = -0.042
 
         public static class kPID {
             public static final double kP                       = 50;
@@ -247,23 +266,33 @@ public final class Constants {
         }
     
         public static class kSetpoints {
-            public final static double kRestingOnIntake         = 0.55;
+            public final static double kRestingOnIntake         = 0;
 
-            public final static double kToTop                   = 0.09; //placeholder
-            public final static double kToMid                   = 0.05; //placeholder
-
+            public final static double kToTop                   = 0.66; // 41.75 inches
+            public final static double kConeMid                 = 0.62; // 36 inches
+            public final static double kConeAbove               = 0.67;  // 43.75 inches
+            public final static double kToMid                   = 0.63; // 28.75 inches
+ 
             public final static double kToGroundFront           = 0.0; //placeholder
             public final static double kToGroundBack            = 0.0; //placeholder
             
-            public final static double kToLoadingRamp           = 0.48; //placeholder
-            public final static double kToLoadingIntake         = 0.43;
+            public final static double kToLoadingRamp           = 0; //placeholder
+            public final static double kToLoadingIntake         = 0;
 
-            public final static double kToLoadingshoulder       = 0.09;
+            public final static double kToLoadingshoulder       = 0.672; // 38.5 inches
             public final static double kToHandoff               = 0.0; //placeholder
 
-            public final static double kIdling                  = 0.34; // placeholder
-        }
+            public final static double kIdling                  = 0.96; // 48.5 inches
+            public final static double kBalancing               = 1.22; // old 1.2 
+
+            // setpoint of hardstop of shoulder side of robot: -0.118
+            // measurement in inches is from the edge of the claw plate
+            // setpoints are off by 0.01 from absolute position
+        } 
+
     }
+
+
 
     public static final class kTelescope {
 
@@ -327,10 +356,14 @@ public final class Constants {
 
         public static final int kIntakeCurrentLimit             = 30;
 
+        public static final double kRollerInVolts               = 3.6;
+        public static final double kRollerReverseVolts          = -1;
+
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
                 public static final double kPivotExtended       = 0.36;
-                public static final double kPivotHugging        = 0.11;
+                public static final double kPivotHugging        = 0.17;
+                public static final double kPivotStoring        = 0.088;
                 public static final double kPivotTestA          = 0.13;
                 public static final double kPivotTestB          = 0.3;
             }

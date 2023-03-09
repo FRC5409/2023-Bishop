@@ -14,17 +14,19 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
+import frc.robot.commands.DisablePIDSubsystems;
 import edu.wpi.first.networktables.GenericEntry;
 
 public class ArmPIDSubsystem extends PIDSubsystem {
   private final CANSparkMax m_motor1;
   private final CANSparkMax m_motor2;
   private final DutyCycleEncoder m_encoder;
-  private final ShuffleboardTab sb_armTab;
-  private final GenericEntry absolutePosition;
+  private  ShuffleboardTab sb_armTab;
+  private  GenericEntry absolutePosition, angle, rawPosition;
 
   private double prevPos;
 
+  private final boolean debug = true;
 
   /** Creates a new ArmPIDSubsystem. */
   public ArmPIDSubsystem() {
@@ -46,12 +48,17 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     m_motor2.setInverted(true);
     m_motor2.setSmartCurrentLimit(Constants.kArmSubsystem.kCurrentLimit);
 
-    sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
-   // kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
-   // kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
-    // kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
-    absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
-   // angle = sb_armTab.add("Angle",0).getEntry();
+    if (debug){
+      sb_armTab = Shuffleboard.getTab("Arm"); // shuffleboard tab and values
+      absolutePosition = sb_armTab.add("AbsolutePosition", 0).getEntry();
+      angle = sb_armTab.add("Angle",0).getEntry();
+      rawPosition = sb_armTab.add("rawPosition",0).getEntry();
+
+      //kP = sb_armTab.add("kP", Constants.kArmSubsystem.kPID.kP).getEntry();
+      //kI = sb_armTab.add("kI", Constants.kArmSubsystem.kPID.kI).getEntry();
+      //kD = sb_armTab.add("kD", Constants.kArmSubsystem.kPID.kD).getEntry();
+
+    }
     setPIDFvalues(Constants.kArmSubsystem.kPID.kP, Constants.kArmSubsystem.kPID.kI, Constants.kArmSubsystem.kPID.kD);
     m_motor1.burnFlash();
     m_motor2.burnFlash();
@@ -59,6 +66,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   @Override
   public void useOutput(double voltage, double setpoint) { // outputs the voltage 
+
     if (voltage > Constants.kArmSubsystem.kVoltageLimit - calculateFF()){
       m_motor1.setVoltage(Constants.kArmSubsystem.kVoltageLimit - calculateFF());
     }
@@ -73,16 +81,23 @@ public class ArmPIDSubsystem extends PIDSubsystem {
   @Override
   public double getMeasurement() { // gets absolute position and returns the value 
     double ecd_value = m_encoder.getAbsolutePosition(); 
+    rawPosition.setDouble(ecd_value);
 
-     if (ecd_value > 0.8){  // used to fix encoder values
-        absolutePosition.setDouble(ecd_value - 1 + Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value -1 + Constants.kArmSubsystem.knintydegreepos;
+     if (ecd_value < 0.4){  // used to fix encoder values, the greatest value before the values start again
+      if (debug){
+        absolutePosition.setDouble(ecd_value + 1 );
+      }
+      return ecd_value +1;
     }else{
-      absolutePosition.setDouble(ecd_value + Constants.kArmSubsystem.knintydegreepos);
-      return ecd_value + Constants.kArmSubsystem.knintydegreepos;
+      if (debug){
+      absolutePosition.setDouble(ecd_value); // nintydresspos is the value of the encoder when angle is 0
+      }
+      return ecd_value;
     }
     // Return the process variable measurement here 
   }
+
+
 
   public void setPIDFvalues(double kP, double kI, double kD){ // sets PID values
     m_controller.setP(kP);
@@ -102,7 +117,7 @@ public class ArmPIDSubsystem extends PIDSubsystem {
 
   
   public double getAngle(){
-    return getMeasurement()*360;
+    return (getMeasurement()*360) - 397;
   }
 
   public double getPrevPos() {
@@ -113,13 +128,17 @@ public class ArmPIDSubsystem extends PIDSubsystem {
     this.prevPos = prevPos;
   }
 
+  public void moveVolts(double volts) {
+    m_motor1.setVoltage(volts);
+  }
+
+
   @Override
   public void periodic() { // gets the encoder value
       super.periodic();
       getMeasurement();
-    //  angle.setDouble(getAngle());
-
-
-  }
-  
+      if (debug){
+      angle.setDouble(getAngle());
+      }
+  }  
 }
