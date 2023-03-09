@@ -263,12 +263,12 @@ public class RobotContainer
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
         joystickSecondary.y()
-        .onTrue(
-            new ArmToTopCube(
-                sys_armPIDSubsystem, 
-                sys_telescope
-            )
-        );
+            .onTrue(
+                new ArmToTopCube(
+                    sys_armPIDSubsystem, 
+                    sys_telescope
+                )
+            );
                 
         joystickSecondary.x()
             .onTrue(
