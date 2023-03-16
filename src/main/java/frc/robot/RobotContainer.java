@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -27,6 +29,7 @@ import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
+import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kAutoRoutines;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.AutoCloseClaw;
@@ -41,6 +44,7 @@ import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.OneConeAuto;
+import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -138,6 +142,11 @@ public class RobotContainer
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
             OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+        for (String pathName : kOneConeOnePickup.all) {
+            List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
