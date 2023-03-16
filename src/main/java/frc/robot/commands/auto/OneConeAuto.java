@@ -9,9 +9,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 
-public class MidConeAuto extends SequentialCommandGroup {
+public class OneConeAuto extends SequentialCommandGroup {
 
-    public MidConeAuto(
+    public OneConeAuto(
             Drivetrain sys_drivetrain,
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,

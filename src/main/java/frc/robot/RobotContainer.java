@@ -40,7 +40,7 @@ import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.commands.auto.MidConeAuto;
+import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -137,7 +137,7 @@ public class RobotContainer
 
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            MidConeAuto autoCommand = new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
