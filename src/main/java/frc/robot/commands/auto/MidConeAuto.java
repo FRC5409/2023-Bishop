@@ -19,6 +19,8 @@ public class MidConeAuto extends SequentialCommandGroup {
             PathPlannerTrajectory trajectory) {
 
         addCommands(
+                Commands.runOnce(() -> sys_drivetrain.resetOdometry(trajectory.getInitialPose())), // Reset odometry
+
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
                 Commands.waitSeconds(1),
                 new AutoPathPlanning(sys_drivetrain, trajectory),
