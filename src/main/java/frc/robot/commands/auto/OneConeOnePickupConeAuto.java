@@ -10,6 +10,10 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.kClaw;
+import frc.robot.Constants.kTelescope;
+import frc.robot.commands.arm.TelescopeTo;
+import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NewClaw;
@@ -30,7 +34,12 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
                 Commands.waitSeconds(1),
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0)),
-                // TODO: Grab cone from ground
+
+                // Grab cone from ground
+                new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
+
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1)),
                 new BalancingChargeStation(sys_drivetrain));
     }
