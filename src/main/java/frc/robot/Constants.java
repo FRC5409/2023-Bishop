@@ -173,6 +173,7 @@ public final class Constants {
      * https://docs.google.com/document/d/1pk5vwyWT9BPNdzbD-7wMtg9T3llIuKD4-a5t5yMFHZo/edit?usp=sharing
      */
     public static final class kAutoRoutines {
+        
         public static final class kOneConeAuto {
             public static final String TURN_LEFT_place_and_balance = "TURN LEFT place and balance";
             public static final String TURN_RIGHT_place_and_balance = "TURN RIGHT place and balance";
@@ -187,7 +188,8 @@ public final class Constants {
                 TURN_RIGHT_place_and_balance,
                 PLACE_SIDE_and_leave_community_no_balance,
                 PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
-                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance};
+                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
+            };
         }
 
         public static final class kOneConeOnePickup {
@@ -196,7 +198,8 @@ public final class Constants {
 
             public static final String[] all = {
                 TURN_LEFT_place_pickup_balance,
-                TURN_RIGHT_place_pickup_balance};
+                TURN_RIGHT_place_pickup_balance
+            };
         }
     }
 
