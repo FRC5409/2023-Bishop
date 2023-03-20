@@ -136,6 +136,9 @@ public final class Constants {
         public static final double openPosition                  = 0.77;
         public static final double coneClosePosition             = 0.545;
         public static final double cubeClosePosition             = 0.585;
+
+        public static final int coneDistanceThreshold            = 180;
+        public static final int cubeDistanceThreshold            = 60;
         
         public static final int stallTime                        = 40;
 
@@ -250,7 +253,7 @@ public final class Constants {
         public static final int kEncoderChannel                 = 4;
 
         public final static double kVoltageLimit                = 6; //50% speed
-        public final static double kVoltageManual               = 2;
+        public final static double kVoltageManual               = 1.5;
         public final static int kCurrentLimit                   = 30;
         public final static double kPositionTolerance           = 0.001;
         public final static double kg                           = 0.4;
@@ -265,7 +268,7 @@ public final class Constants {
         public static class kSetpoints {
             public final static double kRestingOnIntake         = 0;
 
-            public final static double kToTop                   = 0.66; // 41.75 inches
+            public final static double kToTop                   = 0.665; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
@@ -280,11 +283,10 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.2; // 
+            public final static double kBalancing               = 1.21; // old 1.2 
 
-            // setpoint of hardstop of shoulder side of robot: -0.118
+            // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate
-            // setpoints are off by 0.01 from absolute position
         } 
 
     }
@@ -327,7 +329,7 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
-            public static final double kGroundBack              = 0.0; // placeholder
+            public static final double kGroundBack              = 11.95; 
             
             public static final double kLoading                 = 0.0; // placeholder
 
