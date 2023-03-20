@@ -307,7 +307,6 @@ public class RobotContainer
                  .onTrue(
                     new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingRamp, sys_telescope)
             );
-
                     
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
