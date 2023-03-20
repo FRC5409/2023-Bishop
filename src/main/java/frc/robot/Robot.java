@@ -6,7 +6,9 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,6 +30,8 @@ public class Robot extends TimedRobot {
 
   private int LEDState = 0;
 
+  private Alliance currentAlliance; 
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -40,6 +44,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     LEDState = 0;
+
+    currentAlliance = DriverStation.getAlliance();
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
@@ -74,22 +80,30 @@ public class Robot extends TimedRobot {
     // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
     //   m_robotContainer.sys_candle.idleAnimation();
     // }
-    if (LEDState == 2) {
-      m_robotContainer.sys_candle.chargedUp();
-    } else if (LEDState == 0) {
-      m_robotContainer.sys_candle.idleAnimation();
-    } else if (LEDState == 3) {
-      Commands.runOnce(
-        () -> new EndGameAnimation(m_robotContainer.sys_candle).withTimeout(3))
-        .andThen(() -> m_robotContainer.sys_candle.idleAnimation())
-        .alongWith(Commands.runOnce(() -> LEDState = 0));
+    if (!DriverStation.isEStopped()) {
+      if (LEDState == 2) {
+        m_robotContainer.sys_candle.chargedUp();
+      } else if (LEDState == 0 || LEDState == 1) {
+        m_robotContainer.sys_candle.idleAnimation();
+      } else if (LEDState == 3) {
+        Commands.runOnce(
+          () -> new EndGameAnimation(m_robotContainer.sys_candle).withTimeout(3))
+          .andThen(() -> m_robotContainer.sys_candle.idleAnimation())
+          .alongWith(Commands.runOnce(() -> LEDState = 0));
+      }
+    } else {
+      m_robotContainer.sys_candle.EStopped();
     }
   }
 
   @Override
   public void disabledPeriodic() {
     if (LEDState == 1) {
-      m_robotContainer.sys_candle.idleAnimation();
+      Alliance alliance = DriverStation.getAlliance();
+      if (alliance != currentAlliance) {
+        m_robotContainer.sys_candle.idleAnimation();
+        currentAlliance = alliance;
+      }
     }
   }
 

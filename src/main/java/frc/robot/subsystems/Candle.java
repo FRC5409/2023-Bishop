@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Arrays;
-
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.ColorFlowAnimation;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
@@ -83,6 +81,7 @@ public class Candle extends SubsystemBase {
      */
 
     public void setAnimation(AnimationTypes animationType, int r, int g, int b) {
+      System.out.println(animationType);
         candle.animate(null, currentAnimationSlot);
         switch(animationType) {
             case Static:
@@ -113,6 +112,12 @@ public class Candle extends SubsystemBase {
               maxCharge = 0;
               currentChargeLocation = 0;
               currentAnimationSlot = 4;
+              LEDOff[0] = r;
+              LEDOff[1] = g;
+              LEDOff[2] = b;
+              break;
+            case EStopped:
+              currentAnimationSlot = 5;
               LEDOff[0] = r;
               LEDOff[1] = g;
               LEDOff[2] = b;
@@ -283,14 +288,23 @@ public class Candle extends SubsystemBase {
             setColor(0, 0, 0);
           }
         }
+      } else if (currentAnimationSlot == 5) {
+        //E Stopped
+        if (timer % 10 <= 5) {
+          setColor(255, 0, 0);
+        } else {
+          setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
+        }
       }
 
       for (int i = 8; i < kCANdle.kConfig.LEDCount; i++) {
         if (LEDColors[i][0] != lastLEDColors[i][0] || LEDColors[i][1] != lastLEDColors[i][1] || LEDColors[i][2] != lastLEDColors[i][2]) {
-          candle.setLEDs(LEDColors[i][0], LEDColors[i][1], LEDColors[i][2], 0, i, 0);
+          candle.setLEDs(LEDColors[i][0], LEDColors[i][1], LEDColors[i][2], 0, i, 1);
         }
+        lastLEDColors[i][0] = LEDColors[i][0];
+        lastLEDColors[i][1] = LEDColors[i][1];
+        lastLEDColors[i][2] = LEDColors[i][2];
       }
-      lastLEDColors = LEDColors;
     }
 
     @Override
@@ -352,6 +366,14 @@ public class Candle extends SubsystemBase {
 
     public void chargedUp() {
       setAnimation(AnimationTypes.ChargedUp, 0, 0, 0);
+    }
+
+    /**
+     * Sets the animation to the E Stopped animation
+     */
+
+    public void EStopped() {
+      setAnimation(AnimationTypes.EStopped, 0, 0, 0);
     }
 
 }
