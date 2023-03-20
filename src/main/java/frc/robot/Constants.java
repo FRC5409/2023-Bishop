@@ -117,7 +117,6 @@ public final class Constants {
         public static final double kRotateI                     = 0;
         public static final double kRotateD                     = 0;
 
-        public static final double kAntiTipConstant             = 1;
 
         public static final class kSlew {
             public static final double kForwardSlew             = 2.2;
@@ -404,8 +403,8 @@ public final class Constants {
         }
 
         public static class kConeNodeAim {
-            public static final double KretroTargetFF               = 0.3;
-            public static final double KretroTargetTolerance        = 0.1;
+            public static final double KretroTargetFF           = 0.3;
+            public static final double KretroTargetTolerance    = 0.1;
             public static final double kP                       = 0.001;
             public static final double kI                       = 0;
             public static final double kD                       = 0;

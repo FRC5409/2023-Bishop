@@ -20,7 +20,7 @@ public class ConeNodeAim extends CommandBase {
     private final Drivetrain sys_drivetrain;
     private final CommandXboxController m_joystick;
 
-    boolean debugMode = true;
+    boolean debugMode = false;
 
     private ShuffleboardTab sb_coneNodeAim;
     private GenericEntry nt_kP, nt_kI, nt_kD;
@@ -58,8 +58,8 @@ public class ConeNodeAim extends CommandBase {
             nt_kI = sb_coneNodeAim.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
             nt_kD = sb_coneNodeAim.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
 
-            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
         }
+        m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
     }
 
     // Called every time the scheduler runs while the command is scheduled.
