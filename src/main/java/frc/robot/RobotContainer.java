@@ -258,6 +258,9 @@ public class RobotContainer
                 .andThen(Commands.waitSeconds(1))
             );
 
+        joystickMain.b()
+            .whileTrue(cmd_coneNodeAim);
+
         /*--------------------------------------------------------------------------------------*/
 
         joystickSecondary.povUp()
