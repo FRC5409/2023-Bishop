@@ -11,9 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.EndGameAnimation;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
 
@@ -86,10 +84,7 @@ public class Robot extends TimedRobot {
       } else if (LEDState == 0 || LEDState == 1) {
         m_robotContainer.sys_candle.idleAnimation();
       } else if (LEDState == 3) {
-        Commands.runOnce(
-          () -> new EndGameAnimation(m_robotContainer.sys_candle).withTimeout(3))
-          .andThen(() -> m_robotContainer.sys_candle.idleAnimation())
-          .alongWith(Commands.runOnce(() -> LEDState = 0));
+        m_robotContainer.sys_candle.endGame();
       }
     } else {
       m_robotContainer.sys_candle.EStopped();
@@ -149,5 +144,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+  }
+
+  public void setToIdle() {
+    LEDState = 1;
   }
 }

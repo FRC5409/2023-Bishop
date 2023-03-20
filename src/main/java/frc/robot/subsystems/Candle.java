@@ -122,6 +122,13 @@ public class Candle extends SubsystemBase {
               LEDOff[1] = g;
               LEDOff[2] = b;
               break;
+            case EndGame:
+              currentAnimationSlot = 6;
+              animationTime = 0;
+              LEDOff[0] = r;
+              LEDOff[1] = g;
+              LEDOff[2] = b;
+              break;
         }
     }
 
@@ -295,6 +302,17 @@ public class Candle extends SubsystemBase {
         } else {
           setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
         }
+      } else if (currentAnimationSlot == 6) {
+        //End Game
+        animationTime++;
+        if (animationTime % 4 != 3) {
+          setColor(kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
+        } else {
+          setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
+        }
+        if (animationTime >= 180) {
+          idleAnimation();
+        }
       }
 
       for (int i = 8; i < kCANdle.kConfig.LEDCount; i++) {
@@ -374,6 +392,10 @@ public class Candle extends SubsystemBase {
 
     public void EStopped() {
       setAnimation(AnimationTypes.EStopped, 0, 0, 0);
+    }
+
+    public void endGame() {
+      setAnimation(AnimationTypes.EndGame, 255, 255, 255);
     }
 
 }
