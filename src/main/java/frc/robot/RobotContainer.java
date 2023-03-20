@@ -289,7 +289,8 @@ public class RobotContainer
 
         joystickSecondary.rightBumper()
             .onTrue(
-                new ArmToSubstation(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+                .andThen(new ClawMovement(sys_claw, kClaw.openPosition))
             ); // pickup from loading station
             
         joystickSecondary.leftBumper()
