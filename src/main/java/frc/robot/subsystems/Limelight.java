@@ -166,6 +166,7 @@ public class Limelight extends SubsystemBase {
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
+    
     public void autoLight() {
         // MIGHT BE EXPENSIVE ON THE CPU
         //System.out.println(System.currentTimeMillis() - lastLightUpdate);
@@ -178,6 +179,8 @@ public class Limelight extends SubsystemBase {
             }
         }
     }
+
+    /*--------------------------------------------------------------------------------------*/
     
     // Retroreflective tape-related code
     /** Turns the limelight off */
@@ -232,7 +235,7 @@ public class Limelight extends SubsystemBase {
     public void dynamicCrop(char targetType, double[] targetPos){
         ;    
     }
-    
+
     public void updateRetroDistance() {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
@@ -248,7 +251,7 @@ public class Limelight extends SubsystemBase {
         //Pushing readings to shuffleboard
         if (retroTargetDistance != lastRetroDistance){
             if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                System.out.printf("[Update] Retro-Distance: %d", retroTargetDistance);
+                System.out.printf("[Update] Retro-Distance:");
             }
             retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
         }
@@ -258,6 +261,6 @@ public class Limelight extends SubsystemBase {
     @Override
     public void periodic() {
         updateRobotPosition();
-        // updateRetroDistance();
+        updateRetroDistance();
     }
 }

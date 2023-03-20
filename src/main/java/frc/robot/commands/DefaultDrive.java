@@ -40,7 +40,7 @@ public class DefaultDrive extends CommandBase {
     @Override
     public void execute() {
         double xSpeed = m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis();
-        double zRotation = (-m_controller.getLeftX()) * Math.cos(m_drivetrain.getPitch()) * Constants.kDrivetrain.kAntiTipConstant;
+        double zRotation = -m_controller.getLeftX();
 
         m_drivetrain.arcadeDrive(m_forwardSlewLimiter.calculate(xSpeed),
                                 m_sidewaysSlewLimiter.calculate(zRotation));
