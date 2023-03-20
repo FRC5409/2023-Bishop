@@ -49,7 +49,7 @@ public class ConeNodeAim extends CommandBase {
     public void initialize() {
         sys_drivetrain.resetEncoders(); // IDK WHY
         sys_limelight.turnOn();
-        sys_limelight.setData("pipeline", 1);
+        sys_limelight.setData("pipeline", 0);
         // System.out.println("Initialized");
 
         if (debugMode) {

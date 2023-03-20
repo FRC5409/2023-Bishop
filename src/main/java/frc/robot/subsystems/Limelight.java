@@ -233,7 +233,7 @@ public class Limelight extends SubsystemBase {
         ;    
     }
     
-    /* public void updateRetroDistance() {
+    public void updateRetroDistance() {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
@@ -253,7 +253,8 @@ public class Limelight extends SubsystemBase {
             retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
         }
         lastRetroDistance = retroTargetDistance;
-    } */
+    }
+    
     @Override
     public void periodic() {
         updateRobotPosition();
