@@ -38,7 +38,7 @@ public class ConeNodeAim extends CommandBase {
 
         m_pidController = new PIDController(kLimelight.kConeNodeAim.kP, kLimelight.kConeNodeAim.kI, kLimelight.kConeNodeAim.kD);
         m_pidController.setSetpoint(0);
-        m_pidController.setTolerance(kLimelight.KretroTargetTolerance);
+        m_pidController.setTolerance(kLimelight.kConeNodeAim.KretroTargetTolerance);
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
