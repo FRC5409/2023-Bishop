@@ -41,6 +41,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                 new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted),
 
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1)),
-                new BalancingChargeStation(sys_drivetrain));
+                new BalancingChargeStation(sys_drivetrain)
+        );
     }
 }

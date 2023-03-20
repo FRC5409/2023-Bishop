@@ -24,7 +24,8 @@ public class OneConeAuto extends SequentialCommandGroup {
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
                 Commands.waitSeconds(1),
                 new AutoPathPlanning(sys_drivetrain, trajectory),
-                new BalancingChargeStation(sys_drivetrain));
+                new BalancingChargeStation(sys_drivetrain)
+        );
     }
 
 }
