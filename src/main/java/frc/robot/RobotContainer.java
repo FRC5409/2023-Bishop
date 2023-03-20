@@ -196,7 +196,7 @@ public class RobotContainer
                 Commands.either(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
@@ -209,7 +209,7 @@ public class RobotContainer
                 Commands.either(
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
