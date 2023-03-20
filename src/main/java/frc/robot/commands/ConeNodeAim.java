@@ -29,7 +29,7 @@ public class ConeNodeAim extends CommandBase {
 
     double xSpeed, dirInRad, turning, calculatedOutput;
 
-    /** Creates a new TargetAim. */
+    /** Creates a new ConeNodeAim. */
     public ConeNodeAim(Limelight limelight, Drivetrain drivetrain, CommandXboxController joystick) {
 
         sys_limelight = limelight;
@@ -47,7 +47,7 @@ public class ConeNodeAim extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        sys_drivetrain.resetEncoders(); // IDK WHY
+        // sys_drivetrain.resetEncoders(); // IDK WHY
         sys_limelight.turnOn();
         sys_limelight.setData("pipeline", 1);
         // System.out.println("Initialized");
@@ -67,7 +67,7 @@ public class ConeNodeAim extends CommandBase {
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
         xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
-        sys_drivetrain.arcadeDrive(xSpeed, calculatedOutput);
+        sys_drivetrain.autoTurnDrive(xSpeed, calculatedOutput);
 
         /*
          * Older code:
@@ -109,6 +109,6 @@ public class ConeNodeAim extends CommandBase {
     @Override
     public boolean isFinished() {
         // return (Math.abs(sys_limelight.getXOffset()) <= kLimelight.KretroTargetTolerance && sys_limelight.isVisible());
-        return m_pidController.atSetpoint();
+        return false;
     }
 }
