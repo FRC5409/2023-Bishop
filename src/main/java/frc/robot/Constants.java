@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 
+import edu.wpi.first.hal.PowerDistributionStickyFaults;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 
 /**
@@ -338,6 +339,16 @@ public final class Constants {
             
             public static final double kLoading                 = 0.0; // placeholder
 
+        }
+
+        public static final class kAutoTelescope {
+            public static final double xOffset                  = 9.654;
+            public static final double yOffset                  = 28.588;
+            public static final double updateInterval           = 250;  //  ms
+            public static final double defaultArmLength         = 40.0; //  placeholder
+            public static final boolean debugMode               = true;
+            public static final boolean enableArm               = false;
+            public static final double maxDist                  = 33;
         }
     }
 

@@ -185,7 +185,7 @@ public class Limelight extends SubsystemBase {
     // Retroreflective tape-related code
     /** Turns the limelight off */
     public void turnOff() {
-        nt_ledMode.setNumber(1);
+        nt_ledMode.setNumber(1); //NEEDS TO BE UPDATED TO LIME LIGHT HELPERS
     }
 
     /** Turns the limelight on */
@@ -258,6 +258,10 @@ public class Limelight extends SubsystemBase {
             retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
         }
         lastRetroDistance = retroTargetDistance;
+    }
+
+    public double getRetroDistance(){
+        return retroTargetDistance;
     }
     
     @Override
