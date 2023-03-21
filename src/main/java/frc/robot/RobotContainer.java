@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,20 +20,23 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
+import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
-import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
+import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
-import frc.robot.Constants.kTrajectoryPath;
-import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
+import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
+import frc.robot.commands.MoveThenExtend;
 import frc.robot.commands.AutoCloseClaw;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
+import frc.robot.commands.MoveAndRetract;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
@@ -39,7 +45,8 @@ import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.commands.auto.MidConeAuto;
+import frc.robot.commands.auto.OneConeAuto;
+import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -65,8 +72,7 @@ import frc.robot.subsystems.Limelight;
  * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer
-{
+public class RobotContainer {
 
     // Driver controllers
     private final CommandXboxController joystickMain;
@@ -102,9 +108,8 @@ public class RobotContainer
     private final GearShift cmd_highSpeed;
 
     // Trajectory & autonomous path chooser
-    private PathPlannerTrajectory[] m_paths = new PathPlannerTrajectory[kTrajectoryPath.paths.length];
     private ShuffleboardTab sb_driveteam;
-    private SendableChooser<PathPlannerTrajectory> sc_choosePath;
+    private SendableChooser<Command> sc_chooseAutoRoutine;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -120,35 +125,18 @@ public class RobotContainer
         sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
-
-        // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        
         sys_claw = new NewClaw();
         sys_candle = new Candle();
         sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();
+        // sys_limelight = new Limelight(joystickMain);
+
+        // Sequential commands
+        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
 
         // Commands
-        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);
-
-        // Trajectory & autonomous path chooser
-        PathConstraints pathConstraints = new PathConstraints(kAuto.kMaxSpeed, kAuto.kMaxAcceleration);
-
-        for (int i = 0; i < m_paths.length; i++) {
-            m_paths[i] = PathPlanner.loadPath(kTrajectoryPath.paths[i], pathConstraints, true);
-        }
-
-        sb_driveteam = Shuffleboard.getTab("Drive Team");
-        sc_choosePath = new SendableChooser<PathPlannerTrajectory>();
-        sc_choosePath.setDefaultOption(kTrajectoryPath.paths[0], m_paths[0]);
-        for (int i = 0; i < m_paths.length; i++) {
-            sc_choosePath.addOption(kTrajectoryPath.paths[i], m_paths[i]);
-        }
-        sb_driveteam.add("Auto path", sc_choosePath)
-            .withSize(3, 1);
-        
+        cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);        
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
@@ -162,8 +150,36 @@ public class RobotContainer
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
+        // Add auto routines to Shuffleboard
+        addAutoRoutinesToShuffleboard();
+
         // Configure the trigger bindings
         configureBindings();
+    }
+
+    /**
+     * Add the auto routines selection to Shuffleboard.
+     * 
+     * This MUST be called in the RobotContainer constructor.
+     */
+    private void addAutoRoutinesToShuffleboard() {
+        // Trajectory & autonomous path chooser
+        sb_driveteam = Shuffleboard.getTab("Select auto");
+        sc_chooseAutoRoutine = new SendableChooser<Command>();
+
+        for (String pathName : kOneConeAuto.all) {
+            PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+        for (String pathName : kOneConeOnePickup.all) {
+            List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, pathGroup);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+
+        sb_driveteam.add("Choose auto routine", sc_chooseAutoRoutine)
+            .withSize(3, 1);
     }
 
     /**
@@ -179,26 +195,22 @@ public class RobotContainer
      * PS4} controllers or
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
-     */
-    /**
+     * 
      * y-intake pivot ascend
      * a-intake pivot descend
      * x-intake roller roll backwards
-     * b-intake roller roll forwards */
-
-     /*
+     * b-intake roller roll forwards
       * starting with - 20% of 12 = 2.4
       */
-
-
     private void configureBindings() {
 
+        // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
                 Commands.either(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
@@ -206,141 +218,126 @@ public class RobotContainer
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
+        // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
                 Commands.either(
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getPrevPos() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
             );
 
+        // Open claw
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
         
-
+        // Gear shifting (low-mid)
         joystickMain.leftBumper()
             .onTrue(cmd_lowSpeed)
             .onFalse(cmd_midSpeed);
 
+        // Gear shifting (high-mid)
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
 
-        joystickMain.povDown()
-            .onTrue(
-                new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-                .andThen(Commands.waitSeconds(0.5))
-                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-                .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerInVolts))
-            )
+        // Intake (to be removed) ------------------------------------------------------------
+        // joystickMain.povDown()
+        //     .onTrue(
+        //         new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
+        //         .andThen(Commands.waitSeconds(0.5))
+        //         .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
+        //         .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerInVolts))
+        //     )
 
-            .onFalse(
-                new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
-                .andThen(Commands.waitSeconds(0.5))
-                .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotHugging))
-        );
+        //     .onFalse(
+        //         new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
+        //         .andThen(Commands.waitSeconds(0.5))
+        //         .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotHugging))
+        // );
         
-        joystickMain.povRight()
-            .onTrue(
-                new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
-                .andThen(Commands.waitSeconds(0.5))
-                .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
-                .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerReverseVolts))
-            )
+        // joystickMain.povRight()
+        //     .onTrue(
+        //         new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotExtended)
+        //         .andThen(Commands.waitSeconds(0.5))
+        //         .andThen(new WristMove(sys_intakeWrist, kWristSetpoints.kWristPickup))
+        //         .andThen(new RollerMove(sys_intakeRoller, kIntake.kRollerReverseVolts))
+        //     )
             
-            .onFalse(
-                new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
-                .andThen(Commands.waitSeconds(0.5))
-                .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
-                .andThen(Commands.waitSeconds(1))
-            );
+        //     .onFalse(
+        //         new WristMove(sys_intakeWrist, kWristSetpoints.kWristHandoff)
+        //         .andThen(Commands.waitSeconds(0.5))
+        //         .andThen(new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotStoring))
+        //         .andThen(Commands.waitSeconds(1))
+        //     );
 
         joystickMain.b()
             .whileTrue(cmd_coneNodeAim);
 
         /*--------------------------------------------------------------------------------------*/
 
+        // Manual telescope movement
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+            
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
+        // Move arm and extend to place top cube position
         joystickSecondary.y()
-        .onTrue(
-            new ArmToTopCube(
-                sys_armPIDSubsystem, 
-                sys_telescope
-            )
-        );
+            .onTrue(
+                new MoveThenExtend(sys_armPIDSubsystem, Constants.kArmSubsystem.kSetpoints.kToTop, 
+                sys_telescope, Constants.kTelescope.kDestinations.kExtended)
+            );
                 
+        // Move arm and retract ONTO mid cone node position
         joystickSecondary.x()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kConeMid
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeMid, sys_telescope)
+                
             );
 
+        // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kConeAbove
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAbove, sys_telescope)
             );
 
+        // Move arm and retract to mid cube position
         joystickSecondary.a()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kToMid
-                )
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
             );
 
+        // Move arm and retract to double substation
         joystickSecondary.rightBumper()
             .onTrue(
-                new ArmToSubstation(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+                .andThen(new ClawMovement(sys_claw, kClaw.openPosition))
             ); // pickup from loading station
             
-            joystickSecondary.leftBumper()
+        // Move arm and retract to idling position
+        joystickSecondary.leftBumper()
             .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kIdling
-                    )
-                );
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
+            );
                     
-            joystickSecondary.back()
-                .onTrue(
-                    new RotateArmGroup(
-                        sys_telescope, 
-                        sys_armPIDSubsystem, 
-                        kArmSubsystem.kSetpoints.kBalancing
-                    )
-                );
-                
-            joystickSecondary.start()
-                .onTrue(
-                    new RotateArmGroup(
-                        sys_telescope, 
-                        sys_armPIDSubsystem, 
-                        kArmSubsystem.kSetpoints.kToLoadingRamp
-                    )
-                );
+        // Move arm and retract to ground pickup (resting on intake) position
+        joystickSecondary.back()
+            .onTrue(
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kBalancing, sys_telescope)
+            );
                     
+        // Manual arm movement
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
-
         joystickSecondary.leftTrigger()
             .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual));             
 
+        // Set LED to cone (yellow)
         joystickSecondary.leftStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
@@ -351,6 +348,8 @@ public class RobotContainer
                 )
             )
         );
+
+        // Set LED to cube (purple)
         joystickSecondary.rightStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
@@ -362,22 +361,14 @@ public class RobotContainer
             )
         );
 
-        joystickSecondary.back()
-            .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kBalancing
-                )
-            );
-        joystickSecondary.start()
-            .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kToLoadingRamp
-                )
-            );
+        // joystickSecondary.start()
+        //     .onTrue(
+        //         new RotateArmGroup(
+        //             sys_telescope, 
+        //             sys_armPIDSubsystem, 
+        //             kArmSubsystem.kSetpoints.kToLoadingRamp
+        //         )
+        //     );
                    
     }
 
@@ -393,15 +384,13 @@ public class RobotContainer
 
         sys_armPIDSubsystem.disable();
 
-        PathPlannerTrajectory chosenTrajectory = sc_choosePath.getSelected();
-
+        Command chosenAutoRoutine = sc_chooseAutoRoutine.getSelected();
 
         // Disable ramp rate
         sys_drivetrain.rampRate(0);
-        // Reset odometry
-        sys_drivetrain.resetOdometry(chosenTrajectory.getInitialPose());
+
         // Run auto path, then stop and re-set ramp rate
-        return new MidConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, chosenTrajectory)
+        return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
     }
