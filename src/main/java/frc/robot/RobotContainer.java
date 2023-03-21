@@ -268,6 +268,7 @@ public class RobotContainer
 
         joystickSecondary.povUp()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+            
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
@@ -310,8 +311,8 @@ public class RobotContainer
             );
                 
         joystickSecondary.start()
-                 .onTrue(
-                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingRamp, sys_telescope)
+            .onTrue(
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingRamp, sys_telescope)
             );
                     
         joystickSecondary.rightTrigger()
@@ -330,6 +331,7 @@ public class RobotContainer
                 )
             )
         );
+
         joystickSecondary.rightStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
@@ -341,14 +343,14 @@ public class RobotContainer
             )
         );
 
-        joystickSecondary.start()
-            .onTrue(
-                new RotateArmGroup(
-                    sys_telescope, 
-                    sys_armPIDSubsystem, 
-                    kArmSubsystem.kSetpoints.kToLoadingRamp
-                )
-            );
+        // joystickSecondary.start()
+        //     .onTrue(
+        //         new RotateArmGroup(
+        //             sys_telescope, 
+        //             sys_armPIDSubsystem, 
+        //             kArmSubsystem.kSetpoints.kToLoadingRamp
+        //         )
+        //     );
                    
     }
 
