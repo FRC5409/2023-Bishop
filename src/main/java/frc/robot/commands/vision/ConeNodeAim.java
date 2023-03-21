@@ -58,9 +58,8 @@ public class ConeNodeAim extends CommandBase {
             nt_kP = sb_coneNodeAim.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
             nt_kI = sb_coneNodeAim.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
             nt_kD = sb_coneNodeAim.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
-
+            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
         }
-        m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
     }
 
     // Called every time the scheduler runs while the command is scheduled.
