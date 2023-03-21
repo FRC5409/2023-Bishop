@@ -108,6 +108,9 @@ public class RobotContainer {
     private ShuffleboardTab sb_driveteam;
     private SendableChooser<Command> sc_chooseAutoRoutine;
 
+    // Misc
+    private boolean manualTelescopeGround;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -198,6 +201,16 @@ public class RobotContainer {
      * b-intake roller roll forwards
       * starting with - 20% of 12 = 2.4
       */
+    
+    public double switchTelescopeSetpoint() {
+
+        if (manualTelescopeGround) {
+            return kTelescope.kDestinations.kGroundBack;
+        } else {
+            return kTelescope.kDestinations.kRetracted;
+        }
+    }
+
     private void configureBindings() {
 
         // Auto-close claw for cone
@@ -239,6 +252,10 @@ public class RobotContainer {
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
+
+        joystickMain.povUp()
+            .onTrue(new InstantCommand(() -> manualTelescopeGround = !manualTelescopeGround))
+            .onTrue(new TelescopeTo(sys_telescope, switchTelescopeSetpoint()));
 
         // Intake (to be removed) ------------------------------------------------------------
         // joystickMain.povDown()
