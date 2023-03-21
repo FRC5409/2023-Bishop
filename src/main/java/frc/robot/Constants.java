@@ -117,7 +117,6 @@ public final class Constants {
         public static final double kRotateI                     = 0;
         public static final double kRotateD                     = 0;
 
-        public static final double kAntiTipConstant             = 1;
 
         public static final class kSlew {
             public static final double kForwardSlew             = 2.2;
