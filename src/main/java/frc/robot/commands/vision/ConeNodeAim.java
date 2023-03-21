@@ -21,7 +21,7 @@ public class ConeNodeAim extends CommandBase {
     private final Drivetrain sys_drivetrain;
     private final CommandXboxController m_joystick;
 
-    boolean debugMode = false;
+    boolean debugMode = false; //---DO NOT ENABLE DURING COMP IT WILL MAKE THE ROBOT CRAAAASHHH---//
 
     private ShuffleboardTab sb_coneNodeAim;
     private GenericEntry nt_kP, nt_kI, nt_kD;
