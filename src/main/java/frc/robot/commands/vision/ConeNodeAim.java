@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -20,7 +21,7 @@ public class ConeNodeAim extends CommandBase {
     private final Drivetrain sys_drivetrain;
     private final CommandXboxController m_joystick;
 
-    boolean debugMode = true;
+    boolean debugMode = false;
 
     private ShuffleboardTab sb_coneNodeAim;
     private GenericEntry nt_kP, nt_kI, nt_kD;
@@ -67,7 +68,20 @@ public class ConeNodeAim extends CommandBase {
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
         xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
+
+        //Applying feat forward and tolerance
+        if (calculatedOutput >= Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
+            calculatedOutput += Constants.kLimelight.kConeNodeAim.KretroTargetFF;
+        } else if (calculatedOutput < -Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
+            calculatedOutput -= Constants.kLimelight.kConeNodeAim.KretroTargetFF;
+        }
+
         sys_drivetrain.autoTurnDrive(xSpeed, calculatedOutput);
+
+        if (debugMode){
+            System.out.println(calculatedOutput);
+        }
+
 
         /*
          * Older code:

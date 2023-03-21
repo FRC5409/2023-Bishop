@@ -241,11 +241,13 @@ public class Limelight extends SubsystemBase {
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
         
-        if (cameraTargetAngle != 0){
+        if (cameraTargetAngle != 0){ //prone to error if retro is direectly in line
             retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.heightOffFloor)/Math.tan(realTargetAngleRadians); 
         } else  { 
-            retroTargetDistance = 0; 
-            System.out.println("No-RetroTarget");
+            retroTargetDistance = 0;
+            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                System.out.println("No-RetroTarget");
+            }
         }
 
         //Pushing readings to shuffleboard
@@ -253,7 +255,7 @@ public class Limelight extends SubsystemBase {
             if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
                 System.out.printf("[Update] Retro-Distance:");
             }
-            retroDistanceWidget.setDouble(retroTargetDistance); //pushing value to shuffleboard
+            retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
         }
         lastRetroDistance = retroTargetDistance;
     }
