@@ -29,11 +29,10 @@ public class AutoTelescope extends CommandBase {
   public AutoTelescope(Telescope sys_telescope, Limelight sys_limelight) {
     this.sys_telescope = sys_telescope;
     this.sys_limelight = sys_limelight;
-    extensionDist = 0;
     
-    //nasd
     yDist = Constants.kLimelight.KretroTarget.lowNodeHeight;
     lastDistanceUpdate = System.currentTimeMillis();
+    extensionDist = 0;
 
     addRequirements(sys_telescope);
   }
@@ -53,12 +52,6 @@ public class AutoTelescope extends CommandBase {
     }
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    sys_limelight.turnOn();
-  }
-
   public void updateDistance() {
     double extensionDist = getTelescopeDist();
     cmd_telescopeTo = new TelescopeTo(sys_telescope, extensionDist);
@@ -76,6 +69,12 @@ public class AutoTelescope extends CommandBase {
 
       lastDistanceUpdate = System.currentTimeMillis();
     }
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    sys_limelight.turnOn();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
