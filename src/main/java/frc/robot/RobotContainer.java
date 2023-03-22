@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -336,9 +337,9 @@ public class RobotContainer {
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual));
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual, sys_candle));
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual));             
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual, sys_candle));             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -347,7 +348,8 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cone[0],
                     kCANdle.kColors.cone[1],
-                    kCANdle.kColors.cone[2]
+                    kCANdle.kColors.cone[2],
+                    LEDColorType.Cone
                 )
             )
         );
@@ -359,7 +361,8 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cube[0],
                     kCANdle.kColors.cube[1],
-                    kCANdle.kColors.cube[2]
+                    kCANdle.kColors.cube[2],
+                    LEDColorType.Cube
                 )
             )
         );
