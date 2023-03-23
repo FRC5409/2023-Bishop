@@ -98,7 +98,7 @@ public class Candle extends SubsystemBase {
      */
 
     public void setAnimation(AnimationTypes animationType, int r, int g, int b) {
-      System.out.println(animationType);
+      // System.out.println(animationType);
         candle.animate(null, currentAnimationSlot);
         switch(animationType) {
             case Static:
