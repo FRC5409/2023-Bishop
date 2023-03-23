@@ -338,9 +338,9 @@ public class RobotContainer {
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0)));
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0)));             
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -352,7 +352,7 @@ public class RobotContainer {
                     kCANdle.kColors.cone[2],
                     LEDColorType.Cone
                 )
-            ).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255))
+            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
         );
 
         // Set LED to cube (purple)
@@ -365,7 +365,7 @@ public class RobotContainer {
                     kCANdle.kColors.cube[2],
                     LEDColorType.Cube
                 )
-            ).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255))
+            ).alongWith(new BlinkLEDs(sys_candle, 0, 155, 0))
         );
 
         // joystickSecondary.start()
