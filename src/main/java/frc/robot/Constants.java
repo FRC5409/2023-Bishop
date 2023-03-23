@@ -127,12 +127,12 @@ public final class Constants {
 
         public static final double timeout                      = 2;
 
-        public static final double openPosition                  = 0.77;
-        public static final double coneClosePosition             = 0.545;
-        public static final double cubeClosePosition             = 0.585;
+        public static final double openPosition                 = 0.77;
+        public static final double coneClosePosition            = 0.545;
+        public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold            = 180;
-        public static final int cubeDistanceThreshold            = 60;
+        public static final int coneDistanceThreshold           = 180;
+        public static final int cubeDistanceThreshold           = 60;
         
         public static final int stallTime                       = 40;
 
@@ -167,24 +167,6 @@ public final class Constants {
      * https://docs.google.com/document/d/1pk5vwyWT9BPNdzbD-7wMtg9T3llIuKD4-a5t5yMFHZo/edit?usp=sharing
      */
     public static final class kAutoRoutines {
-        
-        public static final class kOneConeAuto {
-            public static final String TURN_LEFT_place_and_balance = "3L. TURN LEFT place and balance";
-            public static final String TURN_RIGHT_place_and_balance = "3R. TURN RIGHT place and balance";
-
-            public static final String PLACE_SIDE_and_leave_community_no_balance = "4. PLACE SIDE and leave community, no balance";
-
-            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "5L. PLACE CENTRE, turn LEFT and leave community, no balance";
-            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "5R. PLACE CENTRE, turn RIGHT and leave community, no balance";
-
-            public static final String[] all = {
-                TURN_LEFT_place_and_balance,
-                TURN_RIGHT_place_and_balance,
-                PLACE_SIDE_and_leave_community_no_balance,
-                PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
-                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
-            };
-        }
 
         public static final class kOneConeOnePickup {
             public static final String TURN_LEFT_place_pickup_balance = "1L. TURN LEFT place, pickup, balance";
@@ -192,11 +174,35 @@ public final class Constants {
 
             public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "2. PLACE CENTRE, drive centre, pickup centre, balance";
 
+            public static final String TURN_LEFT_place_pickup_no_balance = "3L. TURN LEFT place, pickup, no balance";
+            public static final String TURN_RIGHT_place_pickup_no_balance = "3R. TURN RIGHT place, pickup, no balance";
+
             public static final String[] all = {
                 TURN_LEFT_place_pickup_balance,
                 TURN_RIGHT_place_pickup_balance,
 
-                PLACE_CENTRE_drive_centre_pickup_centre_balance
+                PLACE_CENTRE_drive_centre_pickup_centre_balance,
+
+                TURN_LEFT_place_pickup_no_balance,
+                TURN_RIGHT_place_pickup_no_balance
+            };
+        }
+        
+        public static final class kOneConeAuto {
+            public static final String TURN_LEFT_place_and_balance = "4L. TURN LEFT place and balance";
+            public static final String TURN_RIGHT_place_and_balance = "4R. TURN RIGHT place and balance";
+
+            public static final String PLACE_SIDE_and_leave_community_no_balance = "5. PLACE SIDE and leave community, no balance";
+
+            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "6L. PLACE CENTRE, turn LEFT and leave community, no balance";
+            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "6R. PLACE CENTRE, turn RIGHT and leave community, no balance";
+
+            public static final String[] all = {
+                TURN_LEFT_place_and_balance,
+                TURN_RIGHT_place_and_balance,
+                PLACE_SIDE_and_leave_community_no_balance,
+                PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
+                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
             };
         }
     }
@@ -307,7 +313,7 @@ public final class Constants {
 
             public final static double kIdling                  = 0.96; // 48.5 inches
             public final static double kBalancing               = 1.215; // old 1.2 
-            public final static double kAutoDrivingWithCone     = 1.20;
+            public final static double kAutoDrivingWithCone     = 1.18;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate
@@ -412,8 +418,8 @@ public final class Constants {
         public static final double kALTriggerDistance           = 1; //PLACEHOLDER
         
         public static final class limeLightAlert {
-            public static final double disconnectNotifLength        = 200; //rumble time in ms
-            public static final double limelightTimeout             = 500; //limelight disconnect timeout time in ms 
+            public static final double disconnectNotifLength    = 200; //rumble time in ms
+            public static final double limelightTimeout         = 500; //limelight disconnect timeout time in ms 
         }
 
         public static final class KretroTarget {
@@ -422,8 +428,8 @@ public final class Constants {
         }
 
         public static class kConeNodeAim {
-            public static final double KretroTargetFF               = 0.265;
-            public static final double KretroTargetTolerance        = 0.025;
+            public static final double KretroTargetFF           = 0.265;
+            public static final double KretroTargetTolerance    = 0.025;
             public static final double kP                       = 0.01; //.22
             public static final double kI                       = 0;
             public static final double kD                       = 0;
