@@ -103,14 +103,12 @@ public class Candle extends SubsystemBase {
         switch(animationType) {
             case Static:
               currentAnimationSlot = 0;
-              Timer.delay(0.1);
               setColor(r, g, b);
               break;
             case ColorFlow:
               currentAnimationSlot = 1;
               colorAnimation = new ColorFlowAnimation(r, g, b, 0, kCANdle.kColors.gameSpeed, kCANdle.kConfig.LEDCount, Direction.Forward);
               setColor(0, 0, 0);
-              Timer.delay(0.1);
               candle.animate(colorAnimation, currentAnimationSlot);
               break;
             case SinFlow:

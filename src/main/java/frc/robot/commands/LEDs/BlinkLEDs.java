@@ -58,19 +58,19 @@ public class BlinkLEDs extends CommandBase {
     }
 
     public void switchToDefaultColor() {
-        if (currentType == LEDColorType.Cone) {
-          m_candle.setAnimation(
-            AnimationTypes.Static,
-            kCANdle.kColors.cone[0],
-            kCANdle.kColors.cone[1],
-            kCANdle.kColors.cone[2]
-          );
-        } else {
+        if (currentType == LEDColorType.Cube) {
           m_candle.setAnimation(
             AnimationTypes.Static,
             kCANdle.kColors.cube[0],
             kCANdle.kColors.cube[1],
             kCANdle.kColors.cube[2]
+          );
+        } else {
+          m_candle.setAnimation(
+            AnimationTypes.Static,
+            kCANdle.kColors.cone[0],
+            kCANdle.kColors.cone[1],
+            kCANdle.kColors.cone[2]
           );
         }
       }
