@@ -253,6 +253,9 @@ public final class Constants {
             public static final int chargeSpeed                 = 4;
 
             public static final double gameSpeed                = 0.2;
+
+            public static final int blinkSpeed                   = 4;
+            public static final int blinkTime                    = 5;
             
         }
 
@@ -265,6 +268,11 @@ public final class Constants {
             ChargedUp,
             EStopped,
             EndGame
+        }
+
+        public enum LEDColorType {
+            Cone,
+            Cube
         }
     }
 
