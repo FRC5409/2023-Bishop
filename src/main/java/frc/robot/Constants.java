@@ -312,7 +312,7 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.215; // old 1.2 
+            public final static double kBalancing               = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
