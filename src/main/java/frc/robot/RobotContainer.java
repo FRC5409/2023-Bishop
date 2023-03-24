@@ -233,6 +233,16 @@ public class RobotContainer {
                 new InstantCommand(() -> sys_claw.disable())
             );
 
+        // Manual-Close claw for cone / cube
+        joystickMain.b()
+            .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
+            .onFalse(
+                new SequentialCommandGroup(
+                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                    )
+                );
+
         // Open claw
         joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
