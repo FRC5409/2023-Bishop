@@ -48,6 +48,7 @@ import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
+import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.ClawMovement;
@@ -259,6 +260,10 @@ public class RobotContainer {
         joystickMain.rightBumper()
             .onTrue(cmd_highSpeed)
             .onFalse(cmd_midSpeed);
+        
+        // Tune balancing
+        // joystickMain.povDown()
+        //     .whileTrue(new BalancingChargeStation(sys_drivetrain));
 
         // Intake (to be removed) ------------------------------------------------------------
         // joystickMain.povDown()
