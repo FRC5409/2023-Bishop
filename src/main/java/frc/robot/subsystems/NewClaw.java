@@ -77,6 +77,14 @@ public class NewClaw extends PIDSubsystem {
 
 }
 
+public void setSpeed(double speed) {
+  clawMot.set(speed);
+}
+
+public void stopMotor() {
+  clawMot.set(0);
+}
+
 public void setPID(double p, double i, double d) {
   m_controller.setP(p);
   m_controller.setI(i);
