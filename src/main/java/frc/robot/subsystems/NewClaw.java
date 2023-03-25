@@ -49,7 +49,7 @@ public class NewClaw extends PIDSubsystem {
     configMot();
 
     s_tof = new TimeOfFlight(36);
-    s_tof.setRangingMode(RangingMode.Long, s_tof.getSampleTime());
+    s_tof.setRangingMode(RangingMode.Short, s_tof.getSampleTime());
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
 
