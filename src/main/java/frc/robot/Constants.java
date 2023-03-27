@@ -125,7 +125,7 @@ public final class Constants {
 
         public static final double outputLimit                  = 3;
 
-        public static final double timeout                      = 2;
+        public static final double timeout                      = 1.25;
 
         public static final double openPosition                 = 0.77;
         public static final double coneClosePosition            = 0.545;
@@ -254,8 +254,8 @@ public final class Constants {
 
             public static final double gameSpeed                = 0.2;
 
-            public static final int blinkSpeed                   = 4;
-            public static final int blinkTime                    = 5;
+            public static final int blinkSpeed                   = 6;
+            public static final int blinkTime                    = 10;
             
         }
 

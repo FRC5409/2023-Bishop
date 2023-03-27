@@ -34,11 +34,9 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
-import frc.robot.commands.MoveThenExtend;
-import frc.robot.commands.AutoCloseClaw;
-import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.GearShift;
-import frc.robot.commands.MoveAndRetract;
+import frc.robot.commands.claw.AutoCloseClaw;
+import frc.robot.commands.Drive.DefaultDrive;
+import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
@@ -46,7 +44,9 @@ import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
+import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
@@ -217,8 +217,11 @@ public class RobotContainer {
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
             );
 
         // Auto-close claw for cube
@@ -230,7 +233,10 @@ public class RobotContainer {
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable())
+                )
             );
 
         // Open claw
@@ -339,9 +345,15 @@ public class RobotContainer {
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));             
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -353,8 +365,13 @@ public class RobotContainer {
                     kCANdle.kColors.cone[2],
                     LEDColorType.Cone
                 )
-            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
-        );
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
         // Set LED to cube (purple)
         joystickSecondary.rightStick()
@@ -366,8 +383,13 @@ public class RobotContainer {
                     kCANdle.kColors.cube[2],
                     LEDColorType.Cube
                 )
-            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
-        );
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
         // joystickSecondary.start()
         //     .onTrue(
