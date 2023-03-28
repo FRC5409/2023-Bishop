@@ -262,11 +262,11 @@ public class RobotContainer {
             .onFalse(cmd_midSpeed);
 
         joystickMain.povUp()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.1)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.2)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
         joystickMain.povDown()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.1)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.2)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
         
         // Tune balancing
