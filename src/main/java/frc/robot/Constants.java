@@ -96,7 +96,7 @@ public final class Constants {
             public static final double slowTurn                 = 0.6;
 
             public static final double boostSpeed               = 1;
-            public static final double boostTurningSpeed        = 0.8;
+            public static final double boostTurningSpeed        = 0.7;
 
             public static enum GearState {
                 kSlow,
