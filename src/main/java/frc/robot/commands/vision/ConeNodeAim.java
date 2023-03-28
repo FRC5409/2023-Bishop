@@ -14,12 +14,15 @@ import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Telescope;
 
 public class ConeNodeAim extends CommandBase {
 
     private final Limelight sys_limelight;
     private final Drivetrain sys_drivetrain;
+    private final Telescope sys_Telescope;
     private final CommandXboxController m_joystick;
+
 
     boolean debugMode = false; //---DO NOT ENABLE DURING COMP IT WILL MAKE THE ROBOT CRAAAASHHH---//
 
@@ -29,20 +32,38 @@ public class ConeNodeAim extends CommandBase {
     private final PIDController m_pidController;
 
     double xSpeed, dirInRad, turning, calculatedOutput;
+    boolean isHigh;
+    double[] lowNodeCrop, highNodeCrop;
 
     /** Creates a new ConeNodeAim. */
-    public ConeNodeAim(Limelight limelight, Drivetrain drivetrain, CommandXboxController joystick) {
-
+    public ConeNodeAim(Limelight limelight, Telescope telescope, Drivetrain drivetrain, CommandXboxController joystick) {
         sys_limelight = limelight;
         sys_drivetrain = drivetrain;
+        sys_Telescope = telescope;
         m_joystick = joystick;
 
         m_pidController = new PIDController(kLimelight.kConeNodeAim.kP, kLimelight.kConeNodeAim.kI, kLimelight.kConeNodeAim.kD);
         m_pidController.setSetpoint(0);
         m_pidController.setTolerance(kLimelight.kConeNodeAim.KretroTargetTolerance);
 
+        //determining alignment mode
+        isHigh = (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended);
+        setTargetMode(isHigh);
+
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
+    }
+
+    public void setTargetMode(Boolean isHigh){
+        lowNodeCrop = kLimelight.KretroTarget.lowNodeCrop;
+        highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
+        if (isHigh) {
+            sys_limelight.setCropSize(highNodeCrop);
+            //add target mode
+        } else {
+            sys_limelight.setCropSize(lowNodeCrop);
+            //add targetMode
+        }
     }
 
     // Called when the command is initially scheduled.

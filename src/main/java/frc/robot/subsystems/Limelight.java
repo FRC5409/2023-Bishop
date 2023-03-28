@@ -246,7 +246,9 @@ public class Limelight extends SubsystemBase {
         } else  { 
             retroTargetDistance = 0;
             if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                // System.out.println("No-RetroTarget");
+                if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
+                    System.out.println("No-RetroTarget");
+                }
             }
         }
 
