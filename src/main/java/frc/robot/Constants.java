@@ -419,7 +419,7 @@ public final class Constants {
         
         public static final class limeLightAlert {
             public static final double disconnectNotifLength    = 200; //rumble time in ms
-            public static final double limelightTimeout         = 500; //limelight disconnect timeout time inss ms 
+            public static final double limelightTimeout         = 500; //limelight disconnect timeout time in ms 
         }
 
         public static final class KretroTarget {
@@ -435,6 +435,8 @@ public final class Constants {
             public static final double kP                       = 0.01; //.22
             public static final double kI                       = 0;
             public static final double kD                       = 0;
+            public static final boolean doPIDTuning             = true; 
+            public static final boolean debugMode               = false;
         }
     }
 }

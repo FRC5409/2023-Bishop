@@ -23,10 +23,7 @@ public class ConeNodeAim extends CommandBase {
     private final Telescope sys_Telescope;
     private final CommandXboxController m_joystick;
 
-
-    boolean debugMode = false; //---DO NOT ENABLE DURING COMP IT WILL MAKE THE ROBOT CRAAAASHHH---//
-
-    private ShuffleboardTab sb_coneNodeAim;
+    private ShuffleboardTab sb_nodeAimTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
 
     private final PIDController m_pidController;
@@ -66,21 +63,21 @@ public class ConeNodeAim extends CommandBase {
         }
     }
 
+    public void getShuffleboardPID(){
+        if (Constants.kLimelight.kConeNodeAim.doPIDTuning) {
+            sb_nodeAimTab = Shuffleboard.getTab("Field Localization");
+            nt_kP = sb_nodeAimTab.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
+            nt_kI = sb_nodeAimTab.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
+            nt_kD = sb_nodeAimTab.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
+            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
+        }
+    }
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        // sys_drivetrain.resetEncoders(); // IDK WHY
         sys_limelight.turnOn();
         sys_limelight.setData("pipeline", 0);
-        // System.out.println("Initialized");
-
-        if (debugMode) {
-            sb_coneNodeAim = Shuffleboard.getTab("Cone node aim");
-            nt_kP = sb_coneNodeAim.add("kP", kLimelight.kConeNodeAim.kP).getEntry();
-            nt_kI = sb_coneNodeAim.add("kI", kLimelight.kConeNodeAim.kI).getEntry();
-            nt_kD = sb_coneNodeAim.add("kD", kLimelight.kConeNodeAim.kD).getEntry();
-            m_pidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
-        }
+        getShuffleboardPID();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -98,7 +95,7 @@ public class ConeNodeAim extends CommandBase {
 
         sys_drivetrain.autoTurnDrive(xSpeed, calculatedOutput);
 
-        if (debugMode){
+        if (Constants.kLimelight.kConeNodeAim.debugMode){
             System.out.println(calculatedOutput);
         }
 
