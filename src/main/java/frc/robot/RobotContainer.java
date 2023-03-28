@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -113,6 +114,8 @@ public class RobotContainer {
     // Trajectory & autonomous path chooser
     private ShuffleboardTab sb_driveteam;
     private SendableChooser<Command> sc_chooseAutoRoutine;
+
+    private int rumbleTime = 0;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -423,6 +426,20 @@ public class RobotContainer {
         return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
+    }
+
+    public void rumbleController(double value, int time) {
+        rumbleTime = time;
+        joystickMain.getHID().setRumble(RumbleType.kBothRumble, value);
+    }
+
+    public void updateRumble() {
+        if (rumbleTime == 0) {
+            joystickMain.getHID().setRumble(RumbleType.kBothRumble, 0);
+            rumbleTime = -1;
+        } else {
+            rumbleTime--;
+        }
     }
 
 }

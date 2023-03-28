@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
 
@@ -73,6 +75,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_robotContainer.rumbleController(0, 1);
     LEDState++;
     m_robotContainer.sys_claw.disable();
     // if (m_robotContainer.sys_candle.getCurrentAnimation() != 4) {
@@ -143,6 +146,31 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+  }
+
+  @Override
+  public void teleopPeriodic() {
+    m_robotContainer.updateRumble();
+    switch (Math.round((long) DriverStation.getMatchTime())) {
+      case 10:
+        //rumble controller
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
+        break;
+      case 5:
+        //switch to red
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
+        m_robotContainer.sys_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
+        break;
+      case 3:
+        //flashing red
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
+        m_robotContainer.sys_candle.EStopped();
+        break;
+      case 1:
+        //rumble controller
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
+        break;
     }
   }
 

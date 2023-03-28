@@ -26,6 +26,9 @@ public final class Constants {
                                                           
         public static final int port_joystickMain               = 0;
         public static final int port_joystickSecondary          = 1;
+
+        public static final double timerRumbleIntensity         = 0.5;
+        public static final double clawRumbleIntensity          = 1;
     }
 
     public static final class kCANBus {
