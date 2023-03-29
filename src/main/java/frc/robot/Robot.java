@@ -56,6 +56,11 @@ public class Robot extends TimedRobot {
       .onTrue(new SetCoastMode(m_robotContainer.sys_drivetrain, m_robotContainer.sys_telescope))
       .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem, m_robotContainer.sys_claw));
 
+      new Trigger(
+          () -> Math.round(DriverStation.getMatchTime()) == 1
+        )
+        .onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
+
   }
 
   /**
@@ -172,7 +177,6 @@ public class Robot extends TimedRobot {
       case 1:
         //rumble controller
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
-        new Trigger(() -> Math.round(DriverStation.getMatchTime()) == 1).onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
         break;
     }
   }
