@@ -5,9 +5,7 @@
 package frc.robot;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
@@ -21,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.kArmSubsystem;
+import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
+import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kCANdle.LEDColorType;
@@ -29,44 +30,35 @@ import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
-import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
-import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
-import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
-import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
-import frc.robot.commands.MoveThenExtend;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.commands.GearShift;
 import frc.robot.commands.MoveAndRetract;
+import frc.robot.commands.MoveThenExtend;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
-import frc.robot.commands.Intake.RollerMove;
-import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.TelescopeTo;
-import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
-import frc.robot.commands.sequencing.ArmToSubstation;
-import frc.robot.commands.sequencing.ArmToTopCube;
-import frc.robot.commands.sequencing.RotateArmGroup;
+import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Limelight;
 
 
 /**
@@ -224,6 +216,7 @@ public class RobotContainer {
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
+                .andThen(new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain))
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
@@ -240,6 +233,7 @@ public class RobotContainer {
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
+                .andThen(new DetectGamepiece(sys_claw, kClaw.cubeDistanceThreshold, joystickMain))
             );
 
         // Manual-Close claw for cone / cube
@@ -354,7 +348,6 @@ public class RobotContainer {
         joystickSecondary.rightBumper()
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
-                .andThen(new ClawMovement(sys_claw, kClaw.openPosition))
             ); // pickup from loading station
             
         // Move arm and retract to idling position
