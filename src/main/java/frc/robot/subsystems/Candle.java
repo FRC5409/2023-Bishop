@@ -71,7 +71,11 @@ public class Candle extends SubsystemBase {
       // candle.setLEDs(r, g, b, 0, 8, kCANdle.kConfig.LEDCount);
       for (int i = 0; i < kCANdle.kConfig.LEDCount; i++) {
         setArrayLEDs(i, r, g, b);
+        lastLEDColors[i][0] = r;
+        lastLEDColors[i][1] = g;
+        lastLEDColors[i][2] = b;
       }
+      candle.setLEDs(r, g, b);
     }
 
     /**
@@ -394,7 +398,12 @@ public class Candle extends SubsystemBase {
 
      public void inGameAnimation() {
       // setAnimation(AnimationTypes.ColorFlow, kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
-      setAnimation(AnimationTypes.Static, kCANdle.kColors.cone[0], kCANdle.kColors.cone[1], kCANdle.kColors.cone[2]);
+      // setAnimation(AnimationTypes.Static, kCANdle.kColors.cone[0], kCANdle.kColors.cone[1], kCANdle.kColors.cone[2]);
+      if (DriverStation.getAlliance() == Alliance.Red) {
+        setAnimation(AnimationTypes.Static, 255, 0, 0);
+      } else {
+        setAnimation(AnimationTypes.Static, 0, 0, 255);
+      }
     }
 
     /**

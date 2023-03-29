@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
 
@@ -170,6 +172,7 @@ public class Robot extends TimedRobot {
       case 1:
         //rumble controller
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
+        new Trigger(() -> Math.round(DriverStation.getMatchTime()) == 1).onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
         break;
     }
   }
