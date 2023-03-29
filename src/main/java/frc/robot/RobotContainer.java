@@ -11,6 +11,9 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoException;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -95,6 +98,7 @@ public class RobotContainer {
     public final IntakePivot sys_intakePivot;
     public final IntakeWrist sys_intakeWrist;
     public final IntakeRoller sys_intakeRoller;
+    private final UsbCamera sys_camera;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -157,10 +161,49 @@ public class RobotContainer {
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Add auto routines to Shuffleboard
+        sb_driveteam = Shuffleboard.getTab("Drive team");
         addAutoRoutinesToShuffleboard();
+
+        // Camera
+        sys_camera = CameraServer.startAutomaticCapture();
+        configCamera();
 
         // Configure the trigger bindings
         configureBindings();
+    }
+
+    private void configCamera() {
+        /*
+        Camera model: HBVCAM-3M2111 V22
+        Link (contains some useful info): https://www.amazon.com/Camera-Module-HBVCAM-3M2111-Distance-Recognition/dp/B09NB2ZYW5
+
+        Supported resolutions:
+
+        MJPEG 320x240 30FPS, YUY2 320x240 30FPS
+        MJPEG 352x288 30FPS, YUY2 352x288 30FPS
+        MJPEG 640x480 20FPS, YUY2 640x480 8FPS
+        MJPEG 1280x720 20FPS, YUY2 1280x720 8FPS
+        MJPEG 1920x1080 20FPS, YUY2 1920x1080 5FPS
+        MJPEG 2048x1536 15FPS, YUY2 2048x1536 5FPS
+         */
+        int[] cam_defaultRes = { 2048, 1536 };
+        int cam_width = (int)(cam_defaultRes[0] / 2);
+        int cam_height = (int)(cam_defaultRes[1] / 2);
+        int cam_fps = 15;
+
+        // System.out.println(sys_camera.getVideoMode().width);
+        // System.out.println(sys_camera.getVideoMode().height);
+
+        try {
+            sys_camera.setVideoMode(sys_camera.getVideoMode().pixelFormat, cam_width, cam_height, cam_fps);
+            sys_camera.setFPS(cam_fps);
+            sys_camera.setResolution(cam_width, cam_height);
+            // System.out.println(sys_camera.getVideoMode().width);
+            // System.out.println(sys_camera.getVideoMode().height);
+            // sys_camera.setResolution(1, 1);
+        } catch (VideoException ve) {
+            ve.printStackTrace();
+        }
     }
 
     /**
@@ -170,7 +213,6 @@ public class RobotContainer {
      */
     private void addAutoRoutinesToShuffleboard() {
         // Trajectory & autonomous path chooser
-        sb_driveteam = Shuffleboard.getTab("Select auto");
         sc_chooseAutoRoutine = new SendableChooser<Command>();
 
         for (String pathName : kOneConeAuto.all) {
@@ -185,6 +227,7 @@ public class RobotContainer {
         }
 
         sb_driveteam.add("Choose auto routine", sc_chooseAutoRoutine)
+            .withPosition(0, 0)
             .withSize(3, 1);
     }
 
