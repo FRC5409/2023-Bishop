@@ -258,11 +258,10 @@ public class RobotContainer {
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.armedOpenPosition)
                 .andThen(new ConditionalCommand(
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
-                    new WaitCommand(0), 
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack)
+                    .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, true, false)),
+                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, false, false), 
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
-                )
                 )
             )
             .onFalse(
@@ -276,8 +275,8 @@ public class RobotContainer {
                 new ClawMovement(sys_claw, kClaw.openPosition)
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround))
                 .andThen(new ConditionalCommand(
-                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
-                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold, true, true),
+                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold, false, true), 
                     () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
                 )
             )

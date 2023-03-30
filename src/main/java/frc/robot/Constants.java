@@ -123,7 +123,8 @@ public final class Constants {
 
         public static final int currentLimit                    = 20;
 
-        public static final double outputLimit                  = 3;
+        public static final double coneOutputLimit              = 3;
+        public static final double cubeOutputLimit              = 0.5;
 
         public static final double timeout                      = 2;
 
