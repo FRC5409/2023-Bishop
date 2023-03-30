@@ -362,6 +362,7 @@ public final class Constants {
 
             public static final double kGroundFront             = 0.0; // placeholder
             public static final double kAutoGroundBack          = 11.95; 
+            public static final double kCubeGround              = 10;
             public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder

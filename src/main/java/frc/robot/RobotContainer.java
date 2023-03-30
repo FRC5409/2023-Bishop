@@ -273,21 +273,17 @@ public class RobotContainer {
         // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
-                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
-                .andThen(new ConditionalCommand(
-                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCube, sys_telescope),
-                    new WaitCommand(0),
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-                ))
+                new ClawMovement(sys_claw, kClaw.openPosition)
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround))
                 .andThen(new ConditionalCommand(
                     new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCube)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
                 )
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
         // Manual-Close claw for cone / cube
