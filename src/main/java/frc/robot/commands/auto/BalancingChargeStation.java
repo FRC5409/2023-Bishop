@@ -58,6 +58,7 @@ public class BalancingChargeStation extends PIDCommand {
     @Override
     public void initialize() {
         // Update PID values from Shuffleboard
+        m_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
         if (debugMode) {
             getController().setP(nt_kP.getDouble(0));
             getController().setI(nt_kI.getDouble(0));
@@ -67,6 +68,7 @@ public class BalancingChargeStation extends PIDCommand {
 
     @Override
     public void execute() {
+        super.execute();
         if (getController().atSetpoint()) {
             if (!isBalanced) {
                 m_candle.setAnimation(AnimationTypes.Static, 0, 255, 0);

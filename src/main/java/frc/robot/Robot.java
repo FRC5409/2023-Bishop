@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
       .onTrue(new DisablePIDSubsystems(m_robotContainer.sys_intakeWrist, m_robotContainer.sys_intakePivot, m_robotContainer.sys_armPIDSubsystem, m_robotContainer.sys_claw));
 
       new Trigger(
-          () -> Math.round(DriverStation.getMatchTime()) == 1
+          () -> Math.round(DriverStation.getMatchTime()) == 1 && this.isTeleop()
         )
         .onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
 
@@ -160,6 +160,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     m_robotContainer.updateRumble();
     switch (Math.round((long) DriverStation.getMatchTime())) {
+      case 30:
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
+        break;
+      case 20:
+        m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
+        break;
       case 10:
         //rumble controller
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
