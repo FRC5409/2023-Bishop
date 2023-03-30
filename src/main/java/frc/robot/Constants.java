@@ -130,11 +130,12 @@ public final class Constants {
 
         public static final double timeout                      = 1.25;
 
-        public static final double openPosition                 = 0.77;
+        public static final double openPosition                 = 0.77; // old 0.77
+        public static final double armedOpenPosition            = 0.67; // old 0.77
         public static final double coneClosePosition            = 0.54;
         public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold           = 160;
+        public static final int coneDistanceThreshold           = 195; // old 160
         public static final int cubeDistanceThreshold           = 60;
         
         public static final int stallTime                       = 40;
@@ -172,19 +173,19 @@ public final class Constants {
     public static final class kAutoRoutines {
 
         public static final class kOneConeOnePickup {
-            public static final String TURN_LEFT_place_pickup_balance = "1L. TURN LEFT place, pickup, balance";
-            public static final String TURN_RIGHT_place_pickup_balance = "1R. TURN RIGHT place, pickup, balance";
+            public static final String TURN_LEFT_place_pickup_balance = "A1L. TURN LEFT place, pickup, balance";
+            public static final String TURN_RIGHT_place_pickup_balance = "A1R. TURN RIGHT place, pickup, balance";
 
-            public static final String PLACE_CENTRE_drive_centre_pickup_centre_balance = "2. PLACE CENTRE, drive centre, pickup centre, balance";
+            public static final String CENTER_place_pickup_balance = "A2. CENTER place, pickup, balance";
 
-            public static final String TURN_LEFT_place_pickup_no_balance = "3L. TURN LEFT place, pickup, no balance";
-            public static final String TURN_RIGHT_place_pickup_no_balance = "3R. TURN RIGHT place, pickup, no balance";
+            public static final String TURN_LEFT_place_pickup_no_balance = "A3L. TURN LEFT place, pickup, no balance";
+            public static final String TURN_RIGHT_place_pickup_no_balance = "A3R. TURN RIGHT place, pickup, no balance";
 
             public static final String[] all = {
                 TURN_LEFT_place_pickup_balance,
                 TURN_RIGHT_place_pickup_balance,
 
-                PLACE_CENTRE_drive_centre_pickup_centre_balance,
+                CENTER_place_pickup_balance,
 
                 TURN_LEFT_place_pickup_no_balance,
                 TURN_RIGHT_place_pickup_no_balance
@@ -192,20 +193,16 @@ public final class Constants {
         }
         
         public static final class kOneConeAuto {
-            public static final String TURN_LEFT_place_and_balance = "4L. TURN LEFT place and balance";
-            public static final String TURN_RIGHT_place_and_balance = "4R. TURN RIGHT place and balance";
+            public static final String TURN_LEFT_place_and_balance = "B1L. TURN LEFT place and balance";
+            public static final String TURN_RIGHT_place_and_balance = "B1R. TURN RIGHT place and balance";
 
-            public static final String PLACE_SIDE_and_leave_community_no_balance = "5. PLACE SIDE and leave community, no balance";
-
-            public static final String PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance = "6L. PLACE CENTRE, turn LEFT and leave community, no balance";
-            public static final String PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance = "6R. PLACE CENTRE, turn RIGHT and leave community, no balance";
+            public static final String PLACE_SIDE_and_leave_community_no_balance = "B2. PLACE SIDE and leave community, no balance";
 
             public static final String[] all = {
                 TURN_LEFT_place_and_balance,
                 TURN_RIGHT_place_and_balance,
-                PLACE_SIDE_and_leave_community_no_balance,
-                PLACE_CENTRE_turn_LEFT_and_leave_community_no_balance,
-                PLACE_CENTRE_turn_RIGHT_and_leave_community_no_balance
+                
+                PLACE_SIDE_and_leave_community_no_balance
             };
         }
     }
@@ -315,7 +312,8 @@ public final class Constants {
             public final static double kToHandoff               = 0.0; //placeholder
 
             public final static double kIdling                  = 0.96; // 48.5 inches
-            public final static double kBalancing               = 1.21; // old 1.2 
+            public final static double kGroundPickupCube        = 1.19; // old 1.2 
+            public final static double kGroundPickupCone        = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
@@ -362,7 +360,8 @@ public final class Constants {
             public static final double kHandoff                 = 0.0;
 
             public static final double kGroundFront             = 0.0; // placeholder
-            public static final double kGroundBack              = 11.95; 
+            public static final double kAutoGroundBack          = 11.95; 
+            public static final double kGroundBack              = 18; 
             
             public static final double kLoading                 = 0.0; // placeholder
 
