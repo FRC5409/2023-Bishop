@@ -269,6 +269,7 @@ public class RobotContainer {
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable()).alongWith(new InstantCommand(() -> sys_claw.stopMotor()))
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
+
             );
 
         // Auto-close claw for cube
