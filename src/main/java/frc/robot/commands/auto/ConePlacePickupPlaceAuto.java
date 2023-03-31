@@ -10,6 +10,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kArmSubsystem;
@@ -65,10 +66,8 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                         // Ready to grab cone
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
-                cmdLED.alongWith(
-                    // Close claw on cone
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)
-                ),
+
+                new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
 
                 // Drive to node
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1))
