@@ -33,13 +33,13 @@ public class Limelight extends SubsystemBase {
 
     // Shuffleboard
     private ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget;
-    private final ShuffleboardTab sb_limelight;
-    private final GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
-    private final GenericEntry xWidget, yWidget, zWidget;
-    private final GenericEntry rxWidget, ryWidget, rzWidget;
-    private final GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
-    private final GenericEntry targetSizeWidget; 
-    private final GenericEntry retroDistanceWidget; 
+    private ShuffleboardTab sb_limelight;
+    private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
+    private GenericEntry xWidget, yWidget, zWidget;
+    private GenericEntry rxWidget, ryWidget, rzWidget;
+    private GenericEntry pipelineIndexWidget, pipelineLatencyWidget;
+    private GenericEntry targetSizeWidget; 
+    private GenericEntry retroDistanceWidget; 
 
     // Fiducial
     private double targetDistance;
@@ -66,7 +66,23 @@ public class Limelight extends SubsystemBase {
         NetworkTableInstance.getDefault().setServerTeam(5409);
 
         // Shuffleboard
-        localizationPos = null;
+        localizationPos         = null;
+        sb_limelight            = null; 
+        xOffEntry               = null;
+        yOffEntry               = null;
+        targetAreaEntry         = null;
+        visibilityEntry         = null;
+        ledModeEntry            = null;
+        xWidget                 = null;
+        yWidget                 = null;
+        zWidget                 = null;
+        rxWidget                = null;
+        ryWidget                = null;
+        rzWidget                = null;
+        pipelineIndexWidget     = null;
+        pipelineLatencyWidget   = null;
+        targetSizeWidget        = null;
+        retroDistanceWidget     = null;
 
         if (kLimelight.doShuffleboard){
             // Shuffleboard
@@ -117,7 +133,7 @@ public class Limelight extends SubsystemBase {
             retroDistanceWidget = retroTarget.add("Distance", 0).getEntry();
 
             // Old shuffleboard retro-targetting data - TO BE MERGED WITH EXISTING
-            sb_limelight = Shuffleboard.getTab("LimelightR");
+            sb_limelight = Shuffleboard.getTab("Limelight Retro");
             xOffEntry = sb_limelight.add("X Offset", nt_xOffset.getDouble(0)).getEntry();
             yOffEntry = sb_limelight.add("Y Offset", nt_yOffset.getDouble(0)).getEntry();
             targetAreaEntry = sb_limelight.add("Target Area", nt_targetArea.getDouble(-1)).getEntry();
