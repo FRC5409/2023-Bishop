@@ -292,10 +292,7 @@ public class RobotContainer {
                 )
             )
             .onFalse(
-                new SequentialCommandGroup(
-                    new WaitCommand(kClaw.timeout),
-                    new InstantCommand(() -> sys_claw.disable())
-                )
+                new InstantCommand(() -> sys_claw.disable())
             );
 
         // Manual-Close claw for cone / cube
