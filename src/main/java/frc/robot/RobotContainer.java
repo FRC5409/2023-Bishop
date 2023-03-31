@@ -5,16 +5,20 @@
 package frc.robot;
 
 import java.util.List;
-
+import java.util.concurrent.locks.Condition;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoException;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -34,11 +38,9 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
-import frc.robot.commands.MoveThenExtend;
-import frc.robot.commands.AutoCloseClaw;
-import frc.robot.commands.DefaultDrive;
-import frc.robot.commands.GearShift;
-import frc.robot.commands.MoveAndRetract;
+import frc.robot.commands.claw.AutoCloseClaw;
+import frc.robot.commands.Drive.DefaultDrive;
+import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
 import frc.robot.commands.Intake.IntakePickupSequence;
 import frc.robot.commands.Intake.PivotMove;
@@ -46,11 +48,14 @@ import frc.robot.commands.Intake.RollerMove;
 import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
+import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.BalancingChargeStation;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
+import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.sequencing.ArmToSubstation;
 import frc.robot.commands.sequencing.ArmToTopCube;
@@ -93,6 +98,7 @@ public class RobotContainer {
     public final IntakePivot sys_intakePivot;
     public final IntakeWrist sys_intakeWrist;
     public final IntakeRoller sys_intakeRoller;
+    private final UsbCamera sys_camera;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -114,6 +120,8 @@ public class RobotContainer {
     // Trajectory & autonomous path chooser
     private ShuffleboardTab sb_driveteam;
     private SendableChooser<Command> sc_chooseAutoRoutine;
+
+    private int rumbleTime = 0;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -155,10 +163,49 @@ public class RobotContainer {
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
 
         // Add auto routines to Shuffleboard
+        sb_driveteam = Shuffleboard.getTab("Drive team");
         addAutoRoutinesToShuffleboard();
+
+        // Camera
+        sys_camera = CameraServer.startAutomaticCapture();
+        configCamera();
 
         // Configure the trigger bindings
         configureBindings();
+    }
+
+    private void configCamera() {
+        /*
+        Camera model: HBVCAM-3M2111 V22
+        Link (contains some useful info): https://www.amazon.com/Camera-Module-HBVCAM-3M2111-Distance-Recognition/dp/B09NB2ZYW5
+
+        Supported resolutions:
+
+        MJPEG 320x240 30FPS, YUY2 320x240 30FPS
+        MJPEG 352x288 30FPS, YUY2 352x288 30FPS
+        MJPEG 640x480 20FPS, YUY2 640x480 8FPS
+        MJPEG 1280x720 20FPS, YUY2 1280x720 8FPS
+        MJPEG 1920x1080 20FPS, YUY2 1920x1080 5FPS
+        MJPEG 2048x1536 15FPS, YUY2 2048x1536 5FPS
+         */
+        int[] cam_defaultRes = { 2048, 1536 };
+        int cam_width = (int)(cam_defaultRes[0] / 2);
+        int cam_height = (int)(cam_defaultRes[1] / 2);
+        int cam_fps = 15;
+
+        // System.out.println(sys_camera.getVideoMode().width);
+        // System.out.println(sys_camera.getVideoMode().height);
+
+        try {
+            sys_camera.setVideoMode(sys_camera.getVideoMode().pixelFormat, cam_width, cam_height, cam_fps);
+            sys_camera.setFPS(cam_fps);
+            sys_camera.setResolution(cam_width, cam_height);
+            // System.out.println(sys_camera.getVideoMode().width);
+            // System.out.println(sys_camera.getVideoMode().height);
+            // sys_camera.setResolution(1, 1);
+        } catch (VideoException ve) {
+            ve.printStackTrace();
+        }
     }
 
     /**
@@ -168,21 +215,21 @@ public class RobotContainer {
      */
     private void addAutoRoutinesToShuffleboard() {
         // Trajectory & autonomous path chooser
-        sb_driveteam = Shuffleboard.getTab("Select auto");
         sc_chooseAutoRoutine = new SendableChooser<Command>();
 
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, trajectory);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, trajectory);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, pathGroup);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
         sb_driveteam.add("Choose auto routine", sc_chooseAutoRoutine)
+            .withPosition(0, 0)
             .withSize(3, 1);
     }
 
@@ -211,38 +258,61 @@ public class RobotContainer {
         // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
-                Commands.either(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                .andThen(new ConditionalCommand(
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
                     new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                )
+                )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
             );
 
         // Auto-close claw for cube
         joystickMain.y()
             .whileTrue(
-                Commands.either(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack))
+                .andThen(new ConditionalCommand(
+                    new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCube, sys_telescope),
+                    new WaitCommand(0),
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                ))
+                .andThen(new ConditionalCommand(
                     new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
                     new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kBalancing)
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCube)
+                )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
+                new SequentialCommandGroup(
+                    new WaitCommand(kClaw.timeout),
+                    new InstantCommand(() -> sys_claw.disable())
+                )
             );
 
         // Manual-Close claw for cone / cube
+        // joystickMain.b()
+        //     .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
+        //     .onFalse(
+        //         new SequentialCommandGroup(
+        //             new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+        //             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+        //             )
+        //         );
+        
+        // Open claw to armed position
         joystickMain.b()
-            .onTrue(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack))
-            .onFalse(
-                new SequentialCommandGroup(
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
-                    )
-                );
+            .onTrue(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+            );
 
         // Open claw
         joystickMain.a()
@@ -254,6 +324,7 @@ public class RobotContainer {
         //     .onFalse(cmd_midSpeed);
 
         joystickMain.leftBumper()
+
             .whileTrue(cmd_coneNodeAim);
 
         // Gear shifting (high-mid)
@@ -262,11 +333,11 @@ public class RobotContainer {
             .onFalse(cmd_midSpeed);
 
         joystickMain.povUp()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.2)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
         joystickMain.povDown()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.2)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
         
         // Tune balancing
@@ -357,14 +428,20 @@ public class RobotContainer {
         // Move arm and retract to ground pickup (resting on intake) position
         joystickSecondary.back()
             .onTrue(
-                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kBalancing, sys_telescope)
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(new BlinkLEDs(sys_candle, 255, 255, 255)));             
+            .whileTrue(new MoveArmManual(sys_armPIDSubsystem, -kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -376,8 +453,13 @@ public class RobotContainer {
                     kCANdle.kColors.cone[2],
                     LEDColorType.Cone
                 )
-            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
-        );
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
         // Set LED to cube (purple)
         joystickSecondary.rightStick()
@@ -389,8 +471,13 @@ public class RobotContainer {
                     kCANdle.kColors.cube[2],
                     LEDColorType.Cube
                 )
-            ).alongWith(new SequentialCommandGroup(new WaitCommand(0.05), new BlinkLEDs(sys_candle, 0, 155, 0)))
-        );
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
         // joystickSecondary.start()
         //     .onTrue(
@@ -424,6 +511,20 @@ public class RobotContainer {
         return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
             .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
+    }
+
+    public void rumbleController(double value, int time) {
+        rumbleTime = time;
+        joystickMain.getHID().setRumble(RumbleType.kBothRumble, value);
+    }
+
+    public void updateRumble() {
+        if (rumbleTime == 0) {
+            joystickMain.getHID().setRumble(RumbleType.kBothRumble, 0);
+            rumbleTime = -1;
+        } else {
+            rumbleTime--;
+        }
     }
 
 }

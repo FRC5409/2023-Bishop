@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -19,21 +18,18 @@ import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
 import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kClaw;
-import frc.robot.Constants.kClaw.kClawState;
 
 public class NewClaw extends PIDSubsystem {
   private final WPI_TalonFX clawMot;
 
     private final DutyCycleEncoder clawDutyEncoder;
 
-    private final TimeOfFlight s_tof;
-
-    private kClawState currentState = kClawState.kOpen;
-
+    private final TimeOfFlight s_tofLeft;
+    private final TimeOfFlight s_tofRight;
 
     private ShuffleboardTab clawTab;
 
-    private GenericEntry tempEntry, dutyEncoderEntry, tofAvgEntry, tofRealEntry;
+    private GenericEntry tempEntry, dutyEncoderEntry, tofLeftAvgEntry, tofLeftRealEntry, tofRightAvgEntry, tofRightRealEntry;
 
     private final boolean debug = true;
 
@@ -48,8 +44,10 @@ public class NewClaw extends PIDSubsystem {
 
     configMot();
 
-    s_tof = new TimeOfFlight(36);
-    s_tof.setRangingMode(RangingMode.Short, s_tof.getSampleTime());
+    s_tofLeft = new TimeOfFlight(36);
+    s_tofLeft.setRangingMode(RangingMode.Short, s_tofLeft.getSampleTime());
+    s_tofRight = new TimeOfFlight(37);
+    s_tofRight.setRangingMode(RangingMode.Short, s_tofLeft.getSampleTime());
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
 
@@ -57,8 +55,10 @@ public class NewClaw extends PIDSubsystem {
       clawTab = Shuffleboard.getTab("Claw");
       tempEntry = clawTab.add("Motor Temp", getMotorTempature()).getEntry();  
       dutyEncoderEntry = clawTab.add("Duty", getDutyPosition()).getEntry();
-      tofAvgEntry = clawTab.add("Time Of Flight (Avg)", rollingToFAvg()).getEntry();
-      tofRealEntry = clawTab.add("Time Of Flight (Real)", getDistanceToF()).getEntry();
+      tofLeftAvgEntry = clawTab.add("Time Of Flight (Left Avg)", rollingToFAvg(s_tofLeft)).getEntry();
+      tofLeftRealEntry = clawTab.add("Time Of Flight (Left Real)", getDistanceToFLeft()).getEntry();
+      tofRightAvgEntry = clawTab.add("Time Of Flight (Right Avg)", rollingToFAvg(s_tofRight)).getEntry();
+      tofRightRealEntry = clawTab.add("Time Of Flight (Right Real)", getDistanceToFRight()).getEntry();
     }
   }
 
@@ -128,18 +128,30 @@ public void setPID(double p, double i, double d) {
     return clawDutyEncoder.getAbsolutePosition();
   }
 
-  public double getDistanceToF() {
-    return s_tof.getRange();
+  public TimeOfFlight getLeftToF() {
+    return s_tofLeft;
   }
 
-  public double rollingToFAvg() {
-    int currentDist = (int) getDistanceToF();
+  public TimeOfFlight getRightToF() {
+    return s_tofRight;
+  }
 
-    if (indexCount > 4) {
+  public double getDistanceToFLeft() {
+    return s_tofLeft.getRange();
+  }
+
+  public double getDistanceToFRight() {
+    return s_tofRight.getRange();
+  }
+
+  public double rollingToFAvg(TimeOfFlight s_tof) {
+    int currentDist = (int) s_tof.getRange();
+
+    if (indexCount > 1) {
       indexCount = 0;
     }
 
-    if (currentDist > 5) {
+    if (currentDist > 2) {
       lastToFValues[indexCount] = currentDist;
     }
     
@@ -148,7 +160,7 @@ public void setPID(double p, double i, double d) {
       sum += value;
     }
     
-    int avg = sum/5;
+    int avg = sum/2;
 
     if (avg > 300) {
       avg = 300;
@@ -165,8 +177,10 @@ public void setPID(double p, double i, double d) {
     if (debug) {
       tempEntry.setDouble(getMotorTempature());
       dutyEncoderEntry.setDouble(getMeasurement());
-      tofAvgEntry.setDouble(rollingToFAvg());
-      tofRealEntry.setDouble(getDistanceToF());
+      tofLeftAvgEntry.setDouble(rollingToFAvg(s_tofLeft));
+      tofLeftRealEntry.setDouble(getDistanceToFLeft());
+      tofRightAvgEntry.setDouble(rollingToFAvg(s_tofRight));
+      tofRightRealEntry.setDouble(getDistanceToFRight());
     }
 
 
