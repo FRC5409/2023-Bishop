@@ -205,6 +205,16 @@ public final class Constants {
                 PLACE_SIDE_and_leave_community_no_balance
             };
         }
+
+        public static final class kConePlacePickupPlaceAuto {
+            public static final String TURN_LEFT_place_pickup_place_no_balance = "C1L. TURN LEFT place, pickup, place, no balance";
+            public static final String TURN_RIGHT_place_pickup_place_no_balance = "C1R. TURN RIGHT place, pickup, place, no balance";
+
+            public static final String[] all = {
+                TURN_LEFT_place_pickup_place_no_balance,
+                TURN_RIGHT_place_pickup_place_no_balance
+            };
+        }
     }
 
     public static final class kBalancing {

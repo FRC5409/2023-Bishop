@@ -36,6 +36,7 @@ import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
+import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
@@ -53,6 +54,7 @@ import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.BalancingChargeStation;
+import frc.robot.commands.auto.ConePlacePickupPlaceAuto;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.AutoCloseClaw;
@@ -225,6 +227,11 @@ public class RobotContainer {
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
             OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
+            sc_chooseAutoRoutine.addOption(pathName, autoCommand);
+        }
+        for (String pathName : kConePlacePickupPlaceAuto.all) {
+            List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
