@@ -24,9 +24,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 
-public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
+public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
 
-    public OneConeOnePickupConeAuto(
+    public ConePlacePickupPlaceAuto(
             Drivetrain sys_drivetrain,
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,
@@ -50,15 +50,16 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                     new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)
                 ),
 
-                // Drive to charge station
+                // Drive to node
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1))
                     .alongWith(
                         // Cone grabbed
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted).withTimeout(0.5),
                         new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
-
-                new BalancingChargeStation(sys_drivetrain, sys_LEDs)
+                
+                // Place cone
+                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
         );
     }
 }
