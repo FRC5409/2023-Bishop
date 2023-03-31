@@ -418,6 +418,7 @@ public final class Constants {
         public static final int kAutoLightTimeout               = 1000; //ms
         public static final boolean kDoAutoLight                = false; 
         public static final double kALTriggerDistance           = 1; //PLACEHOLDER
+        public static final boolean doShuffleboard              = false; 
         
         public static final class limeLightAlert {
             public static final double disconnectNotifLength    = 200; //rumble time in ms
