@@ -265,7 +265,7 @@ public class RobotContainer {
                 )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
+                new InstantCommand(() -> sys_claw.disable()).alongWith(new InstantCommand(() -> sys_claw.stopMotor()))
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
@@ -281,7 +281,7 @@ public class RobotContainer {
                 )
             )
             .onFalse(
-                new InstantCommand(() -> sys_claw.disable())
+                new InstantCommand(() -> sys_claw.disable()).alongWith(new InstantCommand(() -> sys_claw.stopMotor()))
                 .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted))
             );
 
