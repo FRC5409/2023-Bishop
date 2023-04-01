@@ -257,13 +257,14 @@ public class RobotContainer {
         joystickMain.x()
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.armedOpenPosition)
-                .andThen(new ConditionalCommand(
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
-                    new WaitCommand(0), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                        new WaitCommand(0), 
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
                 )
-                )
+                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
             )
             .onFalse(
                 new InstantCommand(() -> sys_claw.disable())
@@ -274,11 +275,13 @@ public class RobotContainer {
         joystickMain.y()
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.openPosition)
-                .andThen(new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround))
-                .andThen(new ConditionalCommand(
-                    new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
-                    new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
+                        .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
                 )
             )
             .onFalse(
