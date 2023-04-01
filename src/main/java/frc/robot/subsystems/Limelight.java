@@ -32,7 +32,7 @@ public class Limelight extends SubsystemBase {
     NetworkTableEntry nt_xOffset, nt_yOffset, nt_targetArea, nt_visibility, nt_ledMode, nt_crop;
 
     // Shuffleboard
-    private ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget;
+    private ShuffleboardLayout localizationPos, localizationRot, localizationPipeline, localizationTarget, retroTarget = null;
     private ShuffleboardTab sb_limelight;
     private GenericEntry xOffEntry, yOffEntry, targetAreaEntry, visibilityEntry, ledModeEntry;
     private GenericEntry xWidget, yWidget, zWidget;
@@ -63,26 +63,7 @@ public class Limelight extends SubsystemBase {
         // Networktables
         limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
         NetworkTableInstance.getDefault().startServer();
-        NetworkTableInstance.getDefault().setServerTeam(5409);
-
-        // Shuffleboard
-        localizationPos         = null;
-        sb_limelight            = null; 
-        xOffEntry               = null;
-        yOffEntry               = null;
-        targetAreaEntry         = null;
-        visibilityEntry         = null;
-        ledModeEntry            = null;
-        xWidget                 = null;
-        yWidget                 = null;
-        zWidget                 = null;
-        rxWidget                = null;
-        ryWidget                = null;
-        rzWidget                = null;
-        pipelineIndexWidget     = null;
-        pipelineLatencyWidget   = null;
-        targetSizeWidget        = null;
-        retroDistanceWidget     = null;
+        NetworkTableInstance.getDefault().setServerTeam(5409); 
 
         if (kLimelight.doShuffleboard){
             // Shuffleboard
