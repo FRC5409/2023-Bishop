@@ -29,7 +29,6 @@ public class ConeNodeAim extends CommandBase {
     private final PIDController m_pidController;
 
     double xSpeed, dirInRad, turning, calculatedOutput;
-    boolean isHigh;
     double[] lowNodeCrop, highNodeCrop;
 
     /** Creates a new ConeNodeAim. */
@@ -43,15 +42,11 @@ public class ConeNodeAim extends CommandBase {
         m_pidController.setSetpoint(0);
         m_pidController.setTolerance(kLimelight.kConeNodeAim.KretroTargetTolerance);
 
-        //determining alignment mode
-        isHigh = (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended? true: false);
-        //setTargetMode(isHigh);
-
-        // Use addRequirements() here to declare subsystem dependencies.
+        // Use addRequirements() here to declare subsysstem dependencies.
         addRequirements(sys_drivetrain, sys_limelight);
     }
 
-    public void setTargetMode(Boolean isHigh){
+    public void setTargetMode(){
         lowNodeCrop = kLimelight.KretroTarget.lowNodeCrop;
         highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
         if (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended) {
@@ -85,9 +80,7 @@ public class ConeNodeAim extends CommandBase {
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
         xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
-        setTargetMode(isHigh);
-        System.out.println(sys_Telescope.getPrevPos());
-        System.out.println(isHigh);
+        setTargetMode();
 
         //Applying feat forward and tolerance
         if (calculatedOutput >= Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
