@@ -40,8 +40,11 @@ public class DetectGamepiece extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        rumblingDone = false;
         if (sys_claw.getDistanceToFLeft() < threshhold || sys_claw.getDistanceToFRight() < threshhold) {
             rumbleController(0.5, 40);
+        } else {
+            rumblingDone = true;
         }
     }
 

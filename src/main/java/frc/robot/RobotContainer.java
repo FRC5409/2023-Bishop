@@ -56,6 +56,7 @@ import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
 import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
+import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
@@ -263,6 +264,7 @@ public class RobotContainer {
                     )
                 )
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                .andThen(new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain))
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -282,6 +284,9 @@ public class RobotContainer {
                         new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
+                )
+                .andThen(
+                    new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain)
                 )
             )
             .onFalse(
