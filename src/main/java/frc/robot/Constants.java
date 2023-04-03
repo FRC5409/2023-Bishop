@@ -126,8 +126,7 @@ public final class Constants {
 
         public static final int currentLimit                    = 20;
 
-        public static final double coneOutputLimit              = 3;
-        public static final double cubeOutputLimit              = 0.5;
+        public static final double outputLimit                  = 3;
 
         public static final double timeout                      = 1.25;
 
@@ -301,6 +300,7 @@ public final class Constants {
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
+            public final static double kConeAboveNew            = 0.64;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
