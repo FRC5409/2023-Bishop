@@ -40,22 +40,6 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
             Candle sys_LEDs,
             List<PathPlannerTrajectory> pathGroup) {
 
-        Command cmdLED = //blinks the LEDs
-            Commands.runOnce(
-                () -> sys_LEDs.setAnimation(
-                    AnimationTypes.Static,
-                    kCANdle.kColors.cone[0],
-                    kCANdle.kColors.cone[1],
-                    kCANdle.kColors.cone[2],
-                    LEDColorType.Cone
-                )
-            ).alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(0.05),
-                    new BlinkLEDs(sys_LEDs, 0, 255, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                )
-            );
-
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
@@ -68,10 +52,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
                     
-                new ParallelDeadlineGroup(
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
-                    cmdLED
-                ),
+                new CloseClawInAuto(sys_claw, sys_LEDs),
 
                 // Drive to charge station
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1))
