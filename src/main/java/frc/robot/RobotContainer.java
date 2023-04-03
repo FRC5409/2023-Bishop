@@ -226,7 +226,7 @@ public class RobotContainer {
         }
         for (String pathName : kConePlacePickupPlaceAuto.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed+1, kAuto.kMaxAcceleration, true);
-            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, pathGroup);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_armPIDSubsystem, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 

@@ -23,9 +23,11 @@ import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.claw.ClawMovement;
+import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.NewClaw;
 import frc.robot.subsystems.Telescope;
 
@@ -37,6 +39,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
             Telescope sys_telescope,
             NewClaw sys_claw,
             Candle sys_LEDs,
+            Limelight sys_limelight,
             List<PathPlannerTrajectory> pathGroup) {
 
             Command cmdLED = //blinks the LEDs
@@ -76,6 +79,9 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted).withTimeout(0.5),
                         new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
+
+                // Lineup using Limelight
+                new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75),
                 
                 // Place cone
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
