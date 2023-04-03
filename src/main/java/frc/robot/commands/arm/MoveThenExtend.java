@@ -40,6 +40,7 @@ public class MoveThenExtend extends CommandBase {
   public void execute() {
   if (Math.abs(sys_arm.getMeasurement()-armSetpoint) < .1){
     sys_telescope.extend(telescopeSetpoint);
+    sys_telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
     extended = true;
 
   }
@@ -48,8 +49,7 @@ public class MoveThenExtend extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    sys_telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);  
+  public void end(boolean interrupted) {  
   }
 
   // Returns true when the command should end.
