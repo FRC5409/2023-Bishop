@@ -48,7 +48,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
-                Commands.waitSeconds(1),
+                Commands.waitSeconds(0.5),
 
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0))
                     .alongWith(

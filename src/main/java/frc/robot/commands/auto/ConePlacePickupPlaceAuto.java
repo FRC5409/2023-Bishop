@@ -49,7 +49,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
-                Commands.waitSeconds(1),
+                Commands.waitSeconds(0.5),
 
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0))
                     .alongWith(
@@ -57,7 +57,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
                     ),
 
-                    new CloseClawInAuto(sys_claw, sys_LEDs),
+                new CloseClawInAuto(sys_claw, sys_LEDs),
 
                 // Drive to node
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(1))
@@ -68,10 +68,11 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                     ),
 
                 // Lineup using Limelight
-                new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75),
-                
-                // Place cone
-                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75)
+                .alongWith(
+                    // Place cone
+                    new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                )
         );
     }
 }
