@@ -123,7 +123,7 @@ public class RobotContainer {
     private SendableChooser<Command> sc_chooseAutoRoutine;
 
     private int rumbleTime = 0;
-    private boolean rumble = true;
+    private boolean rumble = false;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
