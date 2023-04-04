@@ -267,6 +267,10 @@ public class Limelight extends SubsystemBase {
         }
         lastRetroDistance = retroTargetDistance;
     }
+
+    public double getRetroDistance() {
+        return retroTargetDistance;
+    }
     
     @Override
     public void periodic() {
