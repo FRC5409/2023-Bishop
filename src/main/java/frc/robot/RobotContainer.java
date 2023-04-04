@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.List;
 import java.util.concurrent.locks.Condition;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -449,7 +451,8 @@ public class RobotContainer {
         // Run auto path, then stop and re-set ramp rate
         return chosenAutoRoutine
             .andThen(() -> sys_drivetrain.tankDriveVoltages(0, 0))
-            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate));
+            .andThen(() -> sys_drivetrain.rampRate(kDrivetrain.kDriveteam.rampRate))
+            .andThen(() -> sys_drivetrain.setNeutralMode(NeutralMode.Brake));
     }
 
     public void rumbleController(double value, int time) {

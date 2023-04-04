@@ -6,6 +6,7 @@ package frc.robot.commands.auto;
 
 import java.util.List;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,11 +51,12 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
 
                 new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
                 Commands.waitSeconds(0.5),
+                
 
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0))
                     .alongWith(
                         // Ready to grab cone
-                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kAutoGroundBack)
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack) // USE kAutoGroundBack IF GOING OVER CHARGET STATION
                     ),
 
                 new CloseClawInAuto(sys_claw, sys_LEDs),
@@ -67,11 +69,17 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                         new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
 
-                // Lineup using Limelight
-                new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75)
+                // Place cone
+                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
                 .alongWith(
-                    // Place cone
-                    new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw)
+                    // Lineup using Limelight
+                    new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain).withTimeout(0.75)
+                ),
+
+                // Drive to next location
+                new AutoPathPlanning(sys_drivetrain, pathGroup.get(2))
+                .alongWith(
+                    Commands.runOnce(() -> sys_drivetrain.setNeutralMode(NeutralMode.Coast))
                 )
         );
     }

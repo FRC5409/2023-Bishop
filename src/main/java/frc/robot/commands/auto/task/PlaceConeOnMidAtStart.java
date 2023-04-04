@@ -25,7 +25,7 @@ public class PlaceConeOnMidAtStart extends SequentialCommandGroup {
         addCommands(
                 new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)
                 .alongWith(
-                    Commands.waitSeconds(0.4).andThen(
+                    Commands.waitSeconds(0.3).andThen(
                     new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kToMid).withTimeout(1))
                 ),
                 Commands.waitSeconds(0.5),
