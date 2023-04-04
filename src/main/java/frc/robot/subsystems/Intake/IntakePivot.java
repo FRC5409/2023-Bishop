@@ -9,7 +9,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants.kIntake;
-import frc.robot.Constants.kIntake.kVoltageLimits;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -17,18 +16,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
-public class IntakePivot extends PIDSubsystem
-{
+public class IntakePivot extends PIDSubsystem {
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  boolean debugMode = false;
+  boolean debugMode = true;
   private ShuffleboardTab tab_intake;
   private GenericEntry kP, kI, kD, encPos;
 
-  public IntakePivot()
-  {
+  public IntakePivot() {
     super(new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD));
+
+    getController().setTolerance(kIntake.kPivotTolerance);
 
     motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
@@ -49,37 +48,28 @@ public class IntakePivot extends PIDSubsystem
   }
 
   @Override
-  public void useOutput(double output, double setpoint)
-  {
+  public void useOutput(double output, double setpoint) {
     
-    if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
-    {
+    if (output > kIntake.kVoltageLimits.kPivotVoltageLimit) {
       motor.setVoltage(kIntake.kVoltageLimits.kPivotVoltageLimit);
-    }
-    else if (output < -kIntake.kVoltageLimits.kPivotVoltageLimit)
-    {
+    } else if (output < -kIntake.kVoltageLimits.kPivotVoltageLimit) {
       motor.setVoltage(-kIntake.kVoltageLimits.kPivotVoltageLimit);
-    }
-    else
-    {
+    } else {
       motor.setVoltage(output);
     }
   }
 
   @Override
-  public double getMeasurement()
-  {
+  public double getMeasurement() {
     return encoder.getAbsolutePosition();
   }
 
-  public void pivotControl(double voltage)
-  {
+  public void pivotControl(double voltage) {
     motor.setVoltage(voltage);
   }
 
   @Override
-  public void periodic()
-  {
+  public void periodic() {
     super.periodic();
     if (debugMode) {
       encPos.setDouble(encoder.getAbsolutePosition());

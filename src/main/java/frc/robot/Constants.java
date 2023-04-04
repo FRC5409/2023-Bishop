@@ -320,7 +320,8 @@ public final class Constants {
             public final static double kToLoadingIntake         = 0;
 
             public final static double kToLoadingshoulder       = 0.672; // 38.5 inches
-            public final static double kToHandoff               = 0.0; //placeholder
+            public final static double kToHandoff               = 1.15;
+            public final static double kIntakeAim               = 1.175;
 
             public final static double kIdling                  = 0.96; // 48.5 inches
             public final static double kGroundPickupCube        = 1.19; // old 1.2 
@@ -388,7 +389,7 @@ public final class Constants {
         public static final int port_encPivot                   = 5;
         public static final int port_encWrist                   = 0;
 
-        public static final double kPivotP                      = 25; /* testing */
+        public static final double kPivotP                      = 25;
         public static final double kWristP                      = 20;
 
         public static final double kPivotI                      = 0.0; /* placeholder */
@@ -399,28 +400,33 @@ public final class Constants {
 
         public static final int kIntakeCurrentLimit             = 30;
 
-        public static final double kRollerInVolts               = 3.6;
-        public static final double kRollerReverseVolts          = -1;
+        public static final double kPivotTolerance              = 0.05;
+        public static final double kWristTolerance              = 0.05;
+
+        public static final double kRollerCaptureVolts          = 5;
+        public static final double kRollerGripVolts             = 1;
+        public static final double kRollerReleaseVolts          = -1.3;
+        public static final double kRollerReleaseTime           = 0.3;
 
         public static final class kSetpoints {
             public static final class kPivotSetpoints {
-                public static final double kPivotExtended       = 0.36;
-                public static final double kPivotHugging        = 0.17;
-                public static final double kPivotStoring        = 0.088;
-                public static final double kPivotTestA          = 0.13;
-                public static final double kPivotTestB          = 0.3;
+                public static final double kPivotDown           = 0.37;
+                public static final double kPivotPortal         = 0.22;
+                public static final double kPivotUpright        = 0.15;
+                public static final double kPivotInward         = 0.05;
             }
 
             public static final class kWristSetpoints {
-                public static final double kWristPickup         = 0.77;
-                public static final double kWristHandoff        = 0.41;
-                public static final double kWristStoring        = 0.0; /* placeholder */
+                public static final double kWristHover          = 0.77;
+                public static final double kWristFlat           = 0.733;
+                public static final double kWristHugging        = 0.47;
+                public static final double kWristFolded         = 0.44;
             }
         }
 
         public static final class kVoltageLimits {
-            public static final double kPivotVoltageLimit       = 6; /* testing */
-            public static final double kWristVoltageLimit       = 6;
+            public static final double kPivotVoltageLimit       = 6;
+            public static final double kWristVoltageLimit       = 4;
         }
     }
 

@@ -4,19 +4,20 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Intake.IntakePivot;
-import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
+import frc.robot.subsystems.Intake.IntakeWrist;
 
-public class IntakePickupSequence extends ParallelCommandGroup {
-  public IntakePickupSequence(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
+public class SubstationPickup extends SequentialCommandGroup {
+  public SubstationPickup(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
     addCommands(
-      new PivotMove(pivot, kPivotSetpoints.kPivotExtended),
-      new WristMove(wrist, kWristSetpoints.kWristPickup),
-      new RollerMove(roller, 3.6)
+      new PivotMove(pivot, kPivotSetpoints.kPivotPortal),
+      new WristMove(wrist, kWristSetpoints.kWristFlat),
+      new RollerMove(roller, kIntake.kRollerCaptureVolts)
     );
   }
 }

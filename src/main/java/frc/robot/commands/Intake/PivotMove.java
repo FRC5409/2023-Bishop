@@ -5,15 +5,14 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kIntake;
 import frc.robot.subsystems.Intake.IntakePivot;
 
-public class PivotMove extends CommandBase
-{
+public class PivotMove extends CommandBase {
   private final IntakePivot sys_intakePivot;
   private double setpoint;
 
-  public PivotMove(IntakePivot subsystem, double setpoint)
-  {
+  public PivotMove(IntakePivot subsystem, double setpoint) {
     sys_intakePivot = subsystem;
     this.setpoint = setpoint;
 
@@ -22,8 +21,7 @@ public class PivotMove extends CommandBase
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()
-  {
+  public void initialize() {
     sys_intakePivot.setSetpoint(setpoint);
     sys_intakePivot.enable();
   }
@@ -38,8 +36,7 @@ public class PivotMove extends CommandBase
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished()
-  {
-    return true;
+  public boolean isFinished() {
+    return sys_intakePivot.getController().atSetpoint();
   }
 }

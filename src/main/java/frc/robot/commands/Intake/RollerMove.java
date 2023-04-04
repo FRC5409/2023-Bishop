@@ -7,13 +7,11 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
-public class RollerMove extends CommandBase
-{
+public class RollerMove extends CommandBase {
   private final IntakeRoller sys_intakeRoller;
   private double voltage;
 
-  public RollerMove(IntakeRoller subsystem, double voltage)
-  {
+  public RollerMove(IntakeRoller subsystem, double voltage) {
     sys_intakeRoller = subsystem;
     this.voltage = voltage;
 
@@ -22,8 +20,7 @@ public class RollerMove extends CommandBase
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()
-  {
+  public void initialize() {
     sys_intakeRoller.rollerControl(voltage);
   }
 
@@ -40,8 +37,7 @@ public class RollerMove extends CommandBase
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished()
-  {
+  public boolean isFinished() {
     return false;
   }
 }

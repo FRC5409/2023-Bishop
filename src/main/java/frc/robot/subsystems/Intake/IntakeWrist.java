@@ -17,8 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
-public class IntakeWrist extends PIDSubsystem
-{
+public class IntakeWrist extends PIDSubsystem {
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
@@ -26,9 +25,10 @@ public class IntakeWrist extends PIDSubsystem
   private ShuffleboardTab tab_intake;
   private GenericEntry kP, kI, kD, encPos;
 
-  public IntakeWrist()
-  {
+  public IntakeWrist() {
     super(new PIDController(kIntake.kWristP, kIntake.kWristI, kIntake.kWristD));
+
+    getController().setTolerance(kIntake.kWristTolerance);
 
     motor = new CANSparkMax(kIntake.id_motWrist, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
@@ -50,50 +50,37 @@ public class IntakeWrist extends PIDSubsystem
   }
 
   @Override
-  public void useOutput(double output, double setpoint)
-  {
-
-    if (output > kIntake.kVoltageLimits.kWristVoltageLimit)
-    {
+  public void useOutput(double output, double setpoint) {
+    if (output > kIntake.kVoltageLimits.kWristVoltageLimit) {
       motor.setVoltage(kIntake.kVoltageLimits.kWristVoltageLimit);
-    }
-    else if (output < -kIntake.kVoltageLimits.kWristVoltageLimit)
-    {
+    } else if (output < -kIntake.kVoltageLimits.kWristVoltageLimit) {
       motor.setVoltage(-kIntake.kVoltageLimits.kWristVoltageLimit);
-    }
-    else
-    {
+    } else {
       motor.setVoltage(output);
     }
   }
+
   @Override
-  public double getMeasurement()
-  {
+  public double getMeasurement() {
     return getWristPos();
   }
 
-  public double getWristPos()
-  {
+  public double getWristPos() {
     double currPos = encoder.getAbsolutePosition();
 
-    if (currPos < 0.25)
-    {
+    if (currPos < 0.25) {
       return currPos + 1;
-    }
-    else
-    {
+    } else {
       return currPos;
     }
   }
 
-  public void wristControl(double speed)
-  {
+  public void wristControl(double speed) {
     motor.setVoltage(12 * speed);
   }
 
   @Override
-  public void periodic()
-  {
+  public void periodic() {
     super.periodic();
     if (debugMode) {
       encPos.setDouble(getWristPos());

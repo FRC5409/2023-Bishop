@@ -13,16 +13,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kIntake;
 
-public class IntakeRoller extends SubsystemBase
-{
+public class IntakeRoller extends SubsystemBase {
   private final WPI_TalonFX motor;
 
   boolean debugMode = false;
   private ShuffleboardTab tab_intake;
   private GenericEntry rollerSpeed;
 
-  public IntakeRoller()
-  {
+  public IntakeRoller() {
     motor = new WPI_TalonFX(kIntake.id_motRoller);
     motor.configFactoryDefault();
     motor.setNeutralMode(NeutralMode.Brake);
@@ -33,13 +31,11 @@ public class IntakeRoller extends SubsystemBase
     }
   }
 
-  public double getRollerSpeed()
-  {
+  public double getRollerSpeed() {
     return motor.getMotorOutputPercent();
   }
 
-  public void rollerControl(double voltage)
-  {
+  public void rollerControl(double voltage) {
     motor.setVoltage(voltage);
   }
 

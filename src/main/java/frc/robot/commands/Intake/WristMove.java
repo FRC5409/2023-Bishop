@@ -5,15 +5,14 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.kIntake;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
-public class WristMove extends CommandBase
-{
+public class WristMove extends CommandBase {
   private final IntakeWrist sys_intakeWrist;
   private double setpoint;
   
-  public WristMove(IntakeWrist subsystem, double setpoint)
-  {
+  public WristMove(IntakeWrist subsystem, double setpoint) {
     sys_intakeWrist = subsystem;
     this.setpoint = setpoint;
 
@@ -22,8 +21,7 @@ public class WristMove extends CommandBase
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()
-  {
+  public void initialize() {
     sys_intakeWrist.setSetpoint(setpoint);
     sys_intakeWrist.enable();
   }
@@ -38,8 +36,7 @@ public class WristMove extends CommandBase
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished()
-  {
-    return true;
+  public boolean isFinished() {
+    return sys_intakeWrist.getController().atSetpoint();
   }
 }

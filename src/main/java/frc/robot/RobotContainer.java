@@ -38,6 +38,7 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
+import frc.robot.Constants.kIntake.kSetpoints.kWristSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
@@ -46,9 +47,11 @@ import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.Drive.DefaultDrive;
 import frc.robot.commands.Drive.GearShift;
-import frc.robot.commands.Intake.IntakeHandoffSequence;
-import frc.robot.commands.Intake.IntakePickupSequence;
+import frc.robot.commands.Intake.GroundPickup;
+import frc.robot.commands.Intake.Handoff;
+import frc.robot.commands.Intake.HugCone;
 import frc.robot.commands.Intake.PivotMove;
+import frc.robot.commands.Intake.WristMove;
 import frc.robot.commands.Intake.Manual.PivotManualMove;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.arm.MoveAndRetract;
@@ -101,15 +104,12 @@ public class RobotContainer {
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
-    private final PivotManualMove cmd_pivotManualUp;
-    private final PivotManualMove cmd_pivotManualDown;
     private final ConeNodeAim cmd_coneNodeAim;
-    private final PivotMove cmd_pivotTestA;
-    private final PivotMove cmd_pivotTestB;
 
     // Sequential commands
-    private final IntakePickupSequence seq_intakePickup;
-    private final IntakeHandoffSequence seq_intakeHandoff;
+    private final GroundPickup seq_pickup;
+    private final HugCone seq_hugCone;
+    private final Handoff seq_handoff;
 
     // Gear shifting
     private final GearShift cmd_lowSpeed;
@@ -143,20 +143,17 @@ public class RobotContainer {
         // sys_limelight = new Limelight(joystickMain);
 
         // Sequential commands
-        seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
-        seq_intakeHandoff = new IntakeHandoffSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
+        seq_pickup = new GroundPickup(sys_intakePivot, sys_intakeWrist, sys_intakeRoller, sys_armPIDSubsystem);
+        seq_hugCone = new HugCone(sys_intakePivot, sys_intakeWrist, sys_armPIDSubsystem);
+        seq_handoff = new Handoff(sys_intakePivot, sys_intakeWrist, sys_intakeRoller, sys_armPIDSubsystem, sys_claw);
 
         // Commands
         cmd_defaultDrive = new DefaultDrive(sys_drivetrain, joystickMain);        
         cmd_lowSpeed = new GearShift(GearState.kSlow, sys_drivetrain);
         cmd_midSpeed = new GearShift(GearState.kDefault, sys_drivetrain);
         cmd_highSpeed = new GearShift(GearState.kBoost, sys_drivetrain);
-        cmd_pivotManualUp = new PivotManualMove(sys_intakePivot, 3);
-        cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
-        cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
-        cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -325,6 +322,10 @@ public class RobotContainer {
         joystickMain.povDown()
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+        
+        // Intake handoff
+        joystickMain.povRight()
+            .onTrue(seq_handoff);
 
         /*--------------------------------------------------------------------------------------*/
 
@@ -334,6 +335,13 @@ public class RobotContainer {
             
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+        
+        // Manually fold intake inward
+        joystickSecondary.povLeft()
+            .onTrue(Commands.parallel(
+                new WristMove(sys_intakeWrist, kWristSetpoints.kWristFolded),
+                new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotInward)
+            ));
         
         // Move arm and extend to place top cube position
         joystickSecondary.y()
@@ -371,6 +379,11 @@ public class RobotContainer {
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
+        
+        // Intake pickup
+        joystickSecondary.start()
+            .whileTrue(seq_pickup)
+            .onFalse(seq_hugCone);
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
