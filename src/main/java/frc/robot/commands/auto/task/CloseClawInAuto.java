@@ -1,5 +1,7 @@
 package frc.robot.commands.auto.task;
 
+import com.pathplanner.lib.PathPlanner;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -37,7 +39,7 @@ public class CloseClawInAuto extends SequentialCommandGroup {
 
         addCommands(
             new ParallelDeadlineGroup(
-                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1),
+                    new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(0.8),
                     cmdLED
                 )
         );
