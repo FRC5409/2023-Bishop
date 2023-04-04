@@ -46,7 +46,7 @@ public class DetectGamepiece extends CommandBase {
     public void initialize() {
         rumblingDone = false;
         if (sys_claw.getDistanceToFLeft() < threshhold || sys_claw.getDistanceToFRight() < threshhold) {
-            rumbleController(0.5, 40);
+            rumbleController(0.3, 6);
         } else {
             rumblingDone = true;
         }
