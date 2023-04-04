@@ -2,30 +2,28 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+package frc.robot.commands.tipper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.Constants.kConeTipper;
+import frc.robot.subsystems.ConeTipper;
 
-public class WristMove extends CommandBase
-{
-  private final IntakeWrist sys_intakeWrist;
+public class ConeTipperMove extends CommandBase {
+  private final ConeTipper sys_Tipper;
   private double setpoint;
-  
-  public WristMove(IntakeWrist subsystem, double setpoint)
-  {
-    sys_intakeWrist = subsystem;
+
+  public ConeTipperMove(ConeTipper subsystem, double setpoint) {
+    sys_Tipper = subsystem;
     this.setpoint = setpoint;
 
-    addRequirements(sys_intakeWrist);
+    addRequirements(sys_Tipper);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize()
-  {
-    sys_intakeWrist.setSetpoint(setpoint);
-    sys_intakeWrist.enable();
+  public void initialize() {
+    sys_Tipper.setSetpoint(setpoint);
+    sys_Tipper.enable();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,8 +36,7 @@ public class WristMove extends CommandBase
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished()
-  {
-    return true;
+  public boolean isFinished() {
+    return sys_Tipper.getController().atSetpoint();
   }
 }

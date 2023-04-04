@@ -2,48 +2,47 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.Intake;
+package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import frc.robot.Constants.kIntake;
-import frc.robot.Constants.kIntake.kVoltageLimits;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import frc.robot.Constants.kConeTipper;
 
-public class IntakePivot extends PIDSubsystem
+public class ConeTipper extends PIDSubsystem
 {
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;
 
-  boolean debugMode = false;
+  boolean debugMode = true;
   private ShuffleboardTab tab_intake;
   private GenericEntry kP, kI, kD, encPos;
 
-  public IntakePivot()
+  public ConeTipper()
   {
-    super(new PIDController(kIntake.kPivotP, kIntake.kPivotI, kIntake.kPivotD));
+    super(new PIDController(kConeTipper.kP, kConeTipper.kI, kConeTipper.kD));
 
-    motor = new CANSparkMax(kIntake.id_motPivot, MotorType.kBrushless);
+    motor = new CANSparkMax(kConeTipper.id_mot, MotorType.kBrushless);
     motor.restoreFactoryDefaults();
     motor.setIdleMode(IdleMode.kBrake);
-    motor.setSmartCurrentLimit(kIntake.kIntakeCurrentLimit);
+    motor.setSmartCurrentLimit(kConeTipper.kCurrentLimit);
     motor.setInverted(true);
     motor.burnFlash();
 
-    encoder = new DutyCycleEncoder(kIntake.port_encPivot);
+    encoder = new DutyCycleEncoder(kConeTipper.port_enc);
 
     if (debugMode) {
       tab_intake = Shuffleboard.getTab("Intake");
-      kP = tab_intake.add("kPivotP", kIntake.kPivotP).getEntry();
-      kI = tab_intake.add("kPivotI", kIntake.kPivotI).getEntry();
-      kD = tab_intake.add("kPivotD", kIntake.kPivotD).getEntry();
+      kP = tab_intake.add("kPivotP", kConeTipper.kP).getEntry();
+      kI = tab_intake.add("kPivotI", kConeTipper.kI).getEntry();
+      kD = tab_intake.add("kPivotD", kConeTipper.kD).getEntry();
       encPos = tab_intake.add("Pivot Abs Pos", getMeasurement()).getEntry();
     }
   }
@@ -52,13 +51,13 @@ public class IntakePivot extends PIDSubsystem
   public void useOutput(double output, double setpoint)
   {
     
-    if (output > kIntake.kVoltageLimits.kPivotVoltageLimit)
+    if (output > kConeTipper.kVoltageLimit)
     {
-      motor.setVoltage(kIntake.kVoltageLimits.kPivotVoltageLimit);
+      motor.setVoltage(kConeTipper.kVoltageLimit);
     }
-    else if (output < -kIntake.kVoltageLimits.kPivotVoltageLimit)
+    else if (output < -kConeTipper.kVoltageLimit)
     {
-      motor.setVoltage(-kIntake.kVoltageLimits.kPivotVoltageLimit);
+      motor.setVoltage(-kConeTipper.kVoltageLimit);
     }
     else
     {
