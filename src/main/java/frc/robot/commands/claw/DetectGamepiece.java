@@ -12,11 +12,13 @@ public class DetectGamepiece extends CommandBase {
     private int rumbleTime = -1;
     private boolean rumblingDone;
     private CommandXboxController joystickMain;
+    private CommandXboxController joystickSecondary;
 
-    public DetectGamepiece(NewClaw subsystem, int threshhold, CommandXboxController joystick) {
+    public DetectGamepiece(NewClaw subsystem, int threshhold, CommandXboxController joystickMain, CommandXboxController joystickSecondary) {
         sys_claw = subsystem;
         this.threshhold = threshhold;
-        joystickMain = joystick;
+        this.joystickMain = joystickMain;
+        this.joystickSecondary = joystickSecondary;
         rumblingDone = false;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(sys_claw);
@@ -26,11 +28,13 @@ public class DetectGamepiece extends CommandBase {
     public void rumbleController(double value, int time) {
         rumbleTime = time;
         joystickMain.getHID().setRumble(RumbleType.kBothRumble, value);
+        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, value);
     }
 
     public void updateRumble() {
         if (rumbleTime == 0) {
             joystickMain.getHID().setRumble(RumbleType.kBothRumble, 0);
+            joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, 0);
             rumbleTime = -1;
             rumblingDone = true;
         } else {
