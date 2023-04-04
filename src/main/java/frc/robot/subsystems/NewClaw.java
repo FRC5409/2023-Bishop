@@ -147,6 +147,32 @@ public void setPID(double p, double i, double d) {
   public double rollingToFAvg(TimeOfFlight s_tof) {
     int currentDist = (int) s_tof.getRange();
 
+    if (indexCount > 5) {
+      indexCount = 0;
+    }
+
+    if (currentDist > 2) {
+      lastToFValues[indexCount] = currentDist;
+    }
+    
+    int sum = 0;
+    for (double value : lastToFValues) {
+      sum += value;
+    }
+    
+    int avg = sum/5;
+
+    if (avg > 300) {
+      avg = 300;
+    }
+
+    indexCount++;
+    return avg;
+  }
+
+  public double rollingToFGroundAvg(TimeOfFlight s_tof) {
+    int currentDist = (int) s_tof.getRange();
+
     if (indexCount > 1) {
       indexCount = 0;
     }

@@ -12,10 +12,14 @@ public class AutoCloseClaw extends CommandBase {
     private boolean finished = false;
     private int closeDistance;
 
-    public AutoCloseClaw(NewClaw claw, double setpoint, int closeDistance) {
+    private boolean groundPickup = false;
+
+    public AutoCloseClaw(NewClaw claw, double setpoint, int closeDistance, boolean groundPickup) {
         m_claw = claw;
         this.setpoint = setpoint;
         this.closeDistance = closeDistance;
+
+        this.groundPickup = groundPickup;
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_claw);   
     }
@@ -29,14 +33,26 @@ public class AutoCloseClaw extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (m_claw.rollingToFAvg(m_claw.getLeftToF()) <= closeDistance) {
-            m_claw.setSetpoint(setpoint);
-            m_claw.enable();
-            finished = true;
-        } else if (m_claw.rollingToFAvg(m_claw.getRightToF()) <= closeDistance) {
-            m_claw.setSetpoint(setpoint);
-            m_claw.enable();
-            finished = true;
+        if (groundPickup)
+            if (m_claw.rollingToFGroundAvg(m_claw.getLeftToF()) <= closeDistance) {
+                m_claw.setSetpoint(setpoint);
+                m_claw.enable();
+                finished = true;
+            } else if (m_claw.rollingToFGroundAvg(m_claw.getRightToF()) <= closeDistance) {
+                m_claw.setSetpoint(setpoint);
+                m_claw.enable();
+                finished = true;
+            }
+        else {
+            if (m_claw.rollingToFAvg(m_claw.getLeftToF()) <= closeDistance) {
+                m_claw.setSetpoint(setpoint);
+                m_claw.enable();
+                finished = true;
+            } else if (m_claw.rollingToFAvg(m_claw.getRightToF()) <= closeDistance) {
+                m_claw.setSetpoint(setpoint);
+                m_claw.enable();
+                finished = true;
+            }
         }
     }
 
