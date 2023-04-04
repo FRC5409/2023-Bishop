@@ -28,7 +28,7 @@ public class DetectGamepiece extends CommandBase {
     public void rumbleController(double value, int time) {
         rumbleTime = time;
         joystickMain.getHID().setRumble(RumbleType.kBothRumble, value);
-        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, value);
+        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, 0.8);
     }
 
     public void updateRumble() {

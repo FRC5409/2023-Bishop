@@ -274,16 +274,15 @@ public class RobotContainer {
                     )
                 )
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
-                .andThen(
-                    new ConditionalCommand(
-                        new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
-                        new WaitCommand(0), 
-                        () -> rumble))
-            )
-            .onFalse(
-                new SequentialCommandGroup(
-                    new InstantCommand(() -> sys_claw.disable()),
-                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
+                .onFalse(
+                    new SequentialCommandGroup(
+                        new ConditionalCommand(
+                            new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
+                            new WaitCommand(0), 
+                            () -> rumble),
+                        new InstantCommand(() -> sys_claw.disable()),
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
             );
 
@@ -299,15 +298,16 @@ public class RobotContainer {
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
                 )
-                .andThen(
-                    new ConditionalCommand(
-                        new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
-                        new WaitCommand(0), 
-                        () -> rumble)
-                )
             )
             .onFalse(
                 new SequentialCommandGroup(
+                    new ConditionalCommand(
+                        new ConditionalCommand(
+                            new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
+                            new WaitCommand(0), 
+                            () -> !sys_claw.getController().atSetpoint()), 
+                        new WaitCommand(0), 
+                        () -> rumble),
                     new InstantCommand(() -> sys_claw.disable()),
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
