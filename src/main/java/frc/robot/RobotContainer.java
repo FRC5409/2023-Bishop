@@ -420,6 +420,17 @@ public class RobotContainer {
                 )
             );
 
+            joystickSecondary.start()
+                .onTrue(Commands.runOnce(
+                    () -> sys_candle.setAnimation(
+                        AnimationTypes.Static,
+                        255,
+                        0,
+                        0
+                    )
+                )
+            );
+
         // joystickSecondary.start()
         //     .onTrue(
         //         new RotateArmGroup(
