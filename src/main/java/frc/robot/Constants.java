@@ -440,8 +440,8 @@ public final class Constants {
         public static final class KretroTarget {
             public static final boolean retroDistanceDebug      = false; 
             public static final double lowNodeHeight            = 60.14; //cm
-            public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22};
-            public static final double[] highNodeCrop           = {-1, 1, 0.22, 1}; 
+            public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22}; // x, x, y, y
+            public static final double[] highNodeCrop           = {-1, 1, 0.25, 1}; // x, x, y, y
         }
 
         public static class kConeNodeAim {
