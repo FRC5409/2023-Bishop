@@ -445,6 +445,9 @@ public final class Constants {
         }
 
         public static class kConeNodeAim {
+            public static final boolean KdoTargetOffset         = true;
+            public static final double KlowNodeOffset           = -0.11;
+            public static final double KhighNodeOffset          = -0.12;
             public static final double KretroTargetFF           = 0.265;
             public static final double KretroTargetTolerance    = 0.015 ;
             public static final double kP                       = 0.01; //.22

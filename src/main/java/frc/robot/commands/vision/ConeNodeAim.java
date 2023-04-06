@@ -85,10 +85,18 @@ public class ConeNodeAim extends CommandBase {
     @Override
     public void execute() {
         calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
+
         if (m_joystick != null)
             xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
         else xSpeed = 0;
         setTargetMode();
+
+        //Updating the offset if dynamic offset is enabled
+        if (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended && kLimelight.kConeNodeAim.KdoTargetOffset){
+            calculatedOutput += kLimelight.kConeNodeAim.KhighNodeOffset;
+        } else if (kLimelight.kConeNodeAim.KdoTargetOffset) {
+            calculatedOutput += kLimelight.kConeNodeAim.KlowNodeOffset;
+        }
 
         //Applying feat forward and tolerance
         if (calculatedOutput >= Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
@@ -102,34 +110,6 @@ public class ConeNodeAim extends CommandBase {
         if (Constants.kLimelight.kConeNodeAim.debugMode){
             System.out.println(calculatedOutput);
         }
-
-
-        /*
-         * Older code:
-         * dir = sys_limelightR.getXOffset() / Math.abs(sys_limelightR.getXOffset());
-         * dir returns -1 or 1 depending on if it's positive or if it's negative
-         * 
-         * Since the X Offset keeps decreasing, the turning speed will decrease
-         * turning = dir * Constants.kDrivetrain.kCNodeTargetSpeed;
-         */
-
-         /* if (!sys_limelight.isVisible()) {
-            dirInRad = sys_limelight.getTurningDir() * (Math.PI / 180); // dir on the controller converted to radians
-            sys_drivetrain.arcadeDrive(xSpeed, m_joystick.getLeftX()); // Lets the driver drive around
-        } else {
-            dirInRad = sys_limelight.getXOffset() * (Math.PI / 180);
-            sys_drivetrain.arcadeDrive(xSpeed, (-turning));
-        }
-
-        if (dirInRad != 0) {
-            turning = (Math.pow(Math.E, (Math.abs(dirInRad))) - 1);
-            if (turning < kLimelight.KretroTargetFF) {
-                turning = kLimelight.KretroTargetFF;
-            }
-            turning *= ((Math.abs(dirInRad) / dirInRad));
-        } */
-        // System.out.println("Turn Rate: " + turning);
-        // System.out.println("Executed");
     }
 
     // Called once the command ends or is interrupted.
@@ -137,7 +117,6 @@ public class ConeNodeAim extends CommandBase {
     public void end(boolean interrupted) {
         sys_drivetrain.arcadeDrive(0, 0);
         sys_limelight.turnOff();
-        // System.out.println("Ended");
     }
 
     // Returns true when the command should end.
