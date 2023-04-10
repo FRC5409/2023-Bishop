@@ -5,17 +5,13 @@
 package frc.robot;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -32,7 +28,6 @@ import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
-import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
@@ -163,6 +158,12 @@ public class RobotContainer {
 
         // Add auto routines to Shuffleboard
         sb_driveteam = Shuffleboard.getTab("Drive team");
+
+        //putting camera format on shuffleboard
+        sb_driveteam.addInteger("Camera FPS", () -> 10).withPosition(0, 3);
+        sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(1, 3);
+        sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(2, 3);
+
         addAutoRoutinesToShuffleboard();
 
         // Camera
@@ -391,14 +392,10 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cone[0],
                     kCANdle.kColors.cone[1],
-                    kCANdle.kColors.cone[2],
-                    LEDColorType.Cone
+                    kCANdle.kColors.cone[2]
                 )
-            ).alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(0.05),
+            ).andThen(
                     new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                    )
                 )
             );
 
@@ -409,14 +406,10 @@ public class RobotContainer {
                     AnimationTypes.Static,
                     kCANdle.kColors.cube[0],
                     kCANdle.kColors.cube[1],
-                    kCANdle.kColors.cube[2],
-                    LEDColorType.Cube
+                    kCANdle.kColors.cube[2]
                 )
-            ).alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(0.05),
+            ).andThen(
                     new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                    )
                 )
             );
 
@@ -425,20 +418,13 @@ public class RobotContainer {
                     () -> sys_candle.setAnimation(
                         AnimationTypes.Static,
                         255,
-                        0,
-                        0
+                        107,
+                        169
                     )
+                ).andThen(
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
                 )
             );
-
-        // joystickSecondary.start()
-        //     .onTrue(
-        //         new RotateArmGroup(
-        //             sys_telescope, 
-        //             sys_armPIDSubsystem, 
-        //             kArmSubsystem.kSetpoints.kToLoadingRamp
-        //         )
-        //     );
                    
     }
 
