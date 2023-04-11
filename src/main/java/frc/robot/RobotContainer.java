@@ -276,8 +276,8 @@ public class RobotContainer {
                     )
                 )
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
-                .andThen(new WaitCommand(1))
-                .andThen(new DetectGamepiece(sys_claw, rumbleTime, joystickMain, joystickSecondary))
+                .andThen(new WaitCommand(0.4))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -293,11 +293,13 @@ public class RobotContainer {
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
-                        .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
                         new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        )
                     )
-                )
+                .andThen(new WaitCommand(0.5))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
             )
             .onFalse(
                 new SequentialCommandGroup(

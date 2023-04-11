@@ -3,20 +3,21 @@ package frc.robot.commands.claw;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.kClaw;
 import frc.robot.subsystems.NewClaw;
 
 public class DetectGamepiece extends CommandBase {
 
     private final NewClaw sys_claw;
-    private int threshhold;
     private int rumbleTime = -1;
     private boolean rumblingDone;
     private CommandXboxController joystickMain;
     private CommandXboxController joystickSecondary;
+    private boolean cube;
 
-    public DetectGamepiece(NewClaw subsystem, int threshhold, CommandXboxController joystickMain, CommandXboxController joystickSecondary) {
+    public DetectGamepiece(NewClaw subsystem, CommandXboxController joystickMain, CommandXboxController joystickSecondary, boolean cube) {
         sys_claw = subsystem;
-        this.threshhold = threshhold;
+        this.cube = cube;
         this.joystickMain = joystickMain;
         this.joystickSecondary = joystickSecondary;
         rumblingDone = false;
@@ -28,7 +29,12 @@ public class DetectGamepiece extends CommandBase {
     public void rumbleController(double value, int time) {
         rumbleTime = time;
         joystickMain.getHID().setRumble(RumbleType.kBothRumble, value);
-        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, 0.8);
+        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, 1.0);
+    }
+
+    public void stopRumble() {
+        joystickMain.getHID().setRumble(RumbleType.kBothRumble, 0);
+        joystickSecondary.getHID().setRumble(RumbleType.kBothRumble, 0);
     }
 
     public void updateRumble() {
@@ -45,10 +51,18 @@ public class DetectGamepiece extends CommandBase {
     @Override
     public void initialize() {
         rumblingDone = false;
-        if (sys_claw.getDistanceToFLeft() < threshhold || sys_claw.getDistanceToFRight() < threshhold) {
-            rumbleController(0.3, 6);
+        if (cube) {
+            if ((sys_claw.getDistanceToFLeft() < kClaw.coneDistanceThreshold || sys_claw.getDistanceToFRight() < kClaw.coneDistanceThreshold) && !sys_claw.getController().atSetpoint()) {
+                rumbleController(0.5, 6);
+            } else {
+                rumblingDone = true;
+            }
         } else {
-            rumblingDone = true;
+            if ((sys_claw.getDistanceToFLeft() < kClaw.coneDistanceThreshold || sys_claw.getDistanceToFRight() < kClaw.coneDistanceThreshold) || !sys_claw.getController().atSetpoint()) {
+                rumbleController(0.3, 6);
+            } else {
+                rumblingDone = true;
+            }
         }
     }
 
@@ -61,7 +75,7 @@ public class DetectGamepiece extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        
+        stopRumble();
     }
 
     // Returns true when the command should end.
