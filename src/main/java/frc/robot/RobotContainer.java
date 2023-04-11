@@ -123,7 +123,6 @@ public class RobotContainer {
     private SendableChooser<Command> sc_chooseAutoRoutine;
 
     private int rumbleTime = 0;
-    private boolean rumble = false;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -190,10 +189,13 @@ public class RobotContainer {
         MJPEG 1920x1080 20FPS, YUY2 1920x1080 5FPS
         MJPEG 2048x1536 15FPS, YUY2 2048x1536 5FPS
          */
-        int[] cam_defaultRes = { 2048, 1536 };
-        int cam_width = (int)(cam_defaultRes[0] / 2);
-        int cam_height = (int)(cam_defaultRes[1] / 2);
-        int cam_fps = 15;
+        // int[] cam_defaultRes = { 2048, 1536 };
+        // int cam_width = (int)(cam_defaultRes[0] / 2);
+        // int cam_height = (int)(cam_defaultRes[1] / 2);
+        int cam_fps = 10;
+
+        int cam_width = 1024;
+        int cam_height = 768;
 
         // System.out.println(sys_camera.getVideoMode().width);
         // System.out.println(sys_camera.getVideoMode().height);
@@ -274,15 +276,13 @@ public class RobotContainer {
                     )
                 )
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
-                )
-                .onFalse(
-                    new SequentialCommandGroup(
-                        new ConditionalCommand(
-                            new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
-                            new WaitCommand(0), 
-                            () -> rumble),
-                        new InstantCommand(() -> sys_claw.disable()),
-                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                .andThen(new WaitCommand(1))
+                .andThen(new DetectGamepiece(sys_claw, rumbleTime, joystickMain, joystickSecondary))
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
             );
 
@@ -301,13 +301,6 @@ public class RobotContainer {
             )
             .onFalse(
                 new SequentialCommandGroup(
-                    new ConditionalCommand(
-                        new ConditionalCommand(
-                            new DetectGamepiece(sys_claw, kClaw.coneDistanceThreshold, joystickMain, joystickSecondary), 
-                            new WaitCommand(0), 
-                            () -> !sys_claw.getController().atSetpoint()), 
-                        new WaitCommand(0), 
-                        () -> rumble),
                     new InstantCommand(() -> sys_claw.disable()),
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
@@ -430,6 +423,17 @@ public class RobotContainer {
                 new SequentialCommandGroup(
                     new WaitCommand(0.05),
                     new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
+
+            joystickSecondary.start()
+                .onTrue(Commands.runOnce(
+                    () -> sys_candle.setAnimation(
+                        AnimationTypes.Static,
+                        255,
+                        0,
+                        0
                     )
                 )
             );
