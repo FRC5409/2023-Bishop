@@ -326,6 +326,11 @@ public class RobotContainer {
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
         
+        // Intake pickup
+        joystickMain.povLeft()
+            .whileTrue(seq_pickup)
+            .onFalse(seq_hugCone);
+        
         // Intake handoff
         joystickMain.povRight()
             .onTrue(seq_handoff);
