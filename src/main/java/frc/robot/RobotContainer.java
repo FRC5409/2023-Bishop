@@ -160,9 +160,9 @@ public class RobotContainer {
         sb_driveteam = Shuffleboard.getTab("Drive team");
 
         //putting camera format on shuffleboard
-        sb_driveteam.addInteger("Camera FPS", () -> 10).withPosition(0, 3);
-        sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(1, 3);
-        sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(2, 3);
+        sb_driveteam.addInteger("Camera FPS", () -> 10).withPosition(1, 3);
+        sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(2, 3);
+        sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(3, 3);
 
         addAutoRoutinesToShuffleboard();
 

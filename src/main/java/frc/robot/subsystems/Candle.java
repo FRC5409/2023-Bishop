@@ -372,12 +372,19 @@ public class Candle extends SubsystemBase {
      */
 
     public void idleAnimation() {
-      if (DriverStation.getAlliance() == Alliance.Red) {
-        setAnimation(AnimationTypes.SinWave, 150, 0, 0);
-      } else {
+      Alliance currentAlliance = DriverStation.getAlliance();
+      if (currentAlliance == Alliance.Red) {
+        setAnimation(AnimationTypes.SinWave, 200, 0, 0);
+      } else if (currentAlliance == Alliance.Blue) {
         setAnimation(AnimationTypes.SinWave, 0, 0, 255);
+      } else {
+        setAnimation(AnimationTypes.SinWave, 0, 0, 0);
       }
       // setAnimation(AnimationTypes.Static, 255, 155, 0);
+    }
+
+    public void FMSAnimation() {
+      setAnimation(AnimationTypes.Static, 0, 0, 0);
     }
 
     /**
