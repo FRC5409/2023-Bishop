@@ -188,10 +188,13 @@ public class RobotContainer {
         MJPEG 1920x1080 20FPS, YUY2 1920x1080 5FPS
         MJPEG 2048x1536 15FPS, YUY2 2048x1536 5FPS
          */
-        int[] cam_defaultRes = { 2048, 1536 };
-        int cam_width = (int)(cam_defaultRes[0] / 2);
-        int cam_height = (int)(cam_defaultRes[1] / 2);
-        int cam_fps = 15;
+        // int[] cam_defaultRes = { 2048, 1536 };
+        // int cam_width = (int)(cam_defaultRes[0] / 2);
+        // int cam_height = (int)(cam_defaultRes[1] / 2);
+        int cam_fps = 10;
+
+        int cam_width = 1024;
+        int cam_height = 768;
 
         // System.out.println(sys_camera.getVideoMode().width);
         // System.out.println(sys_camera.getVideoMode().height);
