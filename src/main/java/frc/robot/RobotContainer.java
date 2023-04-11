@@ -379,11 +379,6 @@ public class RobotContainer {
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
-        
-        // Intake pickup
-        joystickSecondary.start()
-            .whileTrue(seq_pickup)
-            .onFalse(seq_hugCone);
                     
         // Manual arm movement
         joystickSecondary.rightTrigger()
