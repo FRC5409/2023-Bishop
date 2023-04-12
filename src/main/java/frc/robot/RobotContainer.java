@@ -263,11 +263,6 @@ public class RobotContainer {
       */
     private void configureBindings() {
 
-        // Stall motors on charge station
-        joystickMain.start()
-            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
-            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
-
         // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
@@ -334,6 +329,11 @@ public class RobotContainer {
         joystickMain.povDown()
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+
+        // Stall motors on charge station
+        joystickMain.start()
+            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
+            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
 
         /*--------------------------------------------------------------------------------------*/
 
