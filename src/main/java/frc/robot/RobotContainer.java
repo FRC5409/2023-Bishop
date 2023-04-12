@@ -39,6 +39,7 @@ import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
+import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.Drive.DefaultDrive;
 import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
@@ -53,7 +54,9 @@ import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.ConePlacePickupPlaceAuto;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
+import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
+import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
@@ -275,6 +278,8 @@ public class RobotContainer {
                     )
                 )
                 .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                .andThen(new WaitCommand(0.4))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -290,11 +295,13 @@ public class RobotContainer {
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
-                        .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
                         new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        )
                     )
-                )
+                .andThen(new WaitCommand(0.5))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -329,6 +336,11 @@ public class RobotContainer {
         joystickMain.povDown()
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+
+        // Stall motors on charge station
+        joystickMain.start()
+            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
+            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
 
         /*--------------------------------------------------------------------------------------*/
 
