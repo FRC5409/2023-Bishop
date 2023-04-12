@@ -1,11 +1,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.kBalancing;
 import frc.robot.Constants.kStallDriveOnChargeStation;
 import frc.robot.subsystems.Drivetrain;
 
+/**
+ * This command will stall the robot's drive motors
+ * on the charge station, when the robot is on an angle.
+ */
 public class StallDriveOnChargeStation extends CommandBase {
 
     private final Drivetrain m_drivetrain;
