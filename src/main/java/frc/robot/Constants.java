@@ -283,6 +283,11 @@ public final class Constants {
             EStopped,
             EndGame
         }
+
+        public enum LEDColorType {
+            Cone,
+            Cube
+        }
     }
 
     public static class kArmSubsystem {

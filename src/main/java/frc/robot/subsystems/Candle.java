@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kCANdle;
 import frc.robot.Constants.kCANdle.AnimationTypes;
+import frc.robot.Constants.kCANdle.LEDColorType;
 import frc.robot.Constants.kCANdle.kColors;
 
 public class Candle extends SubsystemBase {
@@ -29,6 +30,8 @@ public class Candle extends SubsystemBase {
 
     private int currentChargeLocation = 0;
     private int maxCharge = 0;
+
+    private LEDColorType currentColor;
 
     public Candle() {
         candle = new CANdle(kCANdle.kConfig.CANID);
@@ -72,6 +75,20 @@ public class Candle extends SubsystemBase {
         lastLEDColors[i][2] = b;
       }
       candle.setLEDs(r, g, b);
+    }
+
+    /**
+     * Sets the current animation playing and clears the LEDs
+     * @param animationType The animation you want to play
+     * @param r : 0 - 255
+     * @param g : Green 0 - 255
+     * @param b : Blue 0  - 255
+     * @param type the cube or cone type
+     */
+
+     public void setAnimation(AnimationTypes animationType, int r, int g, int b, LEDColorType type) {
+      currentColor = type;
+      setAnimation(animationType, r, g, b);
     }
 
     /**
@@ -345,11 +362,15 @@ public class Candle extends SubsystemBase {
 
     public int[] getRGBColors() {
       int[] rgb = {
-        LEDColors[0][0],
-        LEDColors[0][1],
-        LEDColors[0][2]
+        lastLEDColors[9][0],
+        lastLEDColors[9][1],
+        lastLEDColors[9][2]
       };
       return rgb;
+    }
+
+    public LEDColorType getLEDType() {
+      return currentColor;
     }
 
     /**
@@ -373,14 +394,13 @@ public class Candle extends SubsystemBase {
 
     public void idleAnimation() {
       Alliance currentAlliance = DriverStation.getAlliance();
-      if (currentAlliance == Alliance.Red) {
+      if (!DriverStation.isDSAttached()) {
+        setAnimation(AnimationTypes.SinWave, 0, 0, 0);
+      } else if (currentAlliance == Alliance.Red) {
         setAnimation(AnimationTypes.SinWave, 200, 0, 0);
       } else if (currentAlliance == Alliance.Blue) {
         setAnimation(AnimationTypes.SinWave, 0, 0, 255);
-      } else {
-        setAnimation(AnimationTypes.SinWave, 0, 0, 0);
       }
-      // setAnimation(AnimationTypes.Static, 255, 155, 0);
     }
 
     public void FMSAnimation() {
