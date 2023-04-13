@@ -241,33 +241,29 @@ public class Limelight extends SubsystemBase {
     }
 
     public double getTargetDistance() {
-        return 0;
+        return targetDistance;
     }
 
-    public void updateRetroDistance() {
+    public void updateTargetDistance() {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
         double realTargetAngleRadians = realTargetAngle * (3.14159 / 180.0); //converting angle to radians
         
         if (cameraTargetAngle != 0){ //prone to error if retro is direectly in line
-            retroTargetDistance = (Constants.kLimelight.KretroTarget.lowNodeHeight - Constants.kLimelight.heightOffFloor)/Math.tan(realTargetAngleRadians); 
+            retroTargetDistance = (Constants.kLimelight.KAutoDriveAlign.lowNodeHeight - Constants.kLimelight.heightOffFloor)/Math.tan(realTargetAngleRadians); 
         } else  { 
             retroTargetDistance = 0;
-            if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                    System.out.println("No-RetroTarget");
-                }
+            if (Constants.kLimelight.KAutoDriveAlign.debugMode){
+                System.out.println("No-RetroTarget");
             }
         }
 
-        if (kLimelight.doShuffleboard){
-            //Pushing readings to shuffleboard
-            if (retroTargetDistance != lastRetroDistance){
-                if (Constants.kLimelight.KretroTarget.retroDistanceDebug){
-                    // System.out.printf("[Update] Retro-Distance:");
-                }
-                retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
+        //Pushing readings to shuffleboard
+        if (retroTargetDistance != lastRetroDistance){
+            if (Constants.kLimelight.KAutoDriveAlign.debugMode){
+                System.out.printf("[Update] Retro-Distance:");
             }
+            retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
         }
         lastRetroDistance = retroTargetDistance;
     }
@@ -275,6 +271,6 @@ public class Limelight extends SubsystemBase {
     @Override
     public void periodic() {
         updateRobotPosition();
-        updateRetroDistance();
+        updateTargetDistance();
     }
 }
