@@ -460,6 +460,15 @@ public final class Constants {
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
         }
+
+        public static class KAutoDriveAlign {
+            public static final double kP                       = 0.01;
+            public static final double kI                       = 0.0001;
+            public static final double kD                       = 0.0005;
+            public static final double driveFF                  = 0.265;    //TO BE TUNED
+            public static final double driveTolerance           = 2;        //cm
+            public static final boolean debugMode               = false; 
+        }
     }
 
     public static final class kStallDriveOnChargeStation {

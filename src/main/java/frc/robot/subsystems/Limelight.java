@@ -240,6 +240,10 @@ public class Limelight extends SubsystemBase {
         ;    
     }
 
+    public double getTargetDistance() {
+        return 0;
+    }
+
     public void updateRetroDistance() {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
