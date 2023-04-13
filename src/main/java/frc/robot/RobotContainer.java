@@ -59,6 +59,7 @@ import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.vision.ConeNodeAim;
+import frc.robot.commands.AutoDriveAlign;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
@@ -84,6 +85,7 @@ public class RobotContainer {
     // Driver controllers
     private final CommandXboxController joystickMain;
     private final CommandXboxController joystickSecondary;
+    private final CommandXboxController joystickTesting;
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
@@ -103,6 +105,7 @@ public class RobotContainer {
     private final PivotManualMove cmd_pivotManualUp;
     private final PivotManualMove cmd_pivotManualDown;
     private final ConeNodeAim cmd_coneNodeAim;
+    private final AutoDriveAlign cmd_autoDriveAlign;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
 
@@ -129,6 +132,7 @@ public class RobotContainer {
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
+        joystickTesting = new CommandXboxController(kOperator.port_joystickTesting);
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
@@ -154,6 +158,7 @@ public class RobotContainer {
         cmd_pivotManualDown = new PivotManualMove(sys_intakePivot, -3);
         sys_limelight = new Limelight(joystickMain);
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
+        cmd_autoDriveAlign = new AutoDriveAlign(sys_limelight, sys_drivetrain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
@@ -461,7 +466,12 @@ public class RobotContainer {
                     )
                 )
             );
-            
+        
+        /*-------------------------------------------------------------- */
+        joystickTesting.rightBumper()
+                .whileTrue(cmd_autoDriveAlign);
+        joystickTesting.leftBumper()
+                .whileTrue(cmd_coneNodeAim);
                    
     }
 
