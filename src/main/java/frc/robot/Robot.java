@@ -6,15 +6,16 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
-import frc.robot.Constants.kCANdle.AnimationTypes;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
   private int LEDState = 0;
 
   private Alliance currentAlliance; 
+  private boolean connected;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -48,6 +50,7 @@ public class Robot extends TimedRobot {
     LEDState = 0;
 
     currentAlliance = DriverStation.getAlliance();
+    connected = false;
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
@@ -105,9 +108,10 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     if (LEDState == 1 || LEDState == 0) {
       Alliance alliance = DriverStation.getAlliance();
-      if (alliance != currentAlliance) {
+      if (alliance != currentAlliance || DriverStation.isDSAttached() != connected) {
         m_robotContainer.sys_candle.idleAnimation();
         currentAlliance = alliance;
+        connected = DriverStation.isDSAttached();
       }
     }
   }

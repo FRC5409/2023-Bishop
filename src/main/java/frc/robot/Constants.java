@@ -33,7 +33,7 @@ public final class Constants {
 
     public static final class kCANBus {
         public static final String bus_rio                      = "rio";
-        public static final String bus_drive                    = "drive";
+        public static final String bus_drive                    = "rio";
     }
 
     public static final class kDrivetrain {
@@ -118,11 +118,12 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                       = 29;
+        public static final int clawCANID                       = 39;
 
         public static final int dutyCycleChannel                = 3;
 
-        public static final int ToFCANID                        = 36;
+        public static final int LEFT_ToFCANID                   = 36;
+        public static final int RIGHT_ToFCANID                  = 37;
 
         public static final int currentLimit                    = 20;
 
@@ -132,11 +133,13 @@ public final class Constants {
 
         public static final double openPosition                 = 0.77; // old 0.77
         public static final double armedOpenPosition            = 0.67; // old 0.77
+        public static final double armedDoublePosition          = 0.6;
         public static final double coneClosePosition            = 0.54;
         public static final double cubeClosePosition            = 0.585;
 
-        public static final int coneDistanceThreshold           = 195; // old 160
-        public static final int cubeDistanceThreshold           = 60;
+        public static final int coneDistanceThreshold           = 160; // old 160
+        public static final int cubeDistanceThreshold           = 130;
+        public static final int doubleDistanceThreshold         = 220;
         
         public static final int stallTime                       = 40;
 
@@ -198,11 +201,15 @@ public final class Constants {
 
             public static final String PLACE_SIDE_and_leave_community_no_balance = "B2. PLACE SIDE and leave community, no balance";
 
+            public static final String CENTER_place_leave_community_and_balance = "B3. CENTER place, leave community, and balance";
+
             public static final String[] all = {
                 TURN_LEFT_place_and_balance,
                 TURN_RIGHT_place_and_balance,
+
+                PLACE_SIDE_and_leave_community_no_balance,
                 
-                PLACE_SIDE_and_leave_community_no_balance
+                CENTER_place_leave_community_and_balance
             };
         }
 
@@ -310,7 +317,7 @@ public final class Constants {
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
-            public final static double kConeAboveNew            = 0.64;  // 43.75 inches
+            public final static double kConeAboveNew            = 0.66;  // 43.75 inches
             public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
@@ -326,6 +333,7 @@ public final class Constants {
             public final static double kGroundPickupCube        = 1.19; // old 1.2 
             public final static double kGroundPickupCone        = 1.21; // old 1.2 
             public final static double kAutoDrivingWithCone     = 1.15;
+            public final static double kConeLow                 = 1.16;
 
             // setpoint of hardstop of shoulder side of robot: 0.513
             // measurement in inches is from the edge of the claw plate
@@ -340,7 +348,7 @@ public final class Constants {
         public static final double kCentemetreSafetyFactor      = 1.0;
 
         public static final class kDeviceID {
-            public static final int MOTOR_CAN_ID                = 24;
+            public static final int MOTOR_CAN_ID                = 38;
 
             public static final int MAX_LIMIT_SWITCH_ID         = 1;
             public static final int MIN_LIMIT_SWITCH_ID         = 2;
@@ -440,8 +448,8 @@ public final class Constants {
         public static final class KretroTarget {
             public static final boolean retroDistanceDebug      = false; 
             public static final double lowNodeHeight            = 60.14; //cm
-            public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22};
-            public static final double[] highNodeCrop           = {-1, 1, 0.22, 1}; 
+            public static final double[] lowNodeCrop            = {-1, 1, -1, 0.22}; // x, x, y, y
+            public static final double[] highNodeCrop           = {-1, 1, 0.25, 1}; // x, x, y, y
         }
 
         public static class kConeNodeAim {
@@ -449,12 +457,17 @@ public final class Constants {
             public static final double KlowNodeOffset           = -0.11;
             public static final double KhighNodeOffset          = -0.12;
             public static final double KretroTargetFF           = 0.265;
-            public static final double KretroTargetTolerance    = 0.015 ;
-            public static final double kP                       = 0.01; //.22
+            public static final double KretroTargetTolerance    = 0.3;
+            public static final double kP                       = 0.007; //.22
             public static final double kI                       = 0.0001;
-            public static final double kD                       = 0.0005;
+            public static final double kD                       = 0.0008;
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
         }
+    }
+
+    public static final class kStallDriveOnChargeStation {
+        public static final double kForwardSpeed = 0.345;
+        public static final double kBackwardSpeed = -0.34;
     }
 }

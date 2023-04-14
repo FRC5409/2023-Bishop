@@ -28,7 +28,7 @@ public class ConeNodeAim extends CommandBase {
 
     private final PIDController m_pidController;
 
-    double xSpeed, dirInRad, turning, calculatedOutput;
+    double dirInRad, turning;
     double[] lowNodeCrop, highNodeCrop;
 
     /** Creates a new ConeNodeAim. */
@@ -81,35 +81,43 @@ public class ConeNodeAim extends CommandBase {
         getShuffleboardPID();
     }
 
-    // Called every time the scheduler runs while the command is scheduled.
-    @Override
-    public void execute() {
-        calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
+    public double getTargetSpeed(){
+        double calculatedOutput = m_pidController.calculate(sys_limelight.getXOffset());
 
-        if (m_joystick != null)
-            xSpeed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();
-        else xSpeed = 0;
-        setTargetMode();
-
-        //Updating the offset if dynamic offset is enabled
-        if (sys_Telescope.getPrevPos() == Constants.kTelescope.kDestinations.kExtended && kLimelight.kConeNodeAim.KdoTargetOffset){
-            calculatedOutput += kLimelight.kConeNodeAim.KhighNodeOffset;
-        } else if (kLimelight.kConeNodeAim.KdoTargetOffset) {
-            calculatedOutput += kLimelight.kConeNodeAim.KlowNodeOffset;
-        }
-
-        //Applying feat forward and tolerance
-        if (calculatedOutput >= Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
+        if (calculatedOutput >= 0){
             calculatedOutput += Constants.kLimelight.kConeNodeAim.KretroTargetFF;
-        } else if (calculatedOutput < -Constants.kLimelight.kConeNodeAim.KretroTargetTolerance){
+        } else if (calculatedOutput < 0){
             calculatedOutput -= Constants.kLimelight.kConeNodeAim.KretroTargetFF;
         }
 
-        sys_drivetrain.autoTurnDrive(xSpeed, calculatedOutput);
+        if (m_pidController.atSetpoint()){
+            calculatedOutput = 0; 
+        }
 
+        //debugging
         if (Constants.kLimelight.kConeNodeAim.debugMode){
             System.out.println(calculatedOutput);
         }
+
+        return calculatedOutput;
+    }
+
+    public double getXSpeed(){
+        double speed;
+        if (m_joystick != null){
+            speed = m_joystick.getRightTriggerAxis() - m_joystick.getLeftTriggerAxis();   
+        } else {
+            speed = 0;
+        }
+
+        return speed;
+    }
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+        setTargetMode();
+        sys_drivetrain.autoTurnDrive(getXSpeed(), getTargetSpeed());
     }
 
     // Called once the command ends or is interrupted.
@@ -122,7 +130,6 @@ public class ConeNodeAim extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        // return (Math.abs(sys_limelight.getXOffset()) <= kLimelight.KretroTargetTolerance && sys_limelight.isVisible());
         return false;
     }
 }

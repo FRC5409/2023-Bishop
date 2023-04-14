@@ -4,7 +4,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.kBalancing;
 import frc.robot.Constants.kCANdle.AnimationTypes;
@@ -23,7 +22,7 @@ public class BalancingChargeStation extends PIDCommand {
     private static double kD = kBalancing.kD;
 
     // Shuffleboard
-    boolean debugMode = false;
+    boolean debugMode = false; // DO NOT ENABLE: currently causes errors; TODO: Fix debug mode
     private ShuffleboardTab sb_balancingTab;
     private GenericEntry nt_kP, nt_kI, nt_kD;
 
