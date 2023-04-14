@@ -5,17 +5,13 @@
 package frc.robot;
 
 import java.util.List;
-import java.util.concurrent.locks.Condition;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,6 +40,7 @@ import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.commands.claw.AutoCloseClaw;
+import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.Drive.DefaultDrive;
 import frc.robot.commands.Drive.GearShift;
 import frc.robot.commands.Intake.IntakeHandoffSequence;
@@ -58,7 +55,9 @@ import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.auto.ConePlacePickupPlaceAuto;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
+import frc.robot.commands.claw.AutoCloseClaw;
 import frc.robot.commands.claw.ClawMovement;
+import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
@@ -163,6 +162,12 @@ public class RobotContainer {
 
         // Add auto routines to Shuffleboard
         sb_driveteam = Shuffleboard.getTab("Drive team");
+
+        //putting camera format on shuffleboard
+        sb_driveteam.addInteger("Camera FPS", () -> 10).withPosition(0, 2);
+        sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(1, 2);
+        sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(2, 2);
+
         addAutoRoutinesToShuffleboard();
 
         // Camera
@@ -265,7 +270,11 @@ public class RobotContainer {
         // Auto-close claw for cone
         joystickMain.x()
             .whileTrue(
-                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+                new ConditionalCommand(
+                    new ClawMovement(sys_claw, kClaw.armedOpenPosition),
+                    new ClawMovement(sys_claw, kClaw.armedDoublePosition),
+                    () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                )
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
@@ -273,7 +282,15 @@ public class RobotContainer {
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
                     )
                 )
-                .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold))
+                .andThen(
+                    new ConditionalCommand(
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
+                        () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
+                    .andThen(new WaitCommand(0.4))
+                    .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
+                )
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -289,11 +306,13 @@ public class RobotContainer {
                 .andThen(
                     new ConditionalCommand(
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
-                        .andThen(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
                         new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
                         () -> sys_armPIDSubsystem.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        )
                     )
-                )
+                .andThen(new WaitCommand(0.5))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
             )
             .onFalse(
                 new SequentialCommandGroup(
@@ -329,6 +348,11 @@ public class RobotContainer {
             .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
+        // Stall motors on charge station
+        joystickMain.start()
+            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
+            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
+
         /*--------------------------------------------------------------------------------------*/
 
         // Manual telescope movement
@@ -349,6 +373,11 @@ public class RobotContainer {
         joystickSecondary.b()
             .onTrue(
                 new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
+            );
+        
+        joystickSecondary.x()
+            .onTrue(
+                new MoveAndRetract(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
             );
 
         // Move arm and retract to mid cube position
@@ -387,8 +416,7 @@ public class RobotContainer {
                 )
             );             
 
-        // Set LED to cone (yellow)
-        joystickSecondary.leftStick()
+            joystickSecondary.leftStick()
             .onTrue(Commands.runOnce(
                 () -> sys_candle.setAnimation(
                     AnimationTypes.Static,
@@ -433,15 +461,7 @@ public class RobotContainer {
                     )
                 )
             );
-
-        // joystickSecondary.start()
-        //     .onTrue(
-        //         new RotateArmGroup(
-        //             sys_telescope, 
-        //             sys_armPIDSubsystem, 
-        //             kArmSubsystem.kSetpoints.kToLoadingRamp
-        //         )
-        //     );
+            
                    
     }
 
