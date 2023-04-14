@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final class kCANBus {
         public static final String bus_rio                      = "rio";
-        public static final String bus_drive                    = "drive";
+        public static final String bus_drive                    = "rio";
     }
 
     public static final class kDrivetrain {
@@ -119,11 +119,12 @@ public final class Constants {
 
     public static final class kClaw {
 
-        public static final int clawCANID                       = 29;
+        public static final int clawCANID                       = 39;
 
         public static final int dutyCycleChannel                = 3;
 
-        public static final int ToFCANID                        = 36;
+        public static final int LEFT_ToFCANID                   = 36;
+        public static final int RIGHT_ToFCANID                  = 37;
 
         public static final int currentLimit                    = 20;
 
@@ -348,7 +349,7 @@ public final class Constants {
         public static final double kCentemetreSafetyFactor      = 1.0;
 
         public static final class kDeviceID {
-            public static final int MOTOR_CAN_ID                = 24;
+            public static final int MOTOR_CAN_ID                = 38;
 
             public static final int MAX_LIMIT_SWITCH_ID         = 1;
             public static final int MIN_LIMIT_SWITCH_ID         = 2;
@@ -452,11 +453,14 @@ public final class Constants {
         }
 
         public static class kConeNodeAim {
-            public static final double KretroTargetFF           = 0.265;
-            public static final double KretroTargetTolerance    = 0.015 ;
-            public static final double kP                       = 0.01; //.22
+            public static final boolean KdoTargetOffset         = true;
+            public static final double KlowNodeOffset           = 4.5;      //in degrees
+            public static final double KhighNodeOffset          = 3.5;      //in degres 
+            public static final double KretroTargetFF           = 0.275;    
+            public static final double KretroTargetTolerance    = 0.3;    
+            public static final double kP                       = 0.007;
             public static final double kI                       = 0.0001;
-            public static final double kD                       = 0.0005;
+            public static final double kD                       = 0.0008;
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
         }
