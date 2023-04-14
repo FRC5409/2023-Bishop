@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.playingwithfusion.TimeOfFlight;
 import com.playingwithfusion.TimeOfFlight.RangingMode;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.Constants;
-import frc.robot.Constants.kCANBus;
 import frc.robot.Constants.kClaw;
 
 public class NewClaw extends PIDSubsystem {
@@ -33,20 +33,22 @@ public class NewClaw extends PIDSubsystem {
 
     private final boolean debug = true;
 
-    private final double[] lastToFValues = new double[5];
-    private int indexCount;
+    private final double[] lastToFValuesL = new double[2];
+    private int indexCountL;
+    private final double[] lastToFValuesR = new double[2];
+    private int indexCountR;
   
   /** Creates a new NewClaw. */
   public NewClaw() {
     super(new PIDController(Constants.kClaw.kP, Constants.kClaw.kI, Constants.kClaw.kD));
-    clawMot = new WPI_TalonFX(kClaw.clawCANID, kCANBus.bus_rio);
+    clawMot = new WPI_TalonFX(kClaw.clawCANID);
     getController().setTolerance(0);
 
     configMot();
 
-    s_tofLeft = new TimeOfFlight(36);
+    s_tofLeft = new TimeOfFlight(kClaw.LEFT_ToFCANID);
     s_tofLeft.setRangingMode(RangingMode.Short, s_tofLeft.getSampleTime());
-    s_tofRight = new TimeOfFlight(37);
+    s_tofRight = new TimeOfFlight(kClaw.RIGHT_ToFCANID);
     s_tofRight.setRangingMode(RangingMode.Short, s_tofLeft.getSampleTime());
 
     clawDutyEncoder = new DutyCycleEncoder(kClaw.dutyCycleChannel);
@@ -147,43 +149,68 @@ public void setPID(double p, double i, double d) {
   public double rollingToFAvg(TimeOfFlight s_tof) {
     int currentDist = (int) s_tof.getRange();
 
-    if (indexCount > 1) {
-      indexCount = 0;
-    }
+    if (s_tof.equals(s_tofLeft)) {
+      if (indexCountL > 1) {
+        indexCountL = 0;
+      }
 
-    if (currentDist > 2) {
-      lastToFValues[indexCount] = currentDist;
-    }
-    
-    int sum = 0;
-    for (double value : lastToFValues) {
-      sum += value;
-    }
-    
-    int avg = sum/2;
+      if (currentDist > 2) {
+        lastToFValuesL[indexCountL] = currentDist;
+      }
+      
+      int sum = 0;
+      for (double value : lastToFValuesL) {
+        sum += value;
+      }
+      
+      int avg = sum/2;
 
-    if (avg > 300) {
-      avg = 300;
-    }
+      if (avg > 300) {
+        avg = 300;
+      }
 
-    indexCount++;
-    return avg;
+      indexCountL++;
+      return avg;
+    } else {
+      if (indexCountR > 1) {
+        indexCountR = 0;
+      }
+
+      if (currentDist > 2) {
+        lastToFValuesR[indexCountR] = currentDist;
+      }
+      
+      int sum = 0;
+      for (double value : lastToFValuesR) {
+        sum += value;
+      }
+      
+      int avg = sum/2;
+
+      if (avg > 300) {
+        avg = 300;
+      }
+
+      indexCountR++;
+      return avg;
+    }
   }
 
   @Override
   public void periodic() {
     super.periodic();
+    double avgDistL = rollingToFAvg(s_tofLeft);
+    double avgDistR = rollingToFAvg(s_tofRight);
+    double distL = getDistanceToFLeft();
+    double distR = getDistanceToFRight();
 
     if (debug) {
       tempEntry.setDouble(getMotorTempature());
       dutyEncoderEntry.setDouble(getMeasurement());
-      tofLeftAvgEntry.setDouble(rollingToFAvg(s_tofLeft));
-      tofLeftRealEntry.setDouble(getDistanceToFLeft());
-      tofRightAvgEntry.setDouble(rollingToFAvg(s_tofRight));
-      tofRightRealEntry.setDouble(getDistanceToFRight());
+      tofLeftAvgEntry.setDouble(avgDistL);
+      tofLeftRealEntry.setDouble(distL);
+      tofRightAvgEntry.setDouble(avgDistR);
+      tofRightRealEntry.setDouble(distR);
     }
-
-
-
   }
 }
