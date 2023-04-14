@@ -199,16 +199,18 @@ public void setPID(double p, double i, double d) {
   @Override
   public void periodic() {
     super.periodic();
-    rollingToFAvg(s_tofLeft);
-    rollingToFAvg(s_tofRight);
+    double avgDistL = rollingToFAvg(s_tofLeft);
+    double avgDistR = rollingToFAvg(s_tofRight);
+    double distL = getDistanceToFLeft();
+    double distR = getDistanceToFRight();
 
     if (debug) {
       tempEntry.setDouble(getMotorTempature());
       dutyEncoderEntry.setDouble(getMeasurement());
-      tofLeftAvgEntry.setDouble(rollingToFAvg(s_tofLeft));
-      tofLeftRealEntry.setDouble(getDistanceToFLeft());
-      tofRightAvgEntry.setDouble(rollingToFAvg(s_tofRight));
-      tofRightRealEntry.setDouble(getDistanceToFRight());
+      tofLeftAvgEntry.setDouble(avgDistL);
+      tofLeftRealEntry.setDouble(distL);
+      tofRightAvgEntry.setDouble(avgDistR);
+      tofRightRealEntry.setDouble(distR);
     }
   }
 }
