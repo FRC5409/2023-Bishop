@@ -341,11 +341,11 @@ public class RobotContainer {
 
         // Manual claw movement, open
         joystickMain.povUp()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(0.15)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(kClaw.manualMovementSpeed)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
         // Manual claw movement, close
         joystickMain.povDown()
-            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-0.15)))
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-kClaw.manualMovementSpeed)))
             .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
         // Stall motors on charge station
