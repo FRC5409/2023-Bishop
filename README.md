@@ -1,13 +1,13 @@
-![Bilby Stampede](https://cdn.discordapp.com/attachments/794885191898365975/1081016440905277460/bishopLogo_3.png)
+![Bishop](./doc/bishopLogo.png)
 
 ## Useful Documentation
-[CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit#gid=1456793576)
+[CAN ID Spreadsheet](https://docs.google.com/spreadsheets/d/1NtnqaaMVDYO0TyJ946Wxg0dBtV19xBe5mVzWcAWxIAw/edit?usp=sharing)
 
-[Motors and Gearing Ratios - Bishop](https://docs.google.com/spreadsheets/d/1mly-FWH9S1RMrAUBcaXnyuavnCqU-cXk0Q0pLDEhZ-Y/edit#gid=1544976692)
+[Motors and Gearing Ratios - Bishop](https://docs.google.com/spreadsheets/d/1mly-FWH9S1RMrAUBcaXnyuavnCqU-cXk0Q0pLDEhZ-Y/edit?usp=sharing)
 
-[Motors and Gearing Ratios - Windsor](https://docs.google.com/spreadsheets/d/1FxBIIsZFDOvoKsso25b7TmFgGUk4gB1KhH03Lld9y3U/edit#gid=1544976692)
+[Motors and Gearing Ratios - Windsor](https://docs.google.com/spreadsheets/d/1FxBIIsZFDOvoKsso25b7TmFgGUk4gB1KhH03Lld9y3U/edit?usp=sharing)
 
-[Driveteam button mapping](https://docs.google.com/document/d/1LmwfAIl3pLnZguX8B4lljc1ZuzqiQKjrft7fehE6e5s/edit)
+[Driveteam button mapping](https://docs.google.com/spreadsheets/d/1Z_SK2qxh_o4-e56WKn4cpELmqUnG5LR1-ANQ0Ndb_h8/edit?usp=sharing)
 
 [Auto routines diagram](./doc/Auto%20Routines%20Diagram.pdf)
 
