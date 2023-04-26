@@ -19,30 +19,75 @@
 [Rev](https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information)
 
 ## Button Bindings
-<p align="center"><b>Comp Configuration<b><p>
 
-| Binding | Controller | Subsystem/Command | Function | Toggle/Push | 
-|:-------:|:----------:|:------------------|:---------|:-----------:|
-|RT|1|Drivetrain|Accelerate|Push|
-|LT|1|Drivetrain|Reverse|Push|
-|LB|1|Drivetrain|Precision mode|Push|
-|RB|1|Drivetrain|Precision mode|Push|
-|LSB-X|1|Drivetrain|Left-Right|Push|
-|LB|2|Limelight|Target node|Push|
-|DPAD-UP|2|Arm|Place cube top|Push|
-|DPAD-DOWN|2|Arm|Place cube bottom|Push|
-|X|1|Arm|Grab loading zone|Push|
-|A|1|Arm,Intake|Intake handoff|Push|
+| Button      | Controller | Function                                           | Subsystem(s)          | Action |
+| :---------: | :--------: | :------------------------------------------------- | :-------------------- | :----: |
+| RT          | Primary    | Accelerate                                         | Drivetrain            | Hold   |
+| LT          | Primary    | Decelerate/reverse                                 | Drivetrain            | Hold   |
+| LB          | Primary    | Cone node aim                                      | Limelight, Drivetrain | Hold   |
+| RB          | Primary    | Gear shifting (mid-high)                           | Drivetrain            | Hold   |
+| LS-X        | Primary    | Rotation                                           | Drivetrain            | Hold   |
+| LS-Y        | Primary    |                                                    |                       |        |
+| LS-B        | Primary    |                                                    |                       |        |
+| RS-X        | Primary    |                                                    |                       |        |
+| RS-Y        | Primary    |                                                    |                       |        |
+| RS-B        | Primary    |                                                    |                       |        |
+| X           | Primary    | Auto-close claw for cone                           | Claw, Arm, Telescope  | Hold   |
+| Y           | Primary    | Auto-close claw for cube                           | Claw, Arm, Telescope  | Hold   |
+| A           | Primary    | Open claw                                          | Claw                  | Press  |
+| B           | Primary    | Open-claw to armed position                        | Claw                  | Hold   |
+| D-PAD UP    | Primary    | Manual claw open                                   | Claw                  | Hold   |
+| D-PAD DOWN  | Primary    | Manual claw close                                  | Claw                  | Hold   |
+| D-PAD LEFT  | Primary    |                                                    |                       |        |
+| D-PAD RIGHT | Primary    |                                                    |                       |        |
+| START       | Primary    | Stall on charge station                            | Drivetrain            | Hold   |
+| BACK        | Primary    |                                                    |                       |        |
+| RT          | Secondary  | Manual arm up                                      | Arm, CANdle           | Hold   |
+| LT          | Secondary  | Manual arm down                                    | Arm, CANdle           | Hold   |
+| LB          | Secondary  | Move arm and retract to idling position            | Arm, Telescope        | Press  |
+| RB          | Secondary  | Move arm and retract to double substation          | Arm, Telescope        | Press  |
+| LS-X        | Secondary  |                                                    |                       |        |
+| LS-Y        | Secondary  |                                                    |                       |        |
+| LS-B        | Secondary  | Set LED to cone (yellow)                           | CANdle                | Press  |
+| RS-X        | Secondary  |                                                    |                       |        |
+| RS-Y        | Secondary  |                                                    |                       |        |
+| RS-B        | Secondary  | Set LED to cube (purple)                           | CANdle                | Press  |
+| X           | Secondary  | Move arm and retract to cone low position          | Arm, Telescope        | Press  |
+| Y           | Secondary  | Move arm and extend to top cube position           | Arm, Telescope        | Press  |
+| A           | Secondary  | Move arm and retract to mid cube position          | Arm, Telescope        | Press  |
+| B           | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope        | Press  |
+| D-PAD UP    | Secondary  | Manual telescope extend                            | Drivetrain            | Press  |
+| D-PAD DOWN  | Secondary  | Manual telescope retract                           | Drivetrain            | Press  |
+| D-PAD LEFT  | Secondary  |                                                    |                       |        |
+| D-PAD RIGHT | Secondary  |                                                    |                       |        |
+| START       | Secondary  | Set LED to red                                     | CANdle                | Press  |
+| BACK        | Secondary  | Move arm and retract to resting on intake position | Arm, Telescope        | Press  |
 
+### Button Bindings Legend
 
-<p align="center"><b>Demo Configuration<b><p>
-
-| Binding | Controller | Subsystem/Command | Function |
-|:-------:|:----------:|:------------------|:---------|
-|Y|TBD|Intake|Pivot up|
-|A|TBD|Intake|Pivot down|
-|X|TBD|Intake|Roller inwards|
-|B|TBD|Intake|Roller outwards|
+| Key         | Value              |
+| :---------: | :----------------: |
+| RT          | Right trigger      |
+| LT          | Left trigger       |
+| LB          | Left bumper        |
+| RB          | Right bumper       |
+| LS-X        | Left stick x-axis  |
+| LS-Y        | Left stick y-axis  |
+| LS-B        | Left stick button  |
+| RS-X        | Right stick x-axis |
+| RS-Y        | Right stick y-axis |
+| RS-B        | Right stick button |
+| X           | X                  |
+| Y           | Y                  |
+| A           | A                  |
+| B           | B                  |
+| D-PAD UP    | D-Pad up           |
+| D-PAD DOWN  | D-Pad down         |
+| D-PAD LEFT  | D-Pad left         |
+| D-PAD RIGHT | D-Pad right        |
+| START       | Start              |
+| BACK        | Back               |
+| *empty*     | Unbound button     |
 
 
 ## CAN IDs
@@ -69,15 +114,3 @@
 | Intake Pivot SparkMax     | 35  | rio             |
 | Shoulder spark max        | 33  | rio             |
 | Shoulder spark max        | 32  | rio             |
-
-
-## Subsystems
-|Abbrv|Subsystem|Purpose| 
-|:---:|:--------|:------|
-|DRV|Drivetrain|Driving|
-|ITK|Intake|Intake|
-|LLA|LimeLight April-Tags|V/ision|
-|LLR|LimeLight Retro-Reflective|Vision|
-|ELA|ElevatorArm|Telescopic Arm|
-
-<p align="center">(<a href="#readme-top">back to top</a>)</p>
