@@ -45,28 +45,31 @@
 |B|TBD|Intake|Roller outwards|
 
 
-## CAN ID's
-| CAN | CAN Bus | Component | Subsystem(s) |
-|:---:|:--------|:----------|:-------------|
-|2|rio|PDP|-
-|3|rio|PCM|-
-|10|rio|Pigeon 2.0|*DR*
-|19|rio|CANdle|-
-|20|drive|Falcon Left 1|*DR*, *LLR*
-|21|drive|Falcon Left 2|*DR*, *LLR*
-|22|drive|Falcon Left 3|*DR*, *LLR*
-|22|rio|Shoulder spark-Max*|-
-|23|drive|Falcon Right 1|*DR*, *LLR*
-|24|drive|Falcon Right 2|*DR*, *LLR*
-|24|rio|Elevator Spark-Max|*ELA*
-|25|drive|Falcon Right 3|*DR*, *LLR*
-|29|drive|CANCoder Right|*DR*
-|30|drive|CANCoder Left|*DR*
-|34|x|Falcon Intake 1|*ITK*
-|28|x|Neo Intake 1|*ITK*
-|x|x|Neo Intake 2|*ITK*
+## CAN IDs
 
-*CAN ID's are not finalized and are subject to change*
+| Part                      | ID  | CAN Bus         |
+| :------------------------ | :-: | :-------------: |
+| PDH                       | 1   | rio             |
+| Pigeon 2.0                | 10  | rio             |
+| CANdle                    | 19  | rio             |
+| Falcon Left 1             | 20  | rio             |
+| Falcon Left 2             | 21  | rio             |
+| Falcon Left 3             | 22  | rio             |
+| Falcon Right 1            | 23  | rio             |
+| Falcon Right 2            | 24  | rio             |
+| Falcon Right 3            | 25  | rio             |
+| CANCoder (Left)           | 29  | rio             |
+| CANCoder (Right)          | 30  | rio             |
+| Elevator SparkMax         | 38  | rio             |
+| Falcon Claw               | 39  | rio             |
+| Intake Roller Falcon      | 28  | rio             |
+| Left ToF Claw             | 36  | rio             |
+| Right ToF Claw            | 37  | rio             |
+| Intake Wrist SparkMax     | 34  | rio             |
+| Intake Pivot SparkMax     | 35  | rio             |
+| Shoulder spark max        | 33  | rio             |
+| Shoulder spark max        | 32  | rio             |
+
 
 ## Subsystems
 |Abbrv|Subsystem|Purpose| 
