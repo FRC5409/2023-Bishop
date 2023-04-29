@@ -11,7 +11,7 @@ import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.claw.ClawMovement;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
@@ -23,7 +23,7 @@ public class ArmToSubstation extends ParallelCommandGroup {
   /** Creates a new ArmToSubstation. */
 
   public ArmToSubstation(
-    ArmPIDSubsystem sys_arm,
+    Arm sys_arm,
     Telescope sys_telescope,
     Claw sys_claw
   ) {

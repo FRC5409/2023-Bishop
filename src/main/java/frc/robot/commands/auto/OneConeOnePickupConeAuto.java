@@ -18,7 +18,7 @@ import frc.robot.commands.auto.task.AutoPathPlanning;
 import frc.robot.commands.auto.task.BalancingChargeStation;
 import frc.robot.commands.auto.task.CloseClawInAuto;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
-import frc.robot.subsystems.ArmPIDSubsystem;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
@@ -28,7 +28,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
 
     public OneConeOnePickupConeAuto(
             Drivetrain sys_drivetrain,
-            ArmPIDSubsystem sys_armPIDSubsystem,
+            Arm sys_arm,
             Telescope sys_telescope,
             Claw sys_claw,
             Candle sys_LEDs,
@@ -37,7 +37,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
 
-                new PlaceConeOnMidAtStart(sys_armPIDSubsystem, sys_telescope, sys_claw),
+                new PlaceConeOnMidAtStart(sys_arm, sys_telescope, sys_claw),
                 Commands.waitSeconds(0.5),
 
                 new AutoPathPlanning(sys_drivetrain, pathGroup.get(0))
@@ -53,7 +53,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
                     .alongWith(
                         // Cone grabbed
                         new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted).withTimeout(0.5),
-                        new ArmRotation(sys_armPIDSubsystem, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
+                        new ArmRotation(sys_arm, kArmSubsystem.kSetpoints.kAutoDrivingWithCone).withTimeout(1)
                     ),
 
                 new BalancingChargeStation(sys_drivetrain, sys_LEDs)
