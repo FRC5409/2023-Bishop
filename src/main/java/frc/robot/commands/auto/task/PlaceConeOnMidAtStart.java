@@ -11,7 +11,7 @@ import frc.robot.Constants.kClaw;
 import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
 public class PlaceConeOnMidAtStart extends SequentialCommandGroup {
@@ -19,7 +19,7 @@ public class PlaceConeOnMidAtStart extends SequentialCommandGroup {
     public PlaceConeOnMidAtStart(
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,
-            NewClaw sys_claw) {
+            Claw sys_claw) {
                 
         addCommands(
                 new ClawMovement(sys_claw, kClaw.coneClosePosition).withTimeout(1)

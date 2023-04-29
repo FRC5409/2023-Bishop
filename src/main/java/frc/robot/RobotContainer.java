@@ -62,7 +62,7 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.intake.IntakePivot;
 import frc.robot.subsystems.intake.IntakeRoller;
@@ -88,7 +88,7 @@ public class RobotContainer {
     public final Drivetrain sys_drivetrain;
     private final Limelight sys_limelight;
     // public final Claw sys_claw;
-    public final NewClaw sys_claw;
+    public final Claw sys_claw;
     public final Candle sys_candle;
     public final ArmPIDSubsystem sys_armPIDSubsystem;
     public final Telescope sys_telescope;
@@ -134,7 +134,7 @@ public class RobotContainer {
         sys_intakePivot = new IntakePivot();
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
-        sys_claw = new NewClaw();
+        sys_claw = new Claw();
         sys_candle = new Candle();
         sys_armPIDSubsystem = new ArmPIDSubsystem();
         sys_telescope = new Telescope();

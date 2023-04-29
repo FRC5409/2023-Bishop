@@ -12,7 +12,7 @@ import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.TelescopeTo;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.subsystems.ArmPIDSubsystem;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -25,7 +25,7 @@ public class ArmToSubstation extends ParallelCommandGroup {
   public ArmToSubstation(
     ArmPIDSubsystem sys_arm,
     Telescope sys_telescope,
-    NewClaw sys_claw
+    Claw sys_claw
   ) {
     super();
     // Add your commands in the addCommands() call, e.g.

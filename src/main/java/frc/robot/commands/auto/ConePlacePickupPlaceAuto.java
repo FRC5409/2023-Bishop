@@ -23,7 +23,7 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
 public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
@@ -32,7 +32,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
             Drivetrain sys_drivetrain,
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,
-            NewClaw sys_claw,
+            Claw sys_claw,
             Candle sys_LEDs,
             Limelight sys_limelight,
             List<PathPlannerTrajectory> pathGroup) {

@@ -10,7 +10,7 @@ import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
 import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.NewClaw;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
 public class OneConeAuto extends SequentialCommandGroup {
@@ -19,7 +19,7 @@ public class OneConeAuto extends SequentialCommandGroup {
             Drivetrain sys_drivetrain,
             ArmPIDSubsystem sys_armPIDSubsystem,
             Telescope sys_telescope,
-            NewClaw sys_claw,
+            Claw sys_claw,
             Candle sys_LEDs,
             PathPlannerTrajectory trajectory) {
 
