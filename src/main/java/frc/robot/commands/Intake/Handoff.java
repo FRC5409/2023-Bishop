@@ -4,7 +4,7 @@
 
 package frc.robot.commands.Intake;
 
-
+//imports
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kIntake;
 import frc.robot.Constants.kArmSubsystem.kSetpoints;
@@ -22,6 +22,7 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
+//sequential group for full handoff after picking up from ground
 public class Handoff extends SequentialCommandGroup { 
     public Handoff(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller, ArmPIDSubsystem arm, NewClaw claw) {
         addCommands (

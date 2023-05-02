@@ -4,9 +4,11 @@
 
 package frc.robot.commands.Intake;
 
+//import
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
+//base roller command that move the roller with a set voltage
 public class RollerMove extends CommandBase {
   private final IntakeRoller sys_intakeRoller;
   private double voltage;

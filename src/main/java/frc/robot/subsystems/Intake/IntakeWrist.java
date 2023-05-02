@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Intake;
 
+//Imports
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
+//This is a PID subsystem, see the Pivot subsystem for more detailed description
 public class IntakeWrist extends PIDSubsystem {
   private final CANSparkMax motor;
   private final DutyCycleEncoder encoder;

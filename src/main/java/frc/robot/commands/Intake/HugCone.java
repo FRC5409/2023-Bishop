@@ -13,6 +13,7 @@ import frc.robot.subsystems.ArmPIDSubsystem;
 import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
+//intake cone and move the intake to upright position (hugging) with cone in hand
 public class HugCone extends SequentialCommandGroup {
   public HugCone(IntakePivot pivot, IntakeWrist wrist, ArmPIDSubsystem arm) {
     addCommands (

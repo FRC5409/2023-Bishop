@@ -12,6 +12,7 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeRoller;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
+//sequential command group for picking up from single substation
 public class SubstationPickup extends SequentialCommandGroup {
   public SubstationPickup(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller) {
     addCommands(

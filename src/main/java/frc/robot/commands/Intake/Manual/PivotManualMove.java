@@ -4,9 +4,11 @@
 
 package frc.robot.commands.Intake.Manual;
 
+//imports
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake.IntakePivot;
 
+//Manual move command for intake pivot using voltage setting
 public class PivotManualMove extends CommandBase
 {
   private final IntakePivot pivot;

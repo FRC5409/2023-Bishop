@@ -4,10 +4,12 @@
 
 package frc.robot.commands.Intake;
 
+//imports
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kIntake;
 import frc.robot.subsystems.Intake.IntakeWrist;
 
+//base wrist command that move the wrist to the correct setpoint in Constants file
 public class WristMove extends CommandBase {
   private final IntakeWrist sys_intakeWrist;
   private double setpoint;

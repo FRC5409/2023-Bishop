@@ -4,10 +4,12 @@
 
 package frc.robot.commands.Intake;
 
+//imports
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kIntake;
 import frc.robot.subsystems.Intake.IntakePivot;
 
+//base pivot command that move the pivot to the correct setpoint in Constants file
 public class PivotMove extends CommandBase {
   private final IntakePivot sys_intakePivot;
   private double setpoint;

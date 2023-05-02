@@ -15,6 +15,12 @@ import frc.robot.subsystems.Intake.IntakePivot;
 import frc.robot.subsystems.Intake.IntakeWrist;
 import frc.robot.subsystems.Intake.IntakeRoller;
 
+//sequential command for ground pickup. 
+// pivot move down
+// wrist move out
+// arm move
+// roller stars intaking
+
 public class GroundPickup extends SequentialCommandGroup {
   public GroundPickup(IntakePivot pivot, IntakeWrist wrist, IntakeRoller roller, ArmPIDSubsystem arm) {
     addCommands(

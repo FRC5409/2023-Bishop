@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.Intake;
 
+//imports
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kIntake;
 
+//This is a normal subsystem meaning that this is NOT a PID subsystem :D
 public class IntakeRoller extends SubsystemBase {
   private final WPI_TalonFX motor;
 
