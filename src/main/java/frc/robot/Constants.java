@@ -161,6 +161,8 @@ public final class Constants {
             kClose
         }
 
+        public static final double manualMovementSpeed          = 0.15;
+
     }
 
     public static final class kGyro {
