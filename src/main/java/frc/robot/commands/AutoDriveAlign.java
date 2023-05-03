@@ -18,10 +18,7 @@ public class AutoDriveAlign extends CommandBase {
   private final PIDController m_pidController;
   private CommandXboxController m_joystick;
   private boolean finished = false; 
-  private boolean aligned = false; 
   private double calculatedOutput, finishTimer;
-
-
 
   public AutoDriveAlign(Limelight limelight, Drivetrain drivetrain) {
     //initializing
@@ -41,6 +38,10 @@ public class AutoDriveAlign extends CommandBase {
     m_joystick = joystick;
   }
 
+  /**
+   * Calculates the optimal robot rotation speed given target position through PID
+   * @return Target speed
+   */
   public double getTargetSpeed(){
     double targetDistance = sys_Limelight.getTargetDistance();
     calculatedOutput = m_pidController.calculate(targetDistance);
@@ -61,6 +62,10 @@ public class AutoDriveAlign extends CommandBase {
     return calculatedOutput;
   }
 
+  /**
+   * Retrieves the current joystick rotation input.
+   * @return Left joystick Y-input.
+   */
   public double getZSpeed() {
     double zSpeed = 0; 
     if (m_joystick != null){
@@ -70,6 +75,9 @@ public class AutoDriveAlign extends CommandBase {
     return zSpeed; 
   }
 
+  /**
+   * Triggers endstate if the target has been reached for a period of time. 
+   */
   public void alignTimeout(){
     if (getTargetSpeed() != 0){
       finishTimer = System.currentTimeMillis();

@@ -44,11 +44,11 @@ public class Limelight extends SubsystemBase {
 
     // Joystick for Retro-reflective
     private final CommandXboxController c_joystick;
-    private final XboxController joystickMain = new XboxController(0); //temp port;
+    private final XboxController joystickMain = new XboxController(0);
 
     // Retro reflective targetting
     private double retroTargetDistance;
-    private double lastRetroDistance; //DEBUGGING
+    private double lastRetroDistance;
     double angleToTarget;
     double turningDir = 0;
 
@@ -129,14 +129,19 @@ public class Limelight extends SubsystemBase {
         lastLightUpdate = System.currentTimeMillis(); // setting startup millis
     }
 
+    // =============== Updating Values and States =============== //
+
+    /**
+     * Updates robot fieldspace positioning and pushes values to shuffleboard if enabled.
+     */
     public void updateRobotPosition() {
         LimelightHelpers.LimelightResults llresults = LimelightHelpers.getLatestResults("");
 
-        // get the position of the robot in 3d fieldspace as calculated by fiducial
+        // gets the position of the robot in 3d fieldspace as calculated by fiducial
         robotPos = NetworkTableInstance.getDefault()
                 .getTable("limelight")
                 .getEntry("botpose")
-                .getDoubleArray(positionDefaults); // TEMPORARY
+                .getDoubleArray(positionDefaults);
 
         if (kLimelight.doShuffleboard){
             // updating target size data to shuffleboards
@@ -163,80 +168,10 @@ public class Limelight extends SubsystemBase {
         //setting startup millis
         lastLightUpdate = System.currentTimeMillis();
     }
-    
-    public void autoLight() {
-        // MIGHT BE EXPENSIVE ON THE CPU
-        //System.out.println(System.currentTimeMillis() - lastLightUpdate);
-        if (Constants.kLimelight.kDoAutoLight) {
-            lastLightUpdate = System.currentTimeMillis();
-            if (targetDistance >= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
-                LimelightHelpers.setLEDMode_ForceOn("");
-            } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
-                LimelightHelpers.setLEDMode_ForceOff("");
-            }
-        }
-    }
 
-    /*--------------------------------------------------------------------------------------*/
-    
-    // Retroreflective tape-related code
-    /** Turns the limelight off */
-    public void turnOff() {
-        nt_ledMode.setNumber(1);
-    }
-
-    /** Turns the limelight on */
-    public void turnOn() {
-        nt_ledMode.setNumber(3);
-    }
-
-    /** Gets the X position/offset */
-    public double getXOffset() {
-        return nt_xOffset.getDouble(0);
-    }
-
-    /** Gets the Y position/offset */
-    public double getYOffset() {
-        return nt_yOffset.getDouble(0);
-    }
-
-    /** Checks if the target is visible or not */
-    public boolean isVisible() {
-        return nt_visibility.getDouble(0) == 1;
-    }
-
-    /** Sets data in an entry */
-    public void setData(String key, double data) {
-            limelightTable.getEntry(key).setDouble(data);
-    }
-
-    /** Gets the turning direction */
-    public double getTurningDir() {
-        return turningDir;
-    }
-
-    /** Sets the turning direction */
-    public void setTurningDir(double dir) {
-        turningDir = dir;
-    }
-
-    /** Gets data from an entry */
-    public double getData(String key) {
-        return  limelightTable.getEntry(key).getDouble(0);
-    }
-
-    public void setCropSize(double[] cropSize) {
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
-    }
-
-    public void dynamicCrop(char targetType, double[] targetPos){
-        ;    
-    }
-
-    public double getTargetDistance() {
-        return targetDistance;
-    }
-
+    /**
+     * Calculates and updates the current target distance.
+     */
     public void updateTargetDistance() {
         double cameraTargetAngle = LimelightHelpers.getTY("");
         double realTargetAngle = Constants.kLimelight.angle + cameraTargetAngle;
@@ -259,6 +194,110 @@ public class Limelight extends SubsystemBase {
             retroDistanceWidget.setDouble(retroTargetDistance); //Updating shuffleboard
         }
         lastRetroDistance = retroTargetDistance;
+    }
+    
+    /**
+     * Dynamically enables the limelight light based on total target area. 
+     */
+    public void autoLight() {
+        if (Constants.kLimelight.kDoAutoLight) {
+            lastLightUpdate = System.currentTimeMillis();
+            if (targetDistance >= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
+                LimelightHelpers.setLEDMode_ForceOn("");
+            } else if (targetDistance <= Constants.kLimelight.kALTriggerDistance && (System.currentTimeMillis() - lastLightUpdate) >= Constants.kLimelight.kAutoLightTimeout) {
+                LimelightHelpers.setLEDMode_ForceOff("");
+            }
+        }
+    }
+
+    // =============== Utility =============== //
+    
+    /**
+     * Turns off limelight LEDs.
+     */
+    public void turnOff() {
+        nt_ledMode.setNumber(1);
+    }
+
+    /**
+     * Turns on limelight LEDs.
+     */
+    public void turnOn() {
+        nt_ledMode.setNumber(3);
+    }
+
+    /**
+     * Retrieved the target X offset (txy).
+     * @return Target X offset.
+     */
+    public double getXOffset() {
+        return nt_xOffset.getDouble(0);
+    }
+
+    /**
+     * Retrieves the targey Y offset (ty).
+     * @return Target Y offset. 
+     */
+    public double getYOffset() {
+        return nt_yOffset.getDouble(0);
+    }
+
+    /**
+     * Checks if there is a current visible target.
+     * @return Is target visible. 
+     */
+    public boolean isVisible() {
+        return nt_visibility.getDouble(0) == 1;
+    }
+
+    /**
+     * Sets data in specified entry.
+     * @param key Entry key.
+     * @param data Data to enter.
+     */
+    public void setData(String key, double data) {
+            limelightTable.getEntry(key).setDouble(data);
+    }
+
+    /**
+     * Retrieves turning direction.
+     * @return turning direction.
+     */
+    public double getTurningDir() {
+        return turningDir;
+    }
+
+    /**
+     * Sets turning direction
+     * @param dir Rotation value. 
+     */
+    public void setTurningDir(double dir) {
+        turningDir = dir;
+    }
+
+    /**
+     * Retrieves double from speciefied network table entry.
+     * @param key Entry key.
+     * @return value.
+     */
+    public double getData(String key) {
+        return  limelightTable.getEntry(key).getDouble(0);
+    }
+
+    /**
+     * Sets limelight image crop.
+     * @param cropSize Desired crop size.
+     */
+    public void setCropSize(double[] cropSize) {
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("crop").setDoubleArray(cropSize);
+    }
+
+    /**
+     * Retrieves the current target distance. 
+     * @return Target distance. 
+     */
+    public double getTargetDistance() {
+        return targetDistance;
     }
     
     @Override
