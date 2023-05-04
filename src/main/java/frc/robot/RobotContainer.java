@@ -295,7 +295,7 @@ public class RobotContainer {
             );
         
         // Auto-close claw for cone
-        joystickSecondary.x().and(joystickMain.x())
+        joystickMain.x()
             .whileTrue(
                 new ConditionalCommand(
                     new ClawMovement(sys_claw, kClaw.armedOpenPosition),
@@ -327,7 +327,7 @@ public class RobotContainer {
             );
         
         // Auto-close claw for cube
-        joystickSecondary.y().and(joystickMain.x())
+        joystickMain.y()
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.openPosition)
                 .andThen(
@@ -349,36 +349,36 @@ public class RobotContainer {
             );
         
         // Open claw
-        joystickSecondary.a().and(joystickMain.x())
+        joystickMain.a()
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
 
         // Move arm and retract to idling position
-        joystickSecondary.b().and(joystickMain.x())
+        joystickSecondary.b().and(joystickMain.b())
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
             );
 
         // Move arm and extend to top cube position
-        joystickSecondary.povUp().and(joystickMain.x())
+        joystickSecondary.povUp().and(joystickMain.b())
             .onTrue(
                 new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
                 sys_telescope, Constants.kTelescope.kDestinations.kExtended)
             );
 
         // Move arm and retract to ground pickup (resting on intake) position
-        joystickSecondary.povDown().and(joystickMain.x())
+        joystickSecondary.povDown().and(joystickMain.b())
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
 
         // Move arm and retract ABOVE mid cone node position
-        joystickSecondary.povLeft().and(joystickMain.x())
+        joystickSecondary.povLeft().and(joystickMain.b())
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
             );
 
         // Move arm and retract to double substation
-        joystickSecondary.povRight().and(joystickMain.x())
+        joystickSecondary.povRight().and(joystickMain.b())
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
             ); // pickup from loading station
