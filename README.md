@@ -34,46 +34,46 @@
 
 | Button      | Controller | Function                                           | Subsystem(s)          | Action |
 | :---------: | :--------: | :------------------------------------------------- | :-------------------- | :----: |
-| LT          | Primary    | Decelerate/reverse                                 | Drivetrain           | Hold  |
-| RT          | Primary    | Accelerate                                         | Drivetrain           | Hold  |
-| LB          | Primary    |                                                    |                      |       |
-| RB          | Primary    |                                                    |                      |       |
-| LS-X        | Primary    | Rotation                                           | Drivetrain           | Hold  |
-| LS-Y        | Primary    |                                                    |                      |       |
-| LS-B        | Primary    |                                                    |                      |       |
-| RS-X        | Primary    |                                                    |                      |       |
-| RS-Y        | Primary    |                                                    |                      |       |
-| RS-B        | Primary    |                                                    |                      |       |
-| X           | Primary    | "Activate" secondary controller button             | \*                   | \*    |
-| Y           | Primary    |                                                    |                      |       |
-| A           | Primary    |                                                    |                      |       |
-| B           | Primary    |                                                    |                      |       |
-| D-PAD UP    | Primary    |                                                    |                      |       |
-| D-PAD DOWN  | Primary    |                                                    |                      |       |
-| D-PAD LEFT  | Primary    |                                                    |                      |       |
-| D-PAD RIGHT | Primary    |                                                    |                      |       |
-| START       | Primary    |                                                    |                      |       |
-| BACK        | Primary    |                                                    |                      |       |
-| LT          | Secondary  |                                                    |                      |       |
-| RT          | Secondary  |                                                    |                      |       |
-| LB          | Secondary  | Decrease max driving speed                         |                      |       |
-| RB          | Secondary  | Increase max driving speed                         |                      |       |
-| LS-X        | Secondary  |                                                    |                      |       |
-| LS-Y        | Secondary  |                                                    |                      |       |
-| LS-B        | Secondary  |                                                    |                      |       |
-| RS-X        | Secondary  |                                                    |                      |       |
-| RS-Y        | Secondary  |                                                    |                      |       |
-| RS-B        | Secondary  |                                                    |                      |       |
-| X           | Secondary  | Auto-close claw for cone                           | Claw, Arm, Telescope | Hold  |
-| Y           | Secondary  | Auto-close claw for cube                           | Claw, Arm, Telescope | Hold  |
-| A           | Secondary  | Open claw                                          | Claw                 | Press |
-| B           | Secondary  | Move arm and retract to idling position            | Arm, Telescope       | Press |
-| D-PAD UP    | Secondary  | Move arm and extend to top cube position           | Arm, Telescope       | Press |
-| D-PAD DOWN  | Secondary  | Move arm and retract to resting on intake position | Arm, Telescope       | Press |
-| D-PAD LEFT  | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope       | Press |
-| D-PAD RIGHT | Secondary  | Move arm and retract to double substation          | Arm, Telescope       | Press |
-| START       | Secondary  |                                                    |                      |       |
-| BACK        | Secondary  |                                                    |                      |       |
+| LT          | Primary    | Decelerate/reverse                                 | Drivetrain            | Hold   |
+| RT          | Primary    | Accelerate                                         | Drivetrain            | Hold   |
+| LB          | Primary    |                                                    |                       |        |
+| RB          | Primary    |                                                    |                       |        |
+| LS-X        | Primary    | Rotation                                           | Drivetrain            | Hold   |
+| LS-Y        | Primary    |                                                    |                       |        |
+| LS-B        | Primary    |                                                    |                       |        |
+| RS-X        | Primary    |                                                    |                       |        |
+| RS-Y        | Primary    |                                                    |                       |        |
+| RS-B        | Primary    |                                                    |                       |        |
+| X           | Primary    | Auto-close claw for cone                           | Claw, Arm, Telescope  | Hold   |
+| Y           | Primary    | Auto-close claw for cube                           | Claw, Arm, Telescope  | Hold   |
+| A           | Primary    | Open claw                                          | Claw                  | Press  |
+| B           | Primary    | "Activate" secondary controller button             | \*                    | \*     |
+| D-PAD UP    | Primary    |                                                    |                       |        |
+| D-PAD DOWN  | Primary    |                                                    |                       |        |
+| D-PAD LEFT  | Primary    |                                                    |                       |        |
+| D-PAD RIGHT | Primary    |                                                    |                       |        |
+| START       | Primary    |                                                    |                       |        |
+| BACK        | Primary    |                                                    |                       |        |
+| LT          | Secondary  |                                                    |                       |        |
+| RT          | Secondary  |                                                    |                       |        |
+| LB          | Secondary  | Decrease max driving speed                         |                       |        |
+| RB          | Secondary  | Increase max driving speed                         |                       |        |
+| LS-X        | Secondary  |                                                    |                       |        |
+| LS-Y        | Secondary  |                                                    |                       |        |
+| LS-B        | Secondary  |                                                    |                       |        |
+| RS-X        | Secondary  |                                                    |                       |        |
+| RS-Y        | Secondary  |                                                    |                       |        |
+| RS-B        | Secondary  |                                                    |                       |        |
+| X           | Secondary  |                                                    |                       |        |
+| Y           | Secondary  |                                                    |                       |        |
+| A           | Secondary  |                                                    |                       |        |
+| B           | Secondary  | Move arm and retract to idling position            | Arm, Telescope        | Press  |
+| D-PAD UP    | Secondary  | Move arm and extend to top cube position           | Arm, Telescope        | Press  |
+| D-PAD DOWN  | Secondary  | Move arm and retract to resting on intake position | Arm, Telescope        | Press  |
+| D-PAD LEFT  | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope        | Press  |
+| D-PAD RIGHT | Secondary  | Move arm and retract to double substation          | Arm, Telescope        | Press  |
+| START       | Secondary  | Stop drivetrain                                    | Drivetrain            | Press  |
+| BACK        | Secondary  | Stop drivetrain                                    | Drivetrain            | Press  |
 
 ### Button Bindings Legend
 
