@@ -266,6 +266,12 @@ public class RobotContainer {
       */
     private void configureBindings() {
 
+        // Stop robot
+        joystickSecondary.start().or(joystickSecondary.back())
+            .onTrue(
+                Commands.run(() -> sys_drivetrain.tankDriveVoltages(0, 0), sys_drivetrain)
+            );
+
         // Max driving speed adjustment
         joystickSecondary.rightBumper()
             .onTrue(
