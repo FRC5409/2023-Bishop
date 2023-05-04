@@ -292,6 +292,96 @@ public class RobotContainer {
                     sys_drivetrain.setTurningSpeed(turningSpeed - 0.01);
                 })
             );
+        
+        // Auto-close claw for cone
+        joystickSecondary.x().and(joystickMain.x())
+            .whileTrue(
+                new ConditionalCommand(
+                    new ClawMovement(sys_claw, kClaw.armedOpenPosition),
+                    new ClawMovement(sys_claw, kClaw.armedDoublePosition),
+                    () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                )
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                        new WaitCommand(0), 
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
+                )
+                .andThen(
+                    new ConditionalCommand(
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
+                    .andThen(new WaitCommand(0.4))
+                    .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
+                )
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
+            );
+        
+        // Auto-close claw for cube
+        joystickSecondary.y().and(joystickMain.x())
+            .whileTrue(
+                new ClawMovement(sys_claw, kClaw.openPosition)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
+                        .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        )
+                    )
+                .andThen(new WaitCommand(0.5))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
+            );
+        
+        // Open claw
+        joystickSecondary.a().and(joystickMain.x())
+            .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
+
+        // Move arm and retract to idling position
+        joystickSecondary.b().and(joystickMain.x())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
+            );
+
+        // Move arm and extend to top cube position
+        joystickSecondary.povUp().and(joystickMain.x())
+            .onTrue(
+                new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
+                sys_telescope, Constants.kTelescope.kDestinations.kExtended)
+            );
+
+        // Move arm and retract to ground pickup (resting on intake) position
+        joystickSecondary.povDown().and(joystickMain.x())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
+            );
+
+        // Move arm and retract ABOVE mid cone node position
+        joystickSecondary.povLeft().and(joystickMain.x())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
+            );
+
+        // Move arm and retract to double substation
+        joystickSecondary.povRight().and(joystickMain.x())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+            ); // pickup from loading station
+
 
         // // Auto-close claw for cone
         // joystickMain.x()
