@@ -64,8 +64,8 @@
 | Y           | Secondary  | Move arm and extend to top cube position           | Arm, Telescope        | Press  |
 | A           | Secondary  | Move arm and retract to mid cube position          | Arm, Telescope        | Press  |
 | B           | Secondary  | Move arm and retract ABOVE mid cone node position  | Arm, Telescope        | Press  |
-| D-PAD UP    | Secondary  | Manual telescope extend                            | Drivetrain            | Press  |
-| D-PAD DOWN  | Secondary  | Manual telescope retract                           | Drivetrain            | Press  |
+| D-PAD UP    | Secondary  | Manual telescope extend                            | Telescope             | Press  |
+| D-PAD DOWN  | Secondary  | Manual telescope retract                           | Telescope             | Press  |
 | D-PAD LEFT  | Secondary  |                                                    |                       |        |
 | D-PAD RIGHT | Secondary  |                                                    |                       |        |
 | START       | Secondary  | Set LED to red                                     | CANdle                | Press  |
