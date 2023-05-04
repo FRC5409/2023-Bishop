@@ -271,6 +271,28 @@ public class RobotContainer {
       */
     private void configureBindings() {
 
+        // Max driving speed adjustment
+        joystickSecondary.rightTrigger()
+            .whileTrue(
+                Commands.run(() -> {
+                    double forwardSpeed = sys_drivetrain.getForwardSpeed();
+                    double turningSpeed = sys_drivetrain.getTurningSpeed();
+
+                    sys_drivetrain.setForwardSpeed(forwardSpeed + 0.01);
+                    sys_drivetrain.setTurningSpeed(turningSpeed + 0.01);
+                })
+            );
+        joystickSecondary.leftTrigger()
+            .whileTrue(
+                Commands.run(() -> {
+                    double forwardSpeed = sys_drivetrain.getForwardSpeed();
+                    double turningSpeed = sys_drivetrain.getTurningSpeed();
+
+                    sys_drivetrain.setForwardSpeed(forwardSpeed - 0.01);
+                    sys_drivetrain.setTurningSpeed(turningSpeed - 0.01);
+                })
+            );
+
         // // Auto-close claw for cone
         // joystickMain.x()
         //     .whileTrue(

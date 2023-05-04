@@ -399,6 +399,24 @@ public class Drivetrain extends SubsystemBase {
 
     // ----------
 
+    public double getForwardSpeed() {
+        return forwardSpeed;
+    }
+
+    public double getTurningSpeed() {
+        return turningSpeed;
+    }
+
+    public void setForwardSpeed(double newForwardSpeed) {
+        forwardSpeed = newForwardSpeed;
+    }
+
+    public void setTurningSpeed(double newTurningSpeed) {
+        turningSpeed = newTurningSpeed;
+    }
+
+    // ----------
+
     @Override
     public void periodic() {
         // Update odometry
