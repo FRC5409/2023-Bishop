@@ -408,10 +408,20 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setForwardSpeed(double newForwardSpeed) {
+
+        // Hard max limit
+        if (newForwardSpeed > kDriveteam.defaultSpeedMultiplier)
+            newForwardSpeed = kDriveteam.defaultSpeedMultiplier;
+        
         forwardSpeed = newForwardSpeed;
     }
 
     public void setTurningSpeed(double newTurningSpeed) {
+
+        // Hard max limit
+        if (newTurningSpeed > kDriveteam.defaultTurningMultiplier)
+            newTurningSpeed = kDriveteam.defaultTurningMultiplier;
+        
         turningSpeed = newTurningSpeed;
     }
 
