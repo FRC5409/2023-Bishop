@@ -272,24 +272,24 @@ public class RobotContainer {
     private void configureBindings() {
 
         // Max driving speed adjustment
-        joystickSecondary.rightTrigger()
-            .whileTrue(
-                Commands.run(() -> {
+        joystickSecondary.rightBumper()
+            .onTrue(
+                Commands.runOnce(() -> {
                     double forwardSpeed = sys_drivetrain.getForwardSpeed();
                     double turningSpeed = sys_drivetrain.getTurningSpeed();
 
-                    sys_drivetrain.setForwardSpeed(forwardSpeed + 0.01);
-                    sys_drivetrain.setTurningSpeed(turningSpeed + 0.01);
+                    sys_drivetrain.setForwardSpeed(forwardSpeed + 0.05);
+                    sys_drivetrain.setTurningSpeed(turningSpeed + 0.05);
                 })
             );
-        joystickSecondary.leftTrigger()
-            .whileTrue(
-                Commands.run(() -> {
+        joystickSecondary.leftBumper()
+            .onTrue(
+                Commands.runOnce(() -> {
                     double forwardSpeed = sys_drivetrain.getForwardSpeed();
                     double turningSpeed = sys_drivetrain.getTurningSpeed();
 
-                    sys_drivetrain.setForwardSpeed(forwardSpeed - 0.01);
-                    sys_drivetrain.setTurningSpeed(turningSpeed - 0.01);
+                    sys_drivetrain.setForwardSpeed(forwardSpeed - 0.05);
+                    sys_drivetrain.setTurningSpeed(turningSpeed - 0.05);
                 })
             );
         

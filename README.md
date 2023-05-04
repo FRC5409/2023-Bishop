@@ -54,10 +54,10 @@
 | D-PAD RIGHT | Primary    |                                                    |                      |       |
 | START       | Primary    |                                                    |                      |       |
 | BACK        | Primary    |                                                    |                      |       |
-| LT          | Secondary  | Decrease max driving speed                         |                      |       |
-| RT          | Secondary  | Increase max driving speed                         |                      |       |
-| LB          | Secondary  |                                                    |                      |       |
-| RB          | Secondary  |                                                    |                      |       |
+| LT          | Secondary  |                                                    |                      |       |
+| RT          | Secondary  |                                                    |                      |       |
+| LB          | Secondary  | Decrease max driving speed                         |                      |       |
+| RB          | Secondary  | Increase max driving speed                         |                      |       |
 | LS-X        | Secondary  |                                                    |                      |       |
 | LS-Y        | Secondary  |                                                    |                      |       |
 | LS-B        | Secondary  |                                                    |                      |       |
