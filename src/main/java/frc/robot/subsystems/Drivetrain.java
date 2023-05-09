@@ -16,6 +16,8 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
@@ -64,6 +66,8 @@ public class Drivetrain extends SubsystemBase {
     private GenericEntry nt_poseMetersX;
     private GenericEntry nt_poseMetersY;
 
+    private Field2d m_field2d;
+
 
     public Drivetrain() {
 
@@ -105,6 +109,7 @@ public class Drivetrain extends SubsystemBase {
         m_gyro.configMountPose(kGyro.mountPoseForward, kGyro.mountPoseUp);
 
         m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+        m_field2d = new Field2d();
 
         resetGyro();
 
@@ -403,6 +408,7 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         // Update odometry
         m_odometry.update(m_gyro.getRotation2d(), getLeftDistance(), getRightDistance());
+        m_field2d.setRobotPose(m_odometry.getPoseMeters());
 
         // Push data to Shuffleboard
         if (debugMode) {
@@ -418,6 +424,8 @@ public class Drivetrain extends SubsystemBase {
             nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
             nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
         }
+
+        SmartDashboard.putData(m_field2d);
         
     }
 
