@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kDriveteam;
@@ -446,6 +447,9 @@ public class Drivetrain extends SubsystemBase {
             nt_poseMetersY.setDouble(m_odometry.getPoseMeters().getY());
             nt_poseMetersX.setDouble(m_odometry.getPoseMeters().getX());
         }
+
+        SmartDashboard.putNumber("FORWARD SPEED", getForwardSpeed());
+        SmartDashboard.putNumber("TURNING SPEED", getTurningSpeed());
         
     }
 

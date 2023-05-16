@@ -13,10 +13,12 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -173,8 +175,16 @@ public class RobotContainer {
         sys_camera = CameraServer.startAutomaticCapture();
         configCamera();
 
+        // SmartDashboard.putNumber("Test mode", 0);
+        SmartDashboard.putBoolean("Test mode", false);
+
         // Configure the trigger bindings
         configureBindings();
+    }
+
+    private boolean isShuffleboardTestMode() {
+        // return SmartDashboard.getNumber("Test mode", 1) == 1;
+        return SmartDashboard.getBoolean("Test mode", true);
     }
 
     private void configCamera() {
@@ -267,13 +277,14 @@ public class RobotContainer {
     private void configureBindings() {
 
         // Stop robot
-        joystickSecondary.start().or(joystickSecondary.back())
+        (joystickSecondary.start().and(this::isShuffleboardTestMode))
+        .or((joystickSecondary.back()).and(this::isShuffleboardTestMode))
             .onTrue(
                 Commands.run(() -> sys_drivetrain.tankDriveVoltages(0, 0), sys_drivetrain)
             );
 
         // Max driving speed adjustment
-        joystickSecondary.rightBumper()
+        joystickSecondary.rightBumper().and(this::isShuffleboardTestMode)
             .onTrue(
                 Commands.runOnce(() -> {
                     double forwardSpeed = sys_drivetrain.getForwardSpeed();
@@ -283,7 +294,7 @@ public class RobotContainer {
                     sys_drivetrain.setTurningSpeed(turningSpeed + 0.05);
                 })
             );
-        joystickSecondary.leftBumper()
+        joystickSecondary.leftBumper().and(this::isShuffleboardTestMode)
             .onTrue(
                 Commands.runOnce(() -> {
                     double forwardSpeed = sys_drivetrain.getForwardSpeed();
@@ -295,7 +306,7 @@ public class RobotContainer {
             );
         
         // Auto-close claw for cone
-        joystickMain.x()
+        joystickMain.x().and(this::isShuffleboardTestMode)
             .whileTrue(
                 new ConditionalCommand(
                     new ClawMovement(sys_claw, kClaw.armedOpenPosition),
@@ -327,7 +338,7 @@ public class RobotContainer {
             );
         
         // Auto-close claw for cube
-        joystickMain.y()
+        joystickMain.y().and(this::isShuffleboardTestMode)
             .whileTrue(
                 new ClawMovement(sys_claw, kClaw.openPosition)
                 .andThen(
@@ -349,239 +360,252 @@ public class RobotContainer {
             );
         
         // Open claw
-        joystickMain.a()
+        joystickMain.a().and(this::isShuffleboardTestMode)
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
 
         // Move arm and retract to idling position
-        joystickSecondary.b().and(joystickMain.b())
+        joystickSecondary.b().and(joystickMain.b()).and(this::isShuffleboardTestMode)
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
             );
 
         // Move arm and extend to top cube position
-        joystickSecondary.povUp().and(joystickMain.b())
+        joystickSecondary.povUp().and(joystickMain.b()).and(this::isShuffleboardTestMode)
             .onTrue(
                 new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
                 sys_telescope, Constants.kTelescope.kDestinations.kExtended)
             );
 
         // Move arm and retract to ground pickup (resting on intake) position
-        joystickSecondary.povDown().and(joystickMain.b())
+        joystickSecondary.povDown().and(joystickMain.b()).and(this::isShuffleboardTestMode)
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
+            );
+
+        // Move arm and retract to ground pickup (resting on intake) position
+        joystickSecondary.y().and(this::isShuffleboardTestMode)
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
             );
 
         // Move arm and retract ABOVE mid cone node position
-        joystickSecondary.povLeft().and(joystickMain.b())
+        joystickSecondary.povLeft().and(joystickMain.b()).and(this::isShuffleboardTestMode)
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
             );
 
         // Move arm and retract to double substation
-        joystickSecondary.povRight().and(joystickMain.b())
+        joystickSecondary.povRight().and(joystickMain.b()).and(this::isShuffleboardTestMode)
             .onTrue(
                 new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
             ); // pickup from loading station
 
 
-        // // Auto-close claw for cone
-        // joystickMain.x()
-        //     .whileTrue(
-        //         new ConditionalCommand(
-        //             new ClawMovement(sys_claw, kClaw.armedOpenPosition),
-        //             new ClawMovement(sys_claw, kClaw.armedDoublePosition),
-        //             () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-        //         )
-        //         .andThen(
-        //             new ConditionalCommand(
-        //                 new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
-        //                 new WaitCommand(0), 
-        //                 () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-        //             )
-        //         )
-        //         .andThen(
-        //             new ConditionalCommand(
-        //                 new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
-        //                 new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
-        //                 () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-        //             )
-        //             .andThen(new WaitCommand(0.4))
-        //             .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
-        //         )
-        //     )
-        //     .onFalse(
-        //         new SequentialCommandGroup(
-        //             new InstantCommand(() -> sys_claw.disable()),
-        //             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
-        //         )
-        //     );
 
-        // // Auto-close claw for cube
-        // joystickMain.y()
-        //     .whileTrue(
-        //         new ClawMovement(sys_claw, kClaw.openPosition)
-        //         .andThen(
-        //             new ConditionalCommand(
-        //                 new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
-        //                 .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
-        //                 new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
-        //                 () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
-        //                 )
-        //             )
-        //         .andThen(new WaitCommand(0.5))
-        //         .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
-        //     )
-        //     .onFalse(
-        //         new SequentialCommandGroup(
-        //             new InstantCommand(() -> sys_claw.disable()),
-        //             new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
-        //         )
-        //     );
+
+
+
+        // NORMAL CONTROLS:
+
+
+        // Aut-close claw for cone
+        joystickMain.x().and(() -> !isShuffleboardTestMode())
+            .whileTrue(
+                new ConditionalCommand(
+                    new ClawMovement(sys_claw, kClaw.armedOpenPosition),
+                    new ClawMovement(sys_claw, kClaw.armedDoublePosition),
+                    () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                )
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kGroundBack),
+                        new WaitCommand(0), 
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
+                )
+                .andThen(
+                    new ConditionalCommand(
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold),
+                        new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.doubleDistanceThreshold),
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                    )
+                    .andThen(new WaitCommand(0.4))
+                    .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, false))
+                )
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
+            );
+
+        // Auto-close claw for cube
+        joystickMain.y().and(() -> !isShuffleboardTestMode())
+            .whileTrue(
+                new ClawMovement(sys_claw, kClaw.openPosition)
+                .andThen(
+                    new ConditionalCommand(
+                        new TelescopeTo(sys_telescope, kTelescope.kDestinations.kCubeGround)
+                        .alongWith(new AutoCloseClaw(sys_claw, kClaw.coneClosePosition, kClaw.coneDistanceThreshold)),
+                        new AutoCloseClaw(sys_claw, kClaw.cubeClosePosition, kClaw.cubeDistanceThreshold), 
+                        () -> sys_arm.getController().getSetpoint() == kArmSubsystem.kSetpoints.kGroundPickupCone
+                        )
+                    )
+                .andThen(new WaitCommand(0.5))
+                .andThen(new DetectGamepiece(sys_claw, joystickMain, joystickSecondary, true))
+            )
+            .onFalse(
+                new SequentialCommandGroup(
+                    new InstantCommand(() -> sys_claw.disable()),
+                    new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
+                )
+            );
         
-        // // Open claw to armed position
-        // joystickMain.b()
-        //     .onTrue(
-        //         new ClawMovement(sys_claw, kClaw.armedOpenPosition)
-        //     );
+        // Open claw to armed position
+        joystickMain.b().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new ClawMovement(sys_claw, kClaw.armedOpenPosition)
+            );
 
-        // // Open claw
-        // joystickMain.a()
-        //     .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
+        // Open claw
+        joystickMain.a().and(() -> !isShuffleboardTestMode())
+            .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
 
-        // // Limelight: cone node aim
-        // joystickMain.leftBumper()
-        //     .whileTrue(cmd_coneNodeAim);
+        // Limelight: cone node aim
+        joystickMain.leftBumper().and(() -> !isShuffleboardTestMode())
+            .whileTrue(cmd_coneNodeAim);
 
-        // // Gear shifting (high-mid)
-        // joystickMain.rightBumper()
-        //     .onTrue(cmd_highSpeed)
-        //     .onFalse(cmd_midSpeed);
+        // Gear shifting (high-mid)
+        joystickMain.rightBumper().and(() -> !isShuffleboardTestMode())
+            .onTrue(cmd_highSpeed)
+            .onFalse(cmd_midSpeed);
 
-        // // Manual claw movement, open
-        // joystickMain.povUp()
-        //     .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(kClaw.manualMovementSpeed)))
-        //     .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
-        // // Manual claw movement, close
-        // joystickMain.povDown()
-        //     .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-kClaw.manualMovementSpeed)))
-        //     .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+        // Manual claw movement, open
+        joystickMain.povUp().and(() -> !isShuffleboardTestMode())
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(kClaw.manualMovementSpeed)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
+        // Manual claw movement, close
+        joystickMain.povDown().and(() -> !isShuffleboardTestMode())
+            .onTrue(Commands.runOnce(() -> sys_claw.setSpeed(-kClaw.manualMovementSpeed)))
+            .onFalse(Commands.runOnce(() -> sys_claw.stopMotor()));
 
-        // // Stall motors on charge station
-        // joystickMain.start()
-        //     .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
-        //     .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
+        // Stall motors on charge station
+        joystickMain.start().and(() -> !isShuffleboardTestMode())
+            .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
+            .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
 
-        // /*--------------------------------------------------------------------------------------*/
+        /*--------------------------------------------------------------------------------------*/
 
-        // // Manual telescope movement
-        // joystickSecondary.povUp()
-        //     .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
+        // Manual telescope movement
+        joystickSecondary.povUp().and(() -> !isShuffleboardTestMode())
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kExtended));
             
-        // joystickSecondary.povDown()
-        //     .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+        joystickSecondary.povDown().and(() -> !isShuffleboardTestMode())
+            .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
-        // // Move arm and extend to top cube position
-        // joystickSecondary.y()
-        //     .onTrue(
-        //         new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
-        //         sys_telescope, Constants.kTelescope.kDestinations.kExtended)
-        //     );
+        // Move arm and extend to top cube position
+        joystickSecondary.y().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
+                sys_telescope, Constants.kTelescope.kDestinations.kExtended)
+            );
 
-        // // Move arm and retract ABOVE mid cone node position
-        // joystickSecondary.b()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
-        //     );
+        // Move arm and retract ABOVE mid cone node position
+        joystickSecondary.b().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
+            );
         
-        // // Move arm and retract to cone low position
-        // joystickSecondary.x()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
-        //     );
+        // Move arm and retract to cone low position
+        joystickSecondary.x().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
+            );
 
-        // // Move arm and retract to mid cube position
-        // joystickSecondary.a()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
-        //     );
+        // Move arm and retract to mid cube position
+        joystickSecondary.a().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
+            );
 
-        // // Move arm and retract to double substation
-        // joystickSecondary.rightBumper()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
-        //     ); // pickup from loading station
+        // Move arm and retract to double substation
+        joystickSecondary.rightBumper().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
+            ); // pickup from loading station
             
-        // // Move arm and retract to idling position
-        // joystickSecondary.leftBumper()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
-        //     );
+        // Move arm and retract to idling position
+        joystickSecondary.leftBumper().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
+            );
                     
-        // // Move arm and retract to ground pickup (resting on intake) position
-        // joystickSecondary.back()
-        //     .onTrue(
-        //         new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
-        //     );
+        // Move arm and retract to ground pickup (resting on intake) position
+        joystickSecondary.back().and(() -> !isShuffleboardTestMode())
+            .onTrue(
+                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
+            );
                     
-        // // Manual arm movement
-        // joystickSecondary.rightTrigger()
-        //     .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
-        //         new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
-        //         )
-        //     );
-        // joystickSecondary.leftTrigger()
-        //     .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
-        //         new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
-        //         )
-        //     );             
+        // Manual arm movement
+        joystickSecondary.rightTrigger()
+            .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );
+        joystickSecondary.leftTrigger()
+            .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
+                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                )
+            );             
 
-        // // Set LED to cone (yellow)
-        // joystickSecondary.leftStick()
-        //     .onTrue(Commands.runOnce(
-        //         () -> sys_candle.setAnimation(
-        //             AnimationTypes.Static,
-        //             kCANdle.kColors.cone[0],
-        //             kCANdle.kColors.cone[1],
-        //             kCANdle.kColors.cone[2],
-        //             LEDColorType.Cone
-        //         )
-        //     ).alongWith(
-        //         new SequentialCommandGroup(
-        //             new WaitCommand(0.05),
-        //             new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-        //             )
-        //         )
-        //     );
+        // Set LED to cone (yellow)
+        joystickSecondary.leftStick().and(() -> !isShuffleboardTestMode())
+            .onTrue(Commands.runOnce(
+                () -> sys_candle.setAnimation(
+                    AnimationTypes.Static,
+                    kCANdle.kColors.cone[0],
+                    kCANdle.kColors.cone[1],
+                    kCANdle.kColors.cone[2],
+                    LEDColorType.Cone
+                )
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
-        // // Set LED to cube (purple)
-        // joystickSecondary.rightStick()
-        //     .onTrue(Commands.runOnce(
-        //         () -> sys_candle.setAnimation(
-        //             AnimationTypes.Static,
-        //             kCANdle.kColors.cube[0],
-        //             kCANdle.kColors.cube[1],
-        //             kCANdle.kColors.cube[2],
-        //             LEDColorType.Cube
-        //         )
-        //     ).alongWith(
-        //         new SequentialCommandGroup(
-        //             new WaitCommand(0.05),
-        //             new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-        //             )
-        //         )
-        //     );
+        // Set LED to cube (purple)
+        joystickSecondary.rightStick().and(() -> !isShuffleboardTestMode())
+            .onTrue(Commands.runOnce(
+                () -> sys_candle.setAnimation(
+                    AnimationTypes.Static,
+                    kCANdle.kColors.cube[0],
+                    kCANdle.kColors.cube[1],
+                    kCANdle.kColors.cube[2],
+                    LEDColorType.Cube
+                )
+            ).alongWith(
+                new SequentialCommandGroup(
+                    new WaitCommand(0.05),
+                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
+                    )
+                )
+            );
 
-        //     // Set LED to red
-        //     joystickSecondary.start()
-        //         .onTrue(Commands.runOnce(
-        //             () -> sys_candle.setAnimation(
-        //                 AnimationTypes.Static,
-        //                 255,
-        //                 0,
-        //                 0
-        //             )
-        //         )
-        //     );
+            // Set LED to red
+            joystickSecondary.start().and(() -> !isShuffleboardTestMode())
+                .onTrue(Commands.runOnce(
+                    () -> sys_candle.setAnimation(
+                        AnimationTypes.Static,
+                        255,
+                        0,
+                        0
+                    )
+                )
+            );
         
         // /*-------------------------------------------------------------- */
         // joystickTesting.rightBumper()

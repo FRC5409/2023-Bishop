@@ -54,8 +54,8 @@
 | D-PAD RIGHT | Primary    |                                                    |                       |        |
 | START       | Primary    |                                                    |                       |        |
 | BACK        | Primary    |                                                    |                       |        |
-| LT          | Secondary  |                                                    |                       |        |
-| RT          | Secondary  |                                                    |                       |        |
+| LT          | Secondary  | Manual arm                                         |                       |        |
+| RT          | Secondary  | Manual arm                                         |                       |        |
 | LB          | Secondary  | Decrease max driving speed                         |                       |        |
 | RB          | Secondary  | Increase max driving speed                         |                       |        |
 | LS-X        | Secondary  |                                                    |                       |        |
@@ -65,7 +65,7 @@
 | RS-Y        | Secondary  |                                                    |                       |        |
 | RS-B        | Secondary  |                                                    |                       |        |
 | X           | Secondary  |                                                    |                       |        |
-| Y           | Secondary  |                                                    |                       |        |
+| Y           | Secondary  | Move arm and retract to resting on intake position | Arm, Telescope        | Press  |
 | A           | Secondary  |                                                    |                       |        |
 | B           | Secondary  | Move arm and retract to idling position            | Arm, Telescope        | Press  |
 | D-PAD UP    | Secondary  | Move arm and extend to top cube position           | Arm, Telescope        | Press  |
