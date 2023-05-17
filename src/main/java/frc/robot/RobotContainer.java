@@ -473,7 +473,7 @@ public class RobotContainer {
             .onTrue(new ClawMovement(sys_claw, kClaw.openPosition).withTimeout(kClaw.timeout));
 
         // Limelight: cone node aim
-        joystickMain.leftBumper().and(() -> !isShuffleboardTestMode())
+        joystickMain.leftBumper()
             .whileTrue(cmd_coneNodeAim);
 
         // Gear shifting (high-mid)
