@@ -466,6 +466,14 @@ public final class Constants {
             public static final boolean doPIDTuning             = false; 
             public static final boolean debugMode               = false;
         }
+
+        public static class kdistancevalues {
+            public static final double scoreplaceheight = 0;
+            public static final double limelightheight = 0;
+            public static final double mountingangle = 0;
+            public static final double armdistance = 0;
+
+        }
     }
 
     public static final class kStallDriveOnChargeStation {
