@@ -267,15 +267,14 @@ public class Limelight extends SubsystemBase {
         double limeangle = nt_yOffset.getDouble(0);
 
         // total angle
-        double angletogoaldegree = Constants.kLimelight.kdistancevalues.mountingangle + limeangle;
+        double angletogoaldegree = Constants.kLimelight.kdistancevalues.kMountingAngle + limeangle;
 
         // converting to radians
         double angletogoalradians = angletogoaldegree * (3.14159 / 180.0);
 
         // calculating distance to score
-        double distance = ((Constants.kLimelight.kdistancevalues.scoreplaceheight - Constants.kLimelight.kdistancevalues.limelightheight)/ Math.sin(angletogoalradians)) - Constants.kLimelight.kdistancevalues.armdistance;
+        double distance = ((Constants.kLimelight.kdistancevalues.kScorePlaceHeight - Constants.kLimelight.kdistancevalues.kLimelightHeight)/ Math.sin(angletogoalradians)) - Constants.kLimelight.kdistancevalues.kArmDistance;
         return distance;
-        
     }
     
     @Override

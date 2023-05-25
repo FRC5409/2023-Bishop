@@ -468,10 +468,15 @@ public final class Constants {
         }
 
         public static class kdistancevalues {
-            public static final double scoreplaceheight = 0;
-            public static final double limelightheight = 0;
-            public static final double mountingangle = 0;
-            public static final double armdistance = 0;
+            public static final double kScorePlaceHeight = 0;
+            public static final double kLimelightHeight = 0;
+            public static final double kMountingAngle = 0;
+            public static final double kArmDistance = 0;
+            public static final double kDistanceTolerance = 0;
+
+            public static final double kP = 0;
+            public static final double kI = 0;
+            public static final double kD = 0;
 
         }
     }
