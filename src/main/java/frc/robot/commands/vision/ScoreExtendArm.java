@@ -6,6 +6,8 @@ package frc.robot.commands.vision;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,7 +21,6 @@ public class ScoreExtendArm extends CommandBase {
 
   private final Limelight sys_Limelight;
   private final Telescope sys_Telescope;
-  //private CommandXboxController m_joystick;
 
   private ShuffleboardTab sb_scoreExtendArmTab;
   private GenericEntry nt_kP, nt_kI, nt_kD;
@@ -27,6 +28,7 @@ public class ScoreExtendArm extends CommandBase {
   private final PIDController m_PidController;
 
   private final boolean debugmode = false;
+  
 
   /** Creates a new ScoreExtendArm. */
   public ScoreExtendArm(Limelight limelight, Telescope telescope) {
@@ -44,18 +46,35 @@ public class ScoreExtendArm extends CommandBase {
   public void getShuffleboardPID(){
     if (debugmode){
       sb_scoreExtendArmTab = Shuffleboard.getTab("ScoreExtendArm");
+      nt_kP = sb_scoreExtendArmTab.add("kP", kLimelight.kdistancevalues.kP).getEntry();
+      nt_kI = sb_scoreExtendArmTab.add("kI",kLimelight.kdistancevalues.kI).getEntry();
+      nt_kD = sb_scoreExtendArmTab.add("kD",kLimelight.kdistancevalues.kD).getEntry();
+      m_PidController.setPID(nt_kP.getDouble(0), nt_kI.getDouble(0), nt_kD.getDouble(0));
     }
+  }
 
-    }
-
+  public double getDistance(){
+   double limelightAngle = sys_Limelight.getYOffset();
+   double angleToScore = kLimelight.kdistancevalues.kMountingAngle + limelightAngle;
+   double angleToScoreRadians = angleToScore * (3.13159 /180);
+   
+   double distance = (kLimelight.kdistancevalues.kScorePlaceHeight-kLimelight.kdistancevalues.kLimelightHeight)/(Math.sin(angleToScoreRadians)) - kLimelight.kdistancevalues.kArmLength;
+   double extendingDistance = distance* kLimelight.kdistancevalues.kExtendingConversion;
+   return extendingDistance;
+  }
   
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    sys_Limelight.turnOn();
+    sys_Limelight.setData("pipeline", 0);
+    getShuffleboardPID();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override

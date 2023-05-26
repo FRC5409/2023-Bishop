@@ -261,22 +261,6 @@ public class Limelight extends SubsystemBase {
         lastRetroDistance = retroTargetDistance;
     }
 
-    // calculates distance to score
-    public double getScoringDistance(){
-        // angle from camera to goal
-        double limeangle = nt_yOffset.getDouble(0);
-
-        // total angle
-        double angletogoaldegree = Constants.kLimelight.kdistancevalues.kMountingAngle + limeangle;
-
-        // converting to radians
-        double angletogoalradians = angletogoaldegree * (3.14159 / 180.0);
-
-        // calculating distance to score
-        double distance = ((Constants.kLimelight.kdistancevalues.kScorePlaceHeight - Constants.kLimelight.kdistancevalues.kLimelightHeight)/ Math.sin(angletogoalradians)) - Constants.kLimelight.kdistancevalues.kArmDistance;
-        return distance;
-    }
-    
     @Override
     public void periodic() {
         updateRobotPosition();

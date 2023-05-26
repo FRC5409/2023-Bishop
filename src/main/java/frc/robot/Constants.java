@@ -471,8 +471,9 @@ public final class Constants {
             public static final double kScorePlaceHeight = 0;
             public static final double kLimelightHeight = 0;
             public static final double kMountingAngle = 0;
-            public static final double kArmDistance = 0;
+            public static final double kArmLength = 0;
             public static final double kDistanceTolerance = 0;
+            public static final double kExtendingConversion = 0;
 
             public static final double kP = 0;
             public static final double kI = 0;
