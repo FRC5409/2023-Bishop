@@ -176,7 +176,7 @@ public class RobotContainer {
         configCamera();
 
         // SmartDashboard.putNumber("Test mode", 0);
-        SmartDashboard.putBoolean("Test mode", false);
+        SmartDashboard.putBoolean("Test mode", true);
 
         // Configure the trigger bindings
         configureBindings();
