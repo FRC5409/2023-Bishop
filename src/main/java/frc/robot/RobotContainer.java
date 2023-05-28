@@ -58,6 +58,7 @@ import frc.robot.commands.intake.IntakePickupSequence;
 import frc.robot.commands.intake.PivotMove;
 import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.vision.ConeNodeAim;
+import frc.robot.commands.vision.ScoreExtendArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -104,6 +105,7 @@ public class RobotContainer {
     private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
+    private final ScoreExtendArm cmd_scoreExtendArm;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -155,6 +157,8 @@ public class RobotContainer {
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
+        cmd_scoreExtendArm = new ScoreExtendArm(sys_limelight, sys_telescope);
+
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
@@ -292,7 +296,7 @@ public class RobotContainer {
                 )
             )
             .onFalse(
-                new SequentialCommandGroup(
+                new SequentialCommandGroup(                     // use this command for the limelight, extending and
                     new InstantCommand(() -> sys_claw.disable()),
                     new TelescopeTo(sys_telescope, kTelescope.kDestinations.kRetracted)
                 )
@@ -361,6 +365,9 @@ public class RobotContainer {
             
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
+
+        joystickSecondary.povLeft()
+            .whileTrue(cmd_scoreExtendArm);
         
         // Move arm and extend to top cube position
         joystickSecondary.y()

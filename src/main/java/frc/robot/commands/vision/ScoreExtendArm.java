@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
+import frc.robot.Constants.kLimelight.kConeNodeAim;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Telescope;
 
@@ -28,6 +30,10 @@ public class ScoreExtendArm extends CommandBase {
   private final PIDController m_PidController;
 
   private final boolean debugmode = false;
+
+  double[] lowNodeCrop, highNodeCrop;
+  double currentOffset;
+  private boolean extended = false;
   
 
   /** Creates a new ScoreExtendArm. */
@@ -62,18 +68,37 @@ public class ScoreExtendArm extends CommandBase {
    double extendingDistance = distance* kLimelight.kdistancevalues.kExtendingConversion;
    return extendingDistance;
   }
+
+  public void setTargetMode(){
+    lowNodeCrop = kLimelight.KretroTarget.lowNodeCrop;
+    highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
+    if ((sys_Telescope).getPrevPos() == Constants.kTelescope.kDestinations.kExtended) {
+      sys_Limelight.setCropSize(highNodeCrop);
+      currentOffset = kConeNodeAim.KhighNodeOffset;
+    }
+    else {
+      sys_Limelight.setCropSize(lowNodeCrop);
+      currentOffset = kConeNodeAim.KlowNodeOffset;
+    }
+  }
   
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    extended = false;
     sys_Limelight.turnOn();
-    sys_Limelight.setData("pipeline", 0);
+    sys_Limelight.setData("pipeline", 1);
     getShuffleboardPID();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    setTargetMode();
+    sys_Telescope.extend(getDistance());
+    sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
+    extended = true;
+
   }
 
   // Called once the command ends or is interrupted.
@@ -83,6 +108,6 @@ public class ScoreExtendArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return extended;
   }
 }
