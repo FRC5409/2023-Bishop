@@ -36,7 +36,7 @@
 | :---------: | :--------: | :------------------------------------------------- | :-------------------- | :----: |
 | LT          | Primary    | Decelerate/reverse                                 | Drivetrain            | Hold   |
 | RT          | Primary    | Accelerate                                         | Drivetrain            | Hold   |
-| LB          | Primary    |                                                    |                       |        |
+| LB          | Primary    | Cone node aim                                      | Limelight, Drivetrain | Hold   |
 | RB          | Primary    |                                                    |                       |        |
 | LS-X        | Primary    | Rotation                                           | Drivetrain            | Hold   |
 | LS-Y        | Primary    |                                                    |                       |        |
