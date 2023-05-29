@@ -16,12 +16,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.kLimelight;
 import frc.robot.Constants.kLimelight.kConeNodeAim;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Telescope;
 
 public class ScoreExtendArm extends CommandBase {
 
   private final Limelight sys_Limelight;
+  private final Arm sys_arm;
   private final Telescope sys_Telescope;
 
   private ShuffleboardTab sb_scoreExtendArmTab;
@@ -32,20 +34,24 @@ public class ScoreExtendArm extends CommandBase {
   private final boolean debugmode = false;
 
   double[] lowNodeCrop, highNodeCrop;
-  double currentOffset;
+  double cropmode;
+
+  double armSetpoint;
+  double scoreHeight;
   private boolean extended = false;
   
 
   /** Creates a new ScoreExtendArm. */
-  public ScoreExtendArm(Limelight limelight, Telescope telescope) {
+  public ScoreExtendArm(Limelight limelight, double cropmode, Arm arm, double armSetpoint, Telescope telescope) {
     sys_Limelight = limelight;
+    sys_arm = arm;
     sys_Telescope = telescope;
 
     m_PidController = new PIDController(kLimelight.kdistancevalues.kP,kLimelight.kdistancevalues.kI, kLimelight.kdistancevalues.kD);
     m_PidController.setSetpoint(0);
     m_PidController.setTolerance(kLimelight.kdistancevalues.kDistanceTolerance);
 
-    addRequirements(sys_Limelight,sys_Telescope);
+    addRequirements(sys_Limelight,sys_arm, sys_Telescope);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -60,25 +66,29 @@ public class ScoreExtendArm extends CommandBase {
   }
 
   public double getDistance(){
+    if (cropmode == 0){
+      scoreHeight = Constants.kLimelight.kdistancevalues.kScoreHeightLow;
+    }
+    else{
+      scoreHeight = Constants.kLimelight.kdistancevalues.kScoreHeightHigh;
+    }
+
    double limelightAngle = sys_Limelight.getYOffset();
    double angleToScore = kLimelight.kdistancevalues.kMountingAngle + limelightAngle;
    double angleToScoreRadians = angleToScore * (3.13159 /180);
    
-   double distance = (kLimelight.kdistancevalues.kScorePlaceHeight-kLimelight.kdistancevalues.kLimelightHeight)/(Math.sin(angleToScoreRadians)) - kLimelight.kdistancevalues.kArmLength;
+   double distance = (scoreHeight-kLimelight.kdistancevalues.kLimelightHeight)/(Math.sin(angleToScoreRadians)) - kLimelight.kdistancevalues.kArmLength;
    double extendingDistance = distance* kLimelight.kdistancevalues.kExtendingConversion;
    return extendingDistance;
   }
 
-  public void setTargetMode(){
-    lowNodeCrop = kLimelight.KretroTarget.lowNodeCrop;
-    highNodeCrop = kLimelight.KretroTarget.highNodeCrop;
-    if ((sys_Telescope).getPrevPos() == Constants.kTelescope.kDestinations.kExtended) {
-      sys_Limelight.setCropSize(highNodeCrop);
-      currentOffset = kConeNodeAim.KhighNodeOffset;
-    }
-    else {
+  public void setTargetMode(double cropmode){
+    if (cropmode == 0){
       sys_Limelight.setCropSize(lowNodeCrop);
-      currentOffset = kConeNodeAim.KlowNodeOffset;
+    }
+
+    else{
+      sys_Limelight.setCropSize(highNodeCrop);
     }
   }
   
@@ -94,11 +104,16 @@ public class ScoreExtendArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    setTargetMode();
-    sys_Telescope.extend(getDistance());
-    sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
-    extended = true;
+    setTargetMode(cropmode);
+    sys_arm.setSetpoint(armSetpoint);
+    sys_arm.enable();
 
+    if (Math.abs(sys_arm.getMeasurement()-armSetpoint) < .1){
+      sys_Telescope.extend(getDistance());
+      sys_Limelight.turnOff();
+      sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
+      extended = true;
+    }
   }
 
   // Called once the command ends or is interrupted.

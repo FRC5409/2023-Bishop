@@ -105,7 +105,6 @@ public class RobotContainer {
     private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
-    private final ScoreExtendArm cmd_scoreExtendArm;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -157,7 +156,6 @@ public class RobotContainer {
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
-        cmd_scoreExtendArm = new ScoreExtendArm(sys_limelight, sys_telescope);
 
 
         // Set default drive as drivetrain's default command
@@ -365,22 +363,17 @@ public class RobotContainer {
             
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
-
-        joystickSecondary.povLeft()
-            .whileTrue(cmd_scoreExtendArm);
         
         // Move arm and extend to top cube position
         joystickSecondary.y()
             .onTrue(
-                new MoveThenExtend(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, 
-                sys_telescope, Constants.kTelescope.kDestinations.kExtended)
-            );
+                    new ScoreExtendArm(sys_limelight, Constants.kLimelight.kdistancevalues.khighmode , sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, sys_telescope));
+  
 
         // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope)
-            );
+                    new ScoreExtendArm(sys_limelight, Constants.kLimelight.kdistancevalues.klowmode, sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope));
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
