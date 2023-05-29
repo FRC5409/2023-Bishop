@@ -55,6 +55,7 @@ public class ScoreExtendArm extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  // shuffleboard
   public void getShuffleboardPID(){
     if (debugmode){
       sb_scoreExtendArmTab = Shuffleboard.getTab("ScoreExtendArm");
@@ -65,23 +66,29 @@ public class ScoreExtendArm extends CommandBase {
     }
   }
 
+  // gets the distance to extend the arm
   public double getDistance(){
+    // scoring low 
     if (cropmode == 0){
       scoreHeight = Constants.kLimelight.kdistancevalues.kScoreHeightLow;
     }
+    // scoring high
     else{
       scoreHeight = Constants.kLimelight.kdistancevalues.kScoreHeightHigh;
     }
 
+   // gets angle 
    double limelightAngle = sys_Limelight.getYOffset();
    double angleToScore = kLimelight.kdistancevalues.kMountingAngle + limelightAngle;
    double angleToScoreRadians = angleToScore * (3.13159 /180);
    
+   // calculates distance 
    double distance = (scoreHeight-kLimelight.kdistancevalues.kLimelightHeight)/(Math.sin(angleToScoreRadians)) - kLimelight.kdistancevalues.kArmLength;
    double extendingDistance = distance* kLimelight.kdistancevalues.kExtendingConversion;
    return extendingDistance;
   }
 
+  // crops the limelight screen to focus on one row of nodes 
   public void setTargetMode(double cropmode){
     if (cropmode == 0){
       sys_Limelight.setCropSize(lowNodeCrop);
