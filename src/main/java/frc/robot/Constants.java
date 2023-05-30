@@ -468,8 +468,8 @@ public final class Constants {
         }
 
         public static class kdistancevalues {
-            public static final double kScoreHeightHigh = 0;
-            public static final double kScoreHeightLow = 0;
+            public static final double kScoreHeightHigh = 132; // 117cm
+            public static final double kScoreHeightLow = 102; // 87 cm
             public static final double kLimelightHeight = 19;
             public static final double kArmHeight = 30.5;
             public static final double kMountingAngle = 13;
