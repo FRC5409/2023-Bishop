@@ -470,11 +470,12 @@ public final class Constants {
         public static class kdistancevalues {
             public static final double kScoreHeightHigh = 0;
             public static final double kScoreHeightLow = 0;
-            public static final double kLimelightHeight = 0;
-            public static final double kMountingAngle = 0;
-            public static final double kArmLength = 0;
+            public static final double kLimelightHeight = 19;
+            public static final double kArmHeight = 30.5;
+            public static final double kMountingAngle = 13;
+            public static final double kArmLength = 26.5;
             public static final double kDistanceTolerance = 0;
-            public static final double kExtendingConversion = 0;
+            public static final double kExtendingConversion = 0.089285714285714; // the arm can extend by 14 cm, max on entendion is 1.25
             public static final double khighmode = 1;
             public static final double klowmode = 0;
 

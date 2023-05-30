@@ -23,7 +23,7 @@ import frc.robot.subsystems.Telescope;
 public class ScoreExtendArm extends CommandBase {
 
   private final Limelight sys_Limelight;
-  private final Arm sys_arm;
+
   private final Telescope sys_Telescope;
 
   private ShuffleboardTab sb_scoreExtendArmTab;
@@ -36,7 +36,6 @@ public class ScoreExtendArm extends CommandBase {
   double[] lowNodeCrop, highNodeCrop;
   double cropmode;
 
-  double armSetpoint;
   double scoreHeight;
   private boolean extended = false;
   
@@ -44,14 +43,14 @@ public class ScoreExtendArm extends CommandBase {
   /** Creates a new ScoreExtendArm. */
   public ScoreExtendArm(Limelight limelight, double cropmode, Arm arm, double armSetpoint, Telescope telescope) {
     sys_Limelight = limelight;
-    sys_arm = arm;
     sys_Telescope = telescope;
+    
 
     m_PidController = new PIDController(kLimelight.kdistancevalues.kP,kLimelight.kdistancevalues.kI, kLimelight.kdistancevalues.kD);
     m_PidController.setSetpoint(0);
     m_PidController.setTolerance(kLimelight.kdistancevalues.kDistanceTolerance);
 
-    addRequirements(sys_Limelight,sys_arm, sys_Telescope);
+    addRequirements(sys_Limelight, sys_Telescope);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -80,7 +79,7 @@ public class ScoreExtendArm extends CommandBase {
    // gets angle 
    double limelightAngle = sys_Limelight.getYOffset();
    double angleToScore = kLimelight.kdistancevalues.kMountingAngle + limelightAngle;
-   double angleToScoreRadians = angleToScore * (3.13159 /180);
+   double angleToScoreRadians = angleToScore * (Math.PI /180);
    
    // calculates distance 
    double distance = (scoreHeight-kLimelight.kdistancevalues.kLimelightHeight)/(Math.sin(angleToScoreRadians)) - kLimelight.kdistancevalues.kArmLength;
@@ -112,16 +111,11 @@ public class ScoreExtendArm extends CommandBase {
   @Override
   public void execute() {
     setTargetMode(cropmode);
-    sys_arm.setSetpoint(armSetpoint);
-    sys_arm.enable();
-
-    if (Math.abs(sys_arm.getMeasurement()-armSetpoint) < .1){
       sys_Telescope.extend(getDistance());
       sys_Limelight.turnOff();
       sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
       extended = true;
     }
-  }
 
   // Called once the command ends or is interrupted.
   @Override

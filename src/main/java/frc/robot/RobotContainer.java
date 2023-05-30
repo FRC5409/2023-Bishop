@@ -39,8 +39,10 @@ import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
+import frc.robot.Constants.kArmSubsystem.kSetpoints;
 import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.arm.ArmRotation;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
@@ -58,6 +60,7 @@ import frc.robot.commands.intake.IntakePickupSequence;
 import frc.robot.commands.intake.PivotMove;
 import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.vision.ConeNodeAim;
+import frc.robot.commands.vision.NewScoreExtendArm;
 import frc.robot.commands.vision.ScoreExtendArm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
@@ -367,13 +370,22 @@ public class RobotContainer {
         // Move arm and extend to top cube position
         joystickSecondary.y()
             .onTrue(
-                    new ScoreExtendArm(sys_limelight, Constants.kLimelight.kdistancevalues.khighmode , sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop, sys_telescope));
-  
+                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop)
+            )
+        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kToTop) < .1)
+            .onTrue(
+                new NewScoreExtendArm(sys_limelight, 1, sys_telescope)
+            );
 
-        // Move arm and retract ABOVE mid cone node position
+          // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
-                    new ScoreExtendArm(sys_limelight, Constants.kLimelight.kdistancevalues.klowmode, sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew, sys_telescope));
+                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
+            )
+        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kConeAboveNew) < .1)
+            .onTrue(
+                new NewScoreExtendArm(sys_limelight, 0, sys_telescope)
+            );
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
