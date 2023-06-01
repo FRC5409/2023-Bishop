@@ -468,14 +468,14 @@ public final class Constants {
         }
 
         public static class kdistancevalues {
-            public static final double kScoreHeightHigh = 132; // 117cm
-            public static final double kScoreHeightLow = 102; // 87 cm
-            public static final double kLimelightHeight = 19;
-            public static final double kArmHeight = 30.5;
+            public static final double kScoreHeightHigh = 122; // top node height is 117cm and the cones height is 33cm
+            public static final double kScoreHeightLow = 92; // mid node height 87 cm and the cones height is 33cm
+            public static final double kLimelightHeight = 18.5;
+            public static final double kArmHeight = 30;
             public static final double kMountingAngle = 13;
-            public static final double kArmLength = 26.5;
+            public static final double kArmLength = 31.5; // arms length is 27cm and claws length is 9cm
             public static final double kDistanceTolerance = 0;
-            public static final double kExtendingConversion = 0.089285714285714; // the arm can extend by 14 cm, max on entendion is 1.25
+            public static final double kExtendingConversion = (1.25/13.5); // the arm can extend by 13.5 cm, max on entendion is 1.25
             public static final double khighmode = 1;
             public static final double klowmode = 0;
 
