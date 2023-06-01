@@ -53,7 +53,7 @@ public class NewScoreExtendArm extends CommandBase {
    
    // calculates distance 
    double distance = (scoreHeight - kLimelight.kdistancevalues.kLimelightHeight) / (Math.tan(angleToScore));
-   double extendingDistance = (Math.sqrt(Math.pow(distance, 2) + Math.pow((scoreHeight - Constants.kLimelight.kdistancevalues.kArmHeight), 2))) - Constants.kLimelight.kdistancevalues.kArmLength;
+   double extendingDistance = (Math.sqrt(Math.pow(distance, 2) + Math.pow((scoreHeight - Constants.kLimelight.kdistancevalues.kArmHeight + Constants.kLimelight.kdistancevalues.kConeHeight), 2))) - Constants.kLimelight.kdistancevalues.kArmLength;
    double finalExtendingDistance = extendingDistance * Constants.kLimelight.kdistancevalues.kExtendingConversion;
    
    return finalExtendingDistance;
