@@ -190,6 +190,10 @@ public class Limelight extends SubsystemBase {
         nt_ledMode.setNumber(3);
     }
 
+    public boolean isOn() {
+        return nt_ledMode.getDouble(0) == 3;
+    }
+
     /** Gets the X position/offset */
     public double getXOffset() {
         return nt_xOffset.getDouble(0);

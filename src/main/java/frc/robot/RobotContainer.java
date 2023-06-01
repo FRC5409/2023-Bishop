@@ -61,7 +61,7 @@ import frc.robot.commands.intake.PivotMove;
 import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.commands.vision.NewScoreExtendArm;
-import frc.robot.commands.vision.ScoreExtendArm;
+import frc.robot.commands.vision.NewScoreExtendArm.cropMode;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Candle;
 import frc.robot.subsystems.Claw;
@@ -374,7 +374,7 @@ public class RobotContainer {
             )
         .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kToTop) < .1)
             .onTrue(
-                new NewScoreExtendArm(sys_limelight, 1, sys_telescope)
+                new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope)
             );
 
           // Move arm and retract ABOVE mid cone node position
@@ -384,7 +384,7 @@ public class RobotContainer {
             )
         .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kConeAboveNew) < .1)
             .onTrue(
-                new NewScoreExtendArm(sys_limelight, 0, sys_telescope)
+                new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope)
             );
         
         // Move arm and retract to cone low position
