@@ -2,7 +2,31 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Drive Team/Auto path": "String Chooser"
+      "/Shuffleboard/Drive Team/Auto path": "String Chooser",
+      "/Shuffleboard/Drive team/Choose auto routine": "String Chooser",
+      "/Shuffleboard/Drive team/Field": "Field2d"
+    },
+    "windows": {
+      "/Shuffleboard/Drive team/Choose auto routine": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/Shuffleboard/Drive team/Field": {
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "Shuffleboard": {
+        "Drive team": {
+          "open": true
+        },
+        "open": true
+      }
     }
   }
 }

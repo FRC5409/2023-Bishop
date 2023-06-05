@@ -5,17 +5,17 @@
 package frc.robot;
 
 import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -116,7 +116,10 @@ public class RobotContainer {
 
     // Trajectory & autonomous path chooser
     private ShuffleboardTab sb_driveteam;
-    private SendableChooser<Command> sc_chooseAutoRoutine;
+    private SendableChooser<AutoCommand> sc_chooseAutoRoutine;
+
+    private Field2d sb_field;
+    private Trajectory m_trajectory;
 
     private int rumbleTime = 0;
 
@@ -167,7 +170,13 @@ public class RobotContainer {
         sb_driveteam.addInteger("Camera Width", () -> 1024).withPosition(1, 2);
         sb_driveteam.addInteger("Camera Height", () -> 768).withPosition(2, 2);
 
+        sb_field = new Field2d();
+
+        sb_driveteam.add("Field", sb_field);
+
         addAutoRoutinesToShuffleboard();
+
+        updateShuffleboard();
 
         // Camera
         sys_camera = CameraServer.startAutomaticCapture();
@@ -221,7 +230,9 @@ public class RobotContainer {
      */
     private void addAutoRoutinesToShuffleboard() {
         // Trajectory & autonomous path chooser
-        sc_chooseAutoRoutine = new SendableChooser<Command>();
+        sc_chooseAutoRoutine = new SendableChooser<AutoCommand>();
+
+        sc_chooseAutoRoutine.setDefaultOption("B1L. TURN LEFT place and balance", new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, PathPlanner.loadPath("B1L. TURN LEFT place and balance", kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true)));
 
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
@@ -498,6 +509,12 @@ public class RobotContainer {
         } else {
             rumbleTime--;
         }
+    }
+
+    public void updateShuffleboard() {
+        m_trajectory = sc_chooseAutoRoutine.getSelected().getTrajectory();
+        sb_field.getObject("traj").setTrajectory(new Trajectory());
+        sb_field.getObject("traj").setTrajectory(m_trajectory);
     }
 
 }

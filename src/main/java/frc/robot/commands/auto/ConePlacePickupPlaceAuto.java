@@ -5,12 +5,12 @@
 package frc.robot.commands.auto;
 
 import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.AutoCommand;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
@@ -26,7 +26,9 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
-public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
+public class ConePlacePickupPlaceAuto extends SequentialCommandGroup implements AutoCommand {
+
+    private final List<PathPlannerTrajectory> m_pathGroup;
 
     public ConePlacePickupPlaceAuto(
             Drivetrain sys_drivetrain,
@@ -36,6 +38,8 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
             Candle sys_LEDs,
             Limelight sys_limelight,
             List<PathPlannerTrajectory> pathGroup) {
+
+        m_pathGroup = pathGroup;
 
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
@@ -73,5 +77,10 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
                     Commands.runOnce(() -> sys_drivetrain.setNeutralMode(NeutralMode.Coast))
                 )
         );
+    }
+    
+    @Override
+    public Trajectory getTrajectory() {
+        return m_pathGroup.get(0).concatenate(m_pathGroup.get(1).concatenate(m_pathGroup.get(2)));
     }
 }

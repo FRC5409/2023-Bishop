@@ -5,11 +5,11 @@
 package frc.robot.commands.auto;
 
 import java.util.List;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
-
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.AutoCommand;
 import frc.robot.Constants.kArmSubsystem;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.arm.ArmRotation;
@@ -24,7 +24,9 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
 
-public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
+public class OneConeOnePickupConeAuto extends SequentialCommandGroup implements AutoCommand {
+
+    private final List<PathPlannerTrajectory> m_pathGroup;
 
     public OneConeOnePickupConeAuto(
             Drivetrain sys_drivetrain,
@@ -33,6 +35,8 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
             Claw sys_claw,
             Candle sys_LEDs,
             List<PathPlannerTrajectory> pathGroup) {
+
+        m_pathGroup = pathGroup;
 
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
@@ -58,5 +62,10 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
 
                 new BalancingChargeStation(sys_drivetrain, sys_LEDs)
         );
+    }
+
+    @Override
+    public Trajectory getTrajectory() {
+        return m_pathGroup.get(0).concatenate(m_pathGroup.get(1).concatenate(m_pathGroup.get(2)));
     }
 }
