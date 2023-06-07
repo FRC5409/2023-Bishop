@@ -513,7 +513,6 @@ public class RobotContainer {
 
     public void updateShuffleboard() {
         m_trajectory = sc_chooseAutoRoutine.getSelected().getTrajectory();
-        sb_field.getObject("traj").setTrajectory(new Trajectory());
         sb_field.getObject("traj").setTrajectory(m_trajectory);
     }
 

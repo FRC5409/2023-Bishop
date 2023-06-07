@@ -66,6 +66,6 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup implements 
 
     @Override
     public Trajectory getTrajectory() {
-        return m_pathGroup.get(0).concatenate(m_pathGroup.get(1).concatenate(m_pathGroup.get(2)));
+        return m_pathGroup.get(0).concatenate(m_pathGroup.get(1));
     }
 }

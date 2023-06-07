@@ -105,6 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_robotContainer.updateShuffleboard();
     if (LEDState == 1 || LEDState == 0) {
       Alliance alliance = DriverStation.getAlliance();
       if (alliance != currentAlliance || DriverStation.isDSAttached() != connected) {
@@ -136,7 +137,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    m_robotContainer.updateShuffleboard();
+    
   }
 
   @Override
