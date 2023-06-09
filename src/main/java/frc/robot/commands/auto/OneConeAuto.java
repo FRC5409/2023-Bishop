@@ -41,7 +41,7 @@ public class OneConeAuto extends SequentialCommandGroup implements AutoCommand {
 
     @Override
     public Trajectory getTrajectory() {
-        return m_trajectory.transformBy(new Transform2d());
+        return (Trajectory) m_trajectory;
     }
 
 }
