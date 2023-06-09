@@ -1,6 +1,6 @@
 //LimelightHelpers v1.1.2 (Feb 8, 2023)
 
-package frc.robot;
+package frc.robot.Util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

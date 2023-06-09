@@ -19,7 +19,7 @@ import frc.robot.commands.auto.task.BalancingChargeStation;
 import frc.robot.commands.auto.task.CloseClawInAuto;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Telescope;
@@ -31,7 +31,7 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup {
             Arm sys_arm,
             Telescope sys_telescope,
             Claw sys_claw,
-            Candle sys_LEDs,
+            LED sys_LEDs,
             List<PathPlannerTrajectory> pathGroup) {
 
         addCommands(

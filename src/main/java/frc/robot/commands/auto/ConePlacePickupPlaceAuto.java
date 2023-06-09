@@ -20,7 +20,7 @@ import frc.robot.commands.auto.task.CloseClawInAuto;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Claw;
@@ -33,7 +33,7 @@ public class ConePlacePickupPlaceAuto extends SequentialCommandGroup {
             Arm sys_arm,
             Telescope sys_telescope,
             Claw sys_claw,
-            Candle sys_LEDs,
+            LED sys_LEDs,
             Limelight sys_limelight,
             List<PathPlannerTrajectory> pathGroup) {
 

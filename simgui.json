@@ -2,7 +2,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Drive Team/Auto path": "String Chooser"
+      "/Shuffleboard/Drive Team/Auto path": "String Chooser",
+      "/Shuffleboard/Drive team/Choose auto routine": "String Chooser"
+    },
+    "windows": {
+      "/Shuffleboard/Drive team/Choose auto routine": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   }
 }
