@@ -103,31 +103,6 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
       // This method will be called once per scheduler run
-      // timer++;
-      // if (currentAnimationSlot == -1) {
-      //   for (int i = 0; i < 4; i++) {
-      //     candle.animate(null, i);
-      //   }
-      // } else if (currentAnimationSlot == 2) {
-      //   //Sin Flow 
-      // } else if (currentAnimationSlot == 3) {
-      //   //Sin Wave
-      // } else if (currentAnimationSlot == 4) {
-      //   //Charged Up
-      // } else if (currentAnimationSlot == 5) {
-      //   //E Stopped
-      // } else if (currentAnimationSlot == 6) {
-        //End Game
-        // animationTime++;
-        // if (animationTime % 5 < 3) {
-        //   setColor(kCANdle.kColors.idle[0], kCANdle.kColors.idle[1], kCANdle.kColors.idle[2]);
-        // } else {
-        //   setColor(LEDOff[0], LEDOff[1], LEDOff[2]);
-        // }
-        // if (animationTime >= 140) {
-        //   idleAnimation();
-        // }
-      // }
 
       //Setting LED colors
       for (int i = 8; i < kCANdle.kConfig.LEDCount; i++) {
@@ -143,16 +118,30 @@ public class LED extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         // This method will be called once per scheduler run during simulation
-       
+
     }
 
+    /**
+     * Prints what the LED is at index
+     * @param index the index of LED you are looking for
+     */
+    public void printLEDAtIndex(int index) {
+      System.out.printf("LEDs are currently set to:%nRed: %s, green: %s, blue: %s %n", LEDColors[index][0], LEDColors[index][1], LEDColors[index][2]);
+    }
+
+    /**
+     * Sets the idle color of the LEDs
+     */
     public void idleAnimation() {
       setColor(kColors.idle);
     }
 
+    /**
+     * Gets the current color applied to the LEDs
+     * @return
+     */
     public Color getColor() {
-      Color color = new Color(0, 0, 0);
-      return color;
+      return new Color(LEDColors[9][0], LEDColors[9][1], LEDColors[9][2]);
     }
 
     /**

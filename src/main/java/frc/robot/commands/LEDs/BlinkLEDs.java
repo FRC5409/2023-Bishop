@@ -8,11 +8,13 @@ public class BlinkLEDs extends CommandBase {
 
     private final LED LEDs;
     private final Color onColor;
-    private final Color offColor;
+    private       Color offColor;
     private final int blinkSpeed;
     private final int blinkCount;
 
     private int timer;
+
+    private boolean getColor = false;
 
     public BlinkLEDs(LED LEDs, Color colorOn, Color colorOff, int blinkSpeed, int blinkCount) {
         // Use addRequirements() here to declare subsystem dependencies.
@@ -26,13 +28,17 @@ public class BlinkLEDs extends CommandBase {
     }
 
     public BlinkLEDs(LED LEDs, Color colorOff, int blinkSpeed, int blinkCount) {
-      this(LEDs, LEDs.getColor(), colorOff, blinkSpeed, blinkCount);
+      this(LEDs, null, colorOff, blinkSpeed, blinkCount);
+      getColor = true;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         timer = 0;
+        if (getColor) {
+          offColor = LEDs.getColor();
+        }
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -49,7 +55,9 @@ public class BlinkLEDs extends CommandBase {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+      if (getInterruptionBehavior() == InterruptionBehavior.kCancelSelf) {
         LEDs.setColor(onColor);
+      }
     }
 
     // Returns true when the command should end.
