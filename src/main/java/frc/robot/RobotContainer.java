@@ -400,12 +400,12 @@ public class RobotContainer {
         // Manual arm movement
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
-                    new BlinkLEDs(sys_LED, new Color(255, 255, 255), kCANdle.kColors.blinkSpeed, -1)
+                    new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
             );
         joystickSecondary.leftTrigger()
             .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
-                    new BlinkLEDs(sys_LED, new Color(255, 255, 255), kCANdle.kColors.blinkSpeed, -1)
+                    new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
             );             
 

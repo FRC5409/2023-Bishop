@@ -24,7 +24,7 @@ public class LED extends SubsystemBase {
         candle.configLEDType(LEDStripType.GRB);
         candle.animate(null, 0);
 
-        setColor(new Color(0, 0, 0));
+        setColor(Color.kBlack);
 
         configBrightness(kConfig.defaultBrightness);
 
@@ -165,9 +165,9 @@ public class LED extends SubsystemBase {
 
      public void setTeamColor() {
       if (DriverStation.getAlliance() == Alliance.Red) {
-        setColor(new Color(255, 0, 0));
+        setColor(Color.kPureRed);
       } else {
-        setColor(new Color(0, 0, 255));
+        setColor(Color.kPureBlue);
       }
     }
 
@@ -177,9 +177,9 @@ public class LED extends SubsystemBase {
      */
     public Color getTeamColor() {
       if (DriverStation.getAlliance() == Alliance.Red) {
-        return new Color(255, 0, 0);
+        return Color.kPureRed;
       } else if (DriverStation.getAlliance() == Alliance.Blue) {
-        return new Color(0, 0, 255);
+        return Color.kPureBlue;
       }
 
       return kColors.black;

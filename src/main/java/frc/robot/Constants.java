@@ -266,9 +266,9 @@ public final class Constants {
             public static final Color cube                      = new Color(142, 39, 245);
             public static final Color cone                      = new Color(237, 120, 0);
 
-            public static final Color blinkColor                = new Color(255, 0, 0);
+            public static final Color blinkColor                = Color.kPureRed;
 
-            public static final Color black                     = new Color(0, 0, 0);
+            public static final Color black                     = Color.kBlack;
 
             public static final int LEDSinCount                 = 8;
             public static final double kSpeed                   = 0.5;

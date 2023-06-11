@@ -45,11 +45,11 @@ public class DisabledAnimation extends CommandBase {
         if (!DriverStation.isDSAttached()) {
             color = kColors.black;
         } else if (currentAlliance == Alliance.Red) {
-            color = new Color(200, 0, 0);
+            color = Color.kPureRed;
         } else if (currentAlliance == Alliance.Blue) {
-            color = new Color(0, 0, 255);
+            color = Color.kPureBlue;
         } else {
-            color = new Color(255, 255, 255);
+            color = Color.kWhite;
         }
 
         animationTime = Math.sin(timer * kColors.sinFrequency) * kColors.sinFrequencySpeed;

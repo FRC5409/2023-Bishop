@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
         new DisabledAnimation(m_robotContainer.sys_LED, kColors.black).schedule();
       }
     } else {
-      new EStopAnimation(m_robotContainer.sys_LED, new Color(255, 0, 0), kColors.black).schedule();
+      new EStopAnimation(m_robotContainer.sys_LED, Color.kPureRed, kColors.black).schedule();
     }
   }
 
@@ -176,12 +176,12 @@ public class Robot extends TimedRobot {
       case 5:
         //switch to red
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 5);
-        m_robotContainer.sys_LED.setColor(new Color(255, 0, 0));
+        m_robotContainer.sys_LED.setColor(Color.kPureRed);
         break;
       case 3:
         //flashing red
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
-        new EStopAnimation(m_robotContainer.sys_LED, new Color(255, 0, 0), kColors.black).schedule();
+        new EStopAnimation(m_robotContainer.sys_LED, Color.kPureRed, kColors.black).schedule();
         break;
       case 1:
         //rumble controller

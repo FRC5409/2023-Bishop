@@ -38,7 +38,7 @@ public class BalancingChargeStation extends PIDCommand {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_LEDs.setColor(new Color(255, 0, 0));
+        m_LEDs.setColor(Color.kPureRed);
     }
 
     @Override
@@ -46,12 +46,12 @@ public class BalancingChargeStation extends PIDCommand {
         super.execute();
         if (getController().atSetpoint()) {
             if (!isBalanced) {
-                m_LEDs.setColor(new Color(0, 255, 0));
+                m_LEDs.setColor(Color.kPureGreen);
                 isBalanced = true;
             }
         } else {
             if (isBalanced) {
-                m_LEDs.setColor(new Color(255, 0, 0));
+                m_LEDs.setColor(Color.kPureRed);
                 isBalanced = false;
             }
         }

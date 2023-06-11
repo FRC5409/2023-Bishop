@@ -18,7 +18,7 @@ public class CloseClawInAuto extends SequentialCommandGroup {
         Command cmdLED = new BlinkLEDs(
                 sys_LEDs,
                 kColors.idle,
-                new Color(0, 255, 0),
+                Color.kPureGreen,
                 kColors.blinkSpeed, kColors.blinkTime
             );
 
