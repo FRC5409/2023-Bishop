@@ -182,7 +182,7 @@ public class LED extends SubsystemBase {
         return Color.kPureBlue;
       }
 
-      return kColors.black;
+      return Color.kBlack;
     }
 
 }

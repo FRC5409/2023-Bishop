@@ -7,15 +7,11 @@ import frc.robot.subsystems.LED;
 public class EStopAnimation extends CommandBase {
 
     private final LED m_LEDs;
-    private final Color onColor;
-    private final Color offColor;
 
     private int timer;
 
-    public EStopAnimation(LED LEDs, Color onColor, Color offColor) {
+    public EStopAnimation(LED LEDs) {
         m_LEDs = LEDs;
-        this.onColor = onColor;
-        this.offColor = offColor;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_LEDs);
@@ -31,9 +27,9 @@ public class EStopAnimation extends CommandBase {
     @Override
     public void execute() {
         if (timer % 10 <= 5) {
-            m_LEDs.setColor(onColor);
+            m_LEDs.setColor(Color.kPureRed);
         } else {
-            m_LEDs.setColor(offColor);
+            m_LEDs.setColor(Color.kBlack);
         }
     }
 

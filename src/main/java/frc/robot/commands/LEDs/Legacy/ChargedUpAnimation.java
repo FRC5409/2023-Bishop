@@ -10,7 +10,7 @@ public class ChargedUpAnimation extends CommandBase {
 
     private final LED m_LEDs;
 
-    private final Color off = kColors.black;
+    private final Color off = Color.kBlack;
     private final Color yellow = kColors.idle;
 
     private int maxCharge = 0;

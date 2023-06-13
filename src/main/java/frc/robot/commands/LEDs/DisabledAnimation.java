@@ -43,7 +43,7 @@ public class DisabledAnimation extends CommandBase {
         currentAlliance = DriverStation.getAlliance();
 
         if (!DriverStation.isDSAttached()) {
-            color = kColors.black;
+            color = Color.kBlack;
         } else if (currentAlliance == Alliance.Red) {
             color = Color.kPureRed;
         } else if (currentAlliance == Alliance.Blue) {

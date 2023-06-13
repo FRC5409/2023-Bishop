@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.kCANdle.kColors;
 import frc.robot.Util.Color;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
@@ -96,12 +95,12 @@ public class Robot extends TimedRobot {
     if (!DriverStation.isEStopped()) {
       if (DriverStation.isDSAttached()) {
         new GameEndAnimation(m_robotContainer.sys_LED)
-        .andThen(new DisabledAnimation(m_robotContainer.sys_LED, kColors.black)).schedule();
+        .andThen(new DisabledAnimation(m_robotContainer.sys_LED, Color.kBlack)).schedule();
       } else {
-        new DisabledAnimation(m_robotContainer.sys_LED, kColors.black).schedule();
+        new DisabledAnimation(m_robotContainer.sys_LED, Color.kBlack).schedule();
       }
     } else {
-      new EStopAnimation(m_robotContainer.sys_LED, Color.kPureRed, kColors.black).schedule();
+      new EStopAnimation(m_robotContainer.sys_LED).schedule();
     }
   }
 
@@ -181,7 +180,7 @@ public class Robot extends TimedRobot {
       case 3:
         //flashing red
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
-        new EStopAnimation(m_robotContainer.sys_LED, Color.kPureRed, kColors.black).schedule();
+        new EStopAnimation(m_robotContainer.sys_LED).schedule();
         break;
       case 1:
         //rumble controller

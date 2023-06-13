@@ -2,6 +2,7 @@ package frc.robot.commands.LEDs;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.kCANdle.kColors;
+import frc.robot.Util.Color;
 import frc.robot.subsystems.LED;
 
 public class GameEndAnimation extends CommandBase {
@@ -31,7 +32,7 @@ public class GameEndAnimation extends CommandBase {
         if (timer % 5 < 3) {
             m_LEDs.setColor(kColors.idle);
         } else {
-            m_LEDs.setColor(kColors.black);
+            m_LEDs.setColor(Color.kBlack);
         }
     }
 

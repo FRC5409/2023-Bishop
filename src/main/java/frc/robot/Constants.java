@@ -268,8 +268,6 @@ public final class Constants {
 
             public static final Color blinkColor                = Color.kPureRed;
 
-            public static final Color black                     = Color.kBlack;
-
             public static final int LEDSinCount                 = 8;
             public static final double kSpeed                   = 0.5;
 
