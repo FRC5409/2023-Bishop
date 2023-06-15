@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Util.Color;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
-import frc.robot.Constants.kCANdle.kColors;
-import frc.robot.commands.LEDs.DisabledAnimation;
 import frc.robot.commands.LEDs.EStopAnimation;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
@@ -72,7 +71,7 @@ public class Robot extends TimedRobot {
         .onTrue(new EStopAnimation(m_robotContainer.sys_LED).ignoringDisable(true));
 
       new Trigger(this::isDisabled)
-        .onTrue(new DisabledAnimation(m_robotContainer.sys_LED, kColors.idle).ignoringDisable(true));
+        .onTrue(Commands.runOnce(() -> m_robotContainer.sys_LED.getCurrentCommand().end(true)));
 
   }
 
