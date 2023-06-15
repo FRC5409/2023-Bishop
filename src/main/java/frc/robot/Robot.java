@@ -7,16 +7,16 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Util.Color;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
 import frc.robot.commands.LEDs.EStopAnimation;
+import frc.robot.commands.LEDs.GameEndAnimation;
+import frc.robot.commands.LEDs.SetTeamColor;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
@@ -33,11 +33,6 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private int LEDState = 0;
-
-  private Alliance currentAlliance; 
-  private boolean connected;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -48,11 +43,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    LEDState = 0;
-
-    currentAlliance = DriverStation.getAlliance();
-    connected = false;
 
     // Set coast mode after 5 seconds disabled
     new Trigger(this::isEnabled)
@@ -71,7 +61,12 @@ public class Robot extends TimedRobot {
         .onTrue(new EStopAnimation(m_robotContainer.sys_LED).ignoringDisable(true));
 
       new Trigger(this::isDisabled)
-        .onTrue(Commands.runOnce(() -> m_robotContainer.sys_LED.getCurrentCommand().end(true)));
+        .onTrue(new GameEndAnimation(m_robotContainer.sys_LED));
+        
+      new Trigger(this::isAutonomous)
+        .negate()
+        .and(this::isEnabled)
+        .onTrue(new SetTeamColor(m_robotContainer.sys_LED));
 
   }
 
@@ -95,7 +90,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.rumbleController(0, 1);
-    LEDState++;
     m_robotContainer.sys_claw.disable();
   }
 
@@ -107,9 +101,6 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    LEDState = 1;
-    m_robotContainer.sys_LED.setTeamColor();
-
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
     m_robotContainer.sys_telescope.setNeutralMode(IdleMode.kBrake);
@@ -130,9 +121,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // Set in game animation
-    m_robotContainer.sys_LED.setTeamColor();
-
     // Set brake mode
     m_robotContainer.sys_drivetrain.setNeutralMode(NeutralMode.Brake);
     m_robotContainer.sys_telescope.setNeutralMode(IdleMode.kBrake);
@@ -175,10 +163,5 @@ public class Robot extends TimedRobot {
         m_robotContainer.rumbleController(kOperator.timerRumbleIntensity, 10);
         break;
     }
-  }
-
-  public void setToIdle() {
-    LEDState = 0;
-    m_robotContainer.sys_LED.idleAnimation();
   }
 }

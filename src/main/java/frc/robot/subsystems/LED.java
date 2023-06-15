@@ -20,6 +20,8 @@ public class LED extends SubsystemBase {
     private int timer = 0;
     private Alliance currentAlliance;
 
+    private Color lastColor;
+
     public LED() {
         candle = new CANdle(kConfig.CANID);
 
@@ -107,7 +109,9 @@ public class LED extends SubsystemBase {
     public void periodic() {
       // This method will be called once per scheduler run
 
-      if (this.getCurrentCommand() != null) {
+      // System.out.println(getCurrentCommand());
+
+      if (getCurrentCommand() == null && DriverStation.isDisabled()) {
         timer++;
         
         Color color;
@@ -188,7 +192,7 @@ public class LED extends SubsystemBase {
 
     /**
      * Gets the current color applied to the LEDs
-     * @return
+     * @return The current color
      */
     public Color getColor() {
       return new Color(LEDColors[9][0], LEDColors[9][1], LEDColors[9][2]);
@@ -210,18 +214,6 @@ public class LED extends SubsystemBase {
     }
 
     /**
-     * Setting the animation to the built in animation during game
-     */
-
-     public void setTeamColor() {
-      if (DriverStation.getAlliance() == Alliance.Red) {
-        setColor(Color.kPureRed);
-      } else {
-        setColor(Color.kPureBlue);
-      }
-    }
-
-    /**
      * Gets the current team color
      * @return The team color, if no team color can be reached it returns black
      */
@@ -233,6 +225,14 @@ public class LED extends SubsystemBase {
       }
 
       return Color.kBlack;
+    }
+
+    public void setLastColor(Color color) {
+      lastColor = color;
+    }
+
+    public Color getLastColor() {
+      return lastColor;
     }
 
 }

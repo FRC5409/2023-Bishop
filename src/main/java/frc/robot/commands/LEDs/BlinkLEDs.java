@@ -7,13 +7,12 @@ import frc.robot.subsystems.LED;
 public class BlinkLEDs extends CommandBase {
 
     private final LED LEDs;
-    private final Color onColor;
+    private       Color onColor;
     private       Color offColor;
     private final int blinkSpeed;
     private final int blinkCount;
 
     private int timer;
-
     private boolean getColor = false;
 
     public BlinkLEDs(LED LEDs, Color colorOn, Color colorOff, int blinkSpeed, int blinkCount) {
@@ -36,28 +35,32 @@ public class BlinkLEDs extends CommandBase {
     @Override
     public void initialize() {
         timer = 0;
+
         if (getColor) {
-          offColor = LEDs.getColor();
+          onColor = LEDs.getColor();
         }
+        LEDs.setLastColor(onColor);
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+      if (!(Math.floor(timer / blinkSpeed) >= blinkCount && blinkCount != -1)) {
         timer++;
         if (timer % blinkSpeed < blinkSpeed / 2) {
           LEDs.setColor(offColor);
         } else {
           LEDs.setColor(onColor);
         }
+      }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      if (getInterruptionBehavior() == InterruptionBehavior.kCancelSelf) {
-        LEDs.setColor(onColor);
-      }
+      LEDs.setColor(onColor);
+      
     }
 
     // Returns true when the command should end.

@@ -39,6 +39,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.LEDs.SetLEDColor;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
@@ -402,11 +403,16 @@ public class RobotContainer {
             .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
                     new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
+            ).onFalse(
+                new SetLEDColor(sys_LED)
             );
+            
         joystickSecondary.leftTrigger()
             .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
                     new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
+            ).onFalse(
+                new SetLEDColor(sys_LED)
             );             
 
         // Set LED to cone (yellow)
@@ -418,6 +424,8 @@ public class RobotContainer {
                     kColors.blinkColor,
                     kColors.blinkSpeed,
                     kColors.blinkTime
+                ).andThen(
+                    new SetLEDColor(sys_LED, kColors.cone)
                 )
             );
 
@@ -426,10 +434,12 @@ public class RobotContainer {
             .onTrue(
                 new BlinkLEDs(
                     sys_LED,
-                    kColors.cone,
+                    kColors.cube,
                     kColors.blinkColor,
                     kColors.blinkSpeed,
                     kColors.blinkTime
+                ).andThen(
+                    new SetLEDColor(sys_LED, kColors.cube)
                 )
             );
 
