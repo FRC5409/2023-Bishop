@@ -17,6 +17,9 @@ public class LED extends SubsystemBase {
     private int LEDColors[][] = new int[kCANdle.kConfig.LEDCount][3];
     private int lastLEDColors[][] = new int[kCANdle.kConfig.LEDCount][3];
 
+    private int timer = 0;
+    private Alliance currentAlliance;
+
     public LED() {
         candle = new CANdle(kConfig.CANID);
 
@@ -103,6 +106,53 @@ public class LED extends SubsystemBase {
     @Override
     public void periodic() {
       // This method will be called once per scheduler run
+
+      if (this.getCurrentCommand() != null) {
+        timer++;
+        
+        Color color;
+
+        currentAlliance = DriverStation.getAlliance();
+
+        if (!DriverStation.isDSAttached()) {
+            color = Color.kBlack;
+        } else if (currentAlliance == Alliance.Red) {
+            color = Color.kPureRed;
+        } else if (currentAlliance == Alliance.Blue) {
+            color = Color.kPureBlue;
+        } else {
+            color = Color.kWhite;
+        }
+
+        double animationTime = Math.sin(timer * kColors.sinFrequency) * kColors.sinFrequencySpeed;
+    
+        if (Math.abs(animationTime) >= 19.5) {
+            timer += 4;
+        }
+    
+        animationTime = Math.floor(animationTime);
+    
+        for (int i = -kColors.LEDSinCount * 2; i < kConfig.LEDCount; i += kColors.LEDSinCount) {
+            int index = (int) (i + animationTime);
+            if (Math.abs(i % (kColors.LEDSinCount * 2)) == 0) {
+                setLEDColorAtForWithMinAndMax(index, kColors.LEDSinCount, 7, kConfig.LEDCount - kConfig.LEDInnerLeft, color);
+            } else {
+                setLEDColorAtForWithMinAndMax(index, kColors.LEDSinCount, 7, kConfig.LEDCount - kConfig.LEDInnerLeft, kColors.idle);
+            }
+        }
+    
+        animationTime *= -1;
+    
+        for (int i = kConfig.LEDCount - kConfig.LEDInnerLeft - kColors.LEDSinCount * 4; i < kConfig.LEDCount + kColors.LEDSinCount * 2; i += kColors.LEDSinCount) {
+            int index = (int) (i + animationTime);
+            if (Math.abs(i % (kColors.LEDSinCount * 2)) <= kColors.LEDSinCount) {
+                setLEDColorAtForWithMinAndMax(index, kColors.LEDSinCount, kConfig.LEDCount - kConfig.LEDInnerLeft - 1, kConfig.LEDCount, kColors.idle);
+            } else {
+                setLEDColorAtForWithMinAndMax(index, kColors.LEDSinCount, kConfig.LEDCount - kConfig.LEDInnerLeft - 1, kConfig.LEDCount, color);
+            }
+
+        }
+      }
 
       //Setting LED colors
       for (int i = 8; i < kCANdle.kConfig.LEDCount; i++) {
