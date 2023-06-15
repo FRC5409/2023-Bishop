@@ -39,6 +39,7 @@ import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.LEDs.DisabledAnimation;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;

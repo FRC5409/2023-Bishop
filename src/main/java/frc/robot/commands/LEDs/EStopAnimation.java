@@ -26,6 +26,7 @@ public class EStopAnimation extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        timer++;
         if (timer % 10 <= 5) {
             m_LEDs.setColor(Color.kPureRed);
         } else {

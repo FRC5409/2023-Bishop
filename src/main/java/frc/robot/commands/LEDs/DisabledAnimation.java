@@ -18,13 +18,11 @@ public class DisabledAnimation extends CommandBase {
     private int timer = 0;
 
     public DisabledAnimation(LED LEDs, Color offColor) {
-
         m_LEDs = LEDs;
         this.offColor = offColor;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(m_LEDs);
-        
     }
 
     // Called when the command is initially scheduled.
@@ -37,6 +35,7 @@ public class DisabledAnimation extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
+        timer++;
         
         Color color;
 
@@ -78,17 +77,9 @@ public class DisabledAnimation extends CommandBase {
             } else {
                 m_LEDs.setLEDColorAtForWithMinAndMax(index, kColors.LEDSinCount, kConfig.LEDCount - kConfig.LEDInnerLeft - 1, kConfig.LEDCount, color);
             }
+
         }
-    }
 
-    // Called once the command ends or is interrupted.
-    @Override
-    public void end(boolean interrupted) {}
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
     }
 
 }

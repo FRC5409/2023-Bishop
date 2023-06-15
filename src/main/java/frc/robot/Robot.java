@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Util.Color;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kOperator;
+import frc.robot.Constants.kCANdle.kColors;
 import frc.robot.commands.LEDs.DisabledAnimation;
 import frc.robot.commands.LEDs.EStopAnimation;
-import frc.robot.commands.LEDs.GameEndAnimation;
 import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.disabled.DisablePIDSubsystems;
 import frc.robot.commands.disabled.SetCoastMode;
@@ -67,6 +67,13 @@ public class Robot extends TimedRobot {
         )
         .onTrue(new ClawMovement(m_robotContainer.sys_claw, kClaw.openPosition));
 
+        
+      new Trigger(() -> DriverStation.isEStopped())
+        .onTrue(new EStopAnimation(m_robotContainer.sys_LED).ignoringDisable(true));
+
+      new Trigger(this::isDisabled)
+        .onTrue(new DisabledAnimation(m_robotContainer.sys_LED, kColors.idle).ignoringDisable(true));
+
   }
 
   /**
@@ -91,29 +98,11 @@ public class Robot extends TimedRobot {
     m_robotContainer.rumbleController(0, 1);
     LEDState++;
     m_robotContainer.sys_claw.disable();
-
-    if (!DriverStation.isEStopped()) {
-      if (DriverStation.isDSAttached()) {
-        new GameEndAnimation(m_robotContainer.sys_LED)
-        .andThen(new DisabledAnimation(m_robotContainer.sys_LED, Color.kBlack)).schedule();
-      } else {
-        new DisabledAnimation(m_robotContainer.sys_LED, Color.kBlack).schedule();
-      }
-    } else {
-      new EStopAnimation(m_robotContainer.sys_LED).schedule();
-    }
   }
 
   @Override
   public void disabledPeriodic() {
-    if (LEDState == 1 || LEDState == 0) {
-      Alliance alliance = DriverStation.getAlliance();
-      if (alliance != currentAlliance || DriverStation.isDSAttached() != connected) {
-        m_robotContainer.sys_LED.idleAnimation();
-        currentAlliance = alliance;
-        connected = DriverStation.isDSAttached();
-      }
-    }
+    
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
