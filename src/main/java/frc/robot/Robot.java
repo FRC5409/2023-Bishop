@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
         .onTrue(new EStopAnimation(m_robotContainer.sys_LED).ignoringDisable(true));
 
       new Trigger(this::isDisabled)
-        .onTrue(new GameEndAnimation(m_robotContainer.sys_LED));
+        .onTrue(new GameEndAnimation(m_robotContainer.sys_LED).ignoringDisable(true));
         
       new Trigger(this::isAutonomous)
         .negate()
