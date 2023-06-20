@@ -1,6 +1,6 @@
 //LimelightHelpers v1.1.2 (Feb 8, 2023)
 
-package frc.robot;
+package frc.robot.Util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,6 +25,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Robot;
 
 public class LimelightHelpers {
 
@@ -738,7 +739,9 @@ public class LimelightHelpers {
         try {
             results = mapper.readValue(getJSONDump(limelightName), LimelightResults.class);
         } catch (JsonProcessingException e) {
-            System.err.println("lljson error: " + e.getMessage());
+            if (Robot.isReal()) {
+                System.err.println("lljson error: " + e.getMessage());
+            }
         }
 
         long end = System.nanoTime();

@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix.sensors.Pigeon2.AxisDirection;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import frc.robot.Util.Color;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -255,13 +256,17 @@ public final class Constants {
             public static final int LEDInnerRight               = 30;
             public static final int LEDInnerLeft                = 26;
             public static final int LEDOutter                   = 15;
+
+            public static final double defaultBrightness        = 1;
         }
 
         public static class kColors {
 
-            public static final int[] idle                      = {255, 134 , 0};
-            public static final int[] cube                      = {142, 39, 245};
-            public static final int[] cone                      = {237, 120, 0};
+            public static final Color idle                      = new Color(255, 134 , 0);
+            public static final Color cube                      = new Color(142, 39, 245);
+            public static final Color cone                      = new Color(237, 120, 0);
+
+            public static final Color blinkColor                = Color.kPureRed;
 
             public static final int LEDSinCount                 = 8;
             public static final double kSpeed                   = 0.5;
@@ -277,22 +282,7 @@ public final class Constants {
             public static final int blinkTime                    = 10;
             
         }
-
-        public enum AnimationTypes {
-            Static,
-            ColorFlow,
-            //custom
-            SinWave,
-            SinFlow,
-            ChargedUp,
-            EStopped,
-            EndGame
-        }
-
-        public enum LEDColorType {
-            Cone,
-            Cube
-        }
+        
     }
 
     public static class kArmSubsystem {

@@ -3,13 +3,13 @@ package frc.robot.commands.auto.task;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.kBalancing;
-import frc.robot.Constants.kCANdle.AnimationTypes;
-import frc.robot.subsystems.Candle;
+import frc.robot.Util.Color;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Drivetrain;
 
 public class BalancingChargeStation extends PIDCommand {
 
-    private final Candle m_candle;
+    private final LED m_LEDs;
 
     private boolean isBalanced = false;
 
@@ -17,7 +17,7 @@ public class BalancingChargeStation extends PIDCommand {
     private static double kI = kBalancing.kI;
     private static double kD = kBalancing.kD;
 
-    public BalancingChargeStation(Drivetrain drivetrain, Candle candle) {
+    public BalancingChargeStation(Drivetrain drivetrain, LED LEDs) {
         super(
             new PIDController(kP, kI, kD),
             drivetrain::getPitch,
@@ -27,9 +27,9 @@ public class BalancingChargeStation extends PIDCommand {
         );
 
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(drivetrain, candle);
+        addRequirements(drivetrain, LEDs);
 
-        m_candle = candle;
+        m_LEDs = LEDs;
 
         getController().enableContinuousInput(-kBalancing.maxAngle, kBalancing.maxAngle);
         getController().setTolerance(kBalancing.angleTolerance);
@@ -38,7 +38,7 @@ public class BalancingChargeStation extends PIDCommand {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
+        m_LEDs.setColor(Color.kPureRed);
     }
 
     @Override
@@ -46,12 +46,12 @@ public class BalancingChargeStation extends PIDCommand {
         super.execute();
         if (getController().atSetpoint()) {
             if (!isBalanced) {
-                m_candle.setAnimation(AnimationTypes.Static, 0, 255, 0);
+                m_LEDs.setColor(Color.kPureGreen);
                 isBalanced = true;
             }
         } else {
             if (isBalanced) {
-                m_candle.setAnimation(AnimationTypes.Static, 255, 0, 0);
+                m_LEDs.setColor(Color.kPureRed);
                 isBalanced = false;
             }
         }

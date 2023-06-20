@@ -5,11 +5,9 @@
 package frc.robot;
 
 import java.util.List;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
@@ -30,17 +28,18 @@ import frc.robot.Constants.kAutoRoutines.kConePlacePickupPlaceAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeAuto;
 import frc.robot.Constants.kAutoRoutines.kOneConeOnePickup;
 import frc.robot.Constants.kCANdle;
-import frc.robot.Constants.kCANdle.AnimationTypes;
-import frc.robot.Constants.kCANdle.LEDColorType;
+import frc.robot.Constants.kCANdle.kColors;
 import frc.robot.Constants.kClaw;
 import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
+import frc.robot.Util.Color;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
 import frc.robot.commands.LEDs.BlinkLEDs;
+import frc.robot.commands.LEDs.SetLEDColor;
 import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
@@ -59,7 +58,7 @@ import frc.robot.commands.intake.PivotMove;
 import frc.robot.commands.intake.manual.PivotManualMove;
 import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Candle;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -89,7 +88,7 @@ public class RobotContainer {
     private final Limelight sys_limelight;
     // public final Claw sys_claw;
     public final Claw sys_claw;
-    public final Candle sys_candle;
+    public final LED sys_LED;
     public final Arm sys_arm;
     public final Telescope sys_telescope;
     public final IntakePivot sys_intakePivot;
@@ -135,7 +134,7 @@ public class RobotContainer {
         sys_intakeWrist = new IntakeWrist();
         sys_intakeRoller = new IntakeRoller();
         sys_claw = new Claw();
-        sys_candle = new Candle();
+        sys_LED = new LED();
         sys_arm = new Arm();
         sys_telescope = new Telescope();
         // sys_limelight = new Limelight(joystickMain);
@@ -225,17 +224,17 @@ public class RobotContainer {
 
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, pathGroup);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_LED, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, trajectory);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_LED, trajectory);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kConePlacePickupPlaceAuto.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed+1, kAuto.kMaxAcceleration, true);
-            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_LED, sys_limelight, pathGroup);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
@@ -402,59 +401,57 @@ public class RobotContainer {
         // Manual arm movement
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
-                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                    new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
+            ).onFalse(
+                new SetLEDColor(sys_LED)
             );
+            
         joystickSecondary.leftTrigger()
             .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
-                new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+                    new BlinkLEDs(sys_LED, Color.kWhite, kCANdle.kColors.blinkSpeed, -1)
                 )
+            ).onFalse(
+                new SetLEDColor(sys_LED)
             );             
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
-            .onTrue(Commands.runOnce(
-                () -> sys_candle.setAnimation(
-                    AnimationTypes.Static,
-                    kCANdle.kColors.cone[0],
-                    kCANdle.kColors.cone[1],
-                    kCANdle.kColors.cone[2],
-                    LEDColorType.Cone
-                )
-            ).alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(0.05),
-                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                    )
+            .onTrue(
+                new BlinkLEDs(
+                    sys_LED,
+                    kColors.cone,
+                    kColors.blinkColor,
+                    kColors.blinkSpeed,
+                    kColors.blinkTime
+                ).andThen(
+                    new SetLEDColor(sys_LED, kColors.cone)
                 )
             );
 
         // Set LED to cube (purple)
         joystickSecondary.rightStick()
-            .onTrue(Commands.runOnce(
-                () -> sys_candle.setAnimation(
-                    AnimationTypes.Static,
-                    kCANdle.kColors.cube[0],
-                    kCANdle.kColors.cube[1],
-                    kCANdle.kColors.cube[2],
-                    LEDColorType.Cube
-                )
-            ).alongWith(
-                new SequentialCommandGroup(
-                    new WaitCommand(0.05),
-                    new BlinkLEDs(sys_candle, 255, 0, 0, kCANdle.kColors.blinkSpeed, kCANdle.kColors.blinkTime)
-                    )
+            .onTrue(
+                new BlinkLEDs(
+                    sys_LED,
+                    kColors.cube,
+                    kColors.blinkColor,
+                    kColors.blinkSpeed,
+                    kColors.blinkTime
+                ).andThen(
+                    new SetLEDColor(sys_LED, kColors.cube)
                 )
             );
 
             // Set LED to red
             joystickSecondary.start()
                 .onTrue(Commands.runOnce(
-                    () -> sys_candle.setAnimation(
-                        AnimationTypes.Static,
-                        255,
-                        0,
-                        0
+                    () -> sys_LED.setColor(
+                        new Color(
+                            255,
+                            0,
+                            0
+                        )
                     )
                 )
             );
