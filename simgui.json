@@ -13,6 +13,27 @@
         }
       },
       "/Shuffleboard/Drive team/Field": {
+        "Auto Pose": {
+          "arrows": false,
+          "style": "Line",
+          "weight": 0.20000000298023224
+        },
+        "cone": {
+          "arrows": false,
+          "color": [
+            0.7417080402374268,
+            1.0,
+            0.3417721390724182,
+            255.0
+          ],
+          "image": "C:\\Users\\aslsz\\OneDrive\\Pictures\\Screenshots\\Screenshot 2023-03-27 110551.png",
+          "length": 1.0,
+          "selectable": false,
+          "style": "Box/Image",
+          "weight": 8.0,
+          "width": 1.0
+        },
+        "image": "C:\\Users\\aslsz\\OneDrive\\Pictures\\Screenshots\\Screenshot 2023-06-07 113154.png",
         "window": {
           "visible": true
         }

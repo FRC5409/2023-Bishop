@@ -1,6 +1,6 @@
 //LimelightHelpers v1.1.2 (Feb 8, 2023)
 
-package frc.robot;
+package frc.robot.Utils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -26,6 +26,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.Robot;
 
 public class LimelightHelpers {
 

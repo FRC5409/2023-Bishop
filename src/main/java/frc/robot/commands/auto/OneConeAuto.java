@@ -1,11 +1,13 @@
 package frc.robot.commands.auto;
 
+import java.util.ArrayList;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.AutoCommand;
+import frc.robot.Utils.AutoAction;
+import frc.robot.Utils.AutoCommand;
+import frc.robot.Utils.AutoAction.kActions;
 import frc.robot.commands.auto.task.AutoPathPlanning;
 import frc.robot.commands.auto.task.BalancingChargeStation;
 import frc.robot.commands.auto.task.PlaceConeOnMidAtStart;
@@ -42,6 +44,16 @@ public class OneConeAuto extends SequentialCommandGroup implements AutoCommand {
     @Override
     public Trajectory getTrajectory() {
         return (Trajectory) m_trajectory;
+    }
+
+    @Override
+    public ArrayList<AutoAction> getActions() {
+        ArrayList<AutoAction> list = new ArrayList<>();
+
+        list.add(new AutoAction(m_trajectory.getInitialPose(), kActions.ConeScore));
+        list.add(new AutoAction(m_trajectory.getEndState().poseMeters, kActions.ConePickup));
+
+        return list;
     }
 
 }

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathPlanner;
@@ -11,6 +12,8 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoException;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,6 +40,8 @@ import frc.robot.Constants.kDrivetrain;
 import frc.robot.Constants.kDrivetrain.kAuto;
 import frc.robot.Constants.kDrivetrain.kDriveteam.GearState;
 import frc.robot.Constants.kIntake.kSetpoints.kPivotSetpoints;
+import frc.robot.Utils.AutoAction;
+import frc.robot.Utils.AutoCommand;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
@@ -512,8 +517,51 @@ public class RobotContainer {
     }
 
     public void updateShuffleboard() {
-        m_trajectory = sc_chooseAutoRoutine.getSelected().getTrajectory();
-        sb_field.getObject("traj").setTrajectory(m_trajectory);
+        AutoCommand selected = sc_chooseAutoRoutine.getSelected();
+        m_trajectory = selected.getTrajectory();
+        sb_field.getObject("Auto Pose").setTrajectory(m_trajectory);
+        for (int i = 0; i < selected.getActions().size(); i++) {
+            AutoAction index = selected.getActions().get(i);
+
+            switch (index.getAction()) {
+                case Balence:
+                    sb_field.getObject("Balence").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("Balence", index);
+                    break;
+                case ConePickup:
+                    sb_field.getObject("ConePickup").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("ConePickup", index);
+                    break;
+                case ConeScore:
+                    sb_field.getObject("ConeScore").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("ConeScore", index);
+                    break;
+                case CubePickup:
+                    sb_field.getObject("CubePickup").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("CubePickup", index);
+                    break;
+                case CubeScore:
+                    sb_field.getObject("CubeScore").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("CubeScore", index);
+                    break;
+                default:
+                    sb_field.getObject("Invalid").setPoses(new Pose2d());
+                    manageShuffleBoardIcons("Invalid", index);
+                    break;
+
+            }
+        }
     }
 
+    public void manageShuffleBoardIcons(String name, AutoAction action) {
+        ArrayList<Pose2d> poses = new ArrayList<>();
+        poses.clear();
+
+        if (!poses.contains(action.getPose())) {
+            poses.add(action.getPose());
+        }
+        
+        poses.addAll(sb_field.getObject(name).getPoses());
+        sb_field.getObject(name).setPoses(poses);
+    }
 }
