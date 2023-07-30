@@ -1,6 +1,7 @@
 package frc.robot.Utils;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class AutoAction {
 
@@ -20,7 +21,7 @@ public class AutoAction {
     private final kActions m_action;
 
     public AutoAction(Pose2d pose, kActions action) {
-        m_pose = pose;
+        m_pose = new Pose2d(pose.getTranslation(), new Rotation2d());
         m_action = action;
     }
 

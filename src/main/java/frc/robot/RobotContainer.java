@@ -125,6 +125,7 @@ public class RobotContainer {
 
     private Field2d sb_field;
     private Trajectory m_trajectory;
+    private String lastPathName;
 
     private int rumbleTime = 0;
 
@@ -237,21 +238,21 @@ public class RobotContainer {
         // Trajectory & autonomous path chooser
         sc_chooseAutoRoutine = new SendableChooser<AutoCommand>();
 
-        sc_chooseAutoRoutine.setDefaultOption("B1L. TURN LEFT place and balance", new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, PathPlanner.loadPath("B1L. TURN LEFT place and balance", kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true)));
+        sc_chooseAutoRoutine.setDefaultOption("B1L. TURN LEFT place and balance", new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, PathPlanner.loadPath("B1L. TURN LEFT place and balance", kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true), "B1L. TURN LEFT place and balance"));
 
         for (String pathName : kOneConeOnePickup.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, pathGroup);
+            OneConeOnePickupConeAuto autoCommand = new OneConeOnePickupConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, pathGroup, pathName);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kOneConeAuto.all) {
             PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, kAuto.kMaxSpeed, kAuto.kMaxAcceleration, true);
-            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, trajectory);
+            OneConeAuto autoCommand = new OneConeAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, trajectory, pathName);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
         for (String pathName : kConePlacePickupPlaceAuto.all) {
             List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathName, kAuto.kMaxSpeed+1, kAuto.kMaxAcceleration, true);
-            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup);
+            ConePlacePickupPlaceAuto autoCommand = new ConePlacePickupPlaceAuto(sys_drivetrain, sys_arm, sys_telescope, sys_claw, sys_candle, sys_limelight, pathGroup, pathName);
             sc_chooseAutoRoutine.addOption(pathName, autoCommand);
         }
 
@@ -518,37 +519,42 @@ public class RobotContainer {
 
     public void updateShuffleboard() {
         AutoCommand selected = sc_chooseAutoRoutine.getSelected();
-        m_trajectory = selected.getTrajectory();
-        sb_field.getObject("Auto Pose").setTrajectory(m_trajectory);
-        for (int i = 0; i < selected.getActions().size(); i++) {
-            AutoAction index = selected.getActions().get(i);
+        if (lastPathName != selected.getPathName()) {
+            lastPathName = selected.getPathName();
+            m_trajectory = selected.getTrajectory();
 
-            switch (index.getAction()) {
-                case Balence:
-                    sb_field.getObject("Balence").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("Balence", index);
-                    break;
-                case ConePickup:
-                    sb_field.getObject("ConePickup").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("ConePickup", index);
-                    break;
-                case ConeScore:
-                    sb_field.getObject("ConeScore").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("ConeScore", index);
-                    break;
-                case CubePickup:
-                    sb_field.getObject("CubePickup").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("CubePickup", index);
-                    break;
-                case CubeScore:
-                    sb_field.getObject("CubeScore").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("CubeScore", index);
-                    break;
-                default:
-                    sb_field.getObject("Invalid").setPoses(new Pose2d());
-                    manageShuffleBoardIcons("Invalid", index);
-                    break;
+            sb_field.getObject("Balence").setPoses();
+            sb_field.getObject("ConePickup").setPoses();
+            sb_field.getObject("ConeScore").setPoses();
+            sb_field.getObject("CubePickup").setPoses();
+            sb_field.getObject("CubeScore").setPoses();
+            sb_field.getObject("Invalid").setPoses();
 
+            sb_field.getObject("Auto Pose").setTrajectory(m_trajectory);
+            for (int i = 0; i < selected.getActions().size(); i++) {
+                AutoAction index = selected.getActions().get(i);
+
+                switch (index.getAction()) {
+                    case Balence:
+                        manageShuffleBoardIcons("Balence", index);
+                        break;
+                    case ConePickup:
+                        manageShuffleBoardIcons("ConePickup", index);
+                        break;
+                    case ConeScore:
+                        manageShuffleBoardIcons("ConeScore", index);
+                        break;
+                    case CubePickup:
+                        manageShuffleBoardIcons("CubePickup", index);
+                        break;
+                    case CubeScore:
+                        manageShuffleBoardIcons("CubeScore", index);
+                        break;
+                    default:
+                        manageShuffleBoardIcons("Invalid", index);
+                        break;
+
+                }
             }
         }
     }
@@ -560,7 +566,7 @@ public class RobotContainer {
         if (!poses.contains(action.getPose())) {
             poses.add(action.getPose());
         }
-        
+
         poses.addAll(sb_field.getObject(name).getPoses());
         sb_field.getObject(name).setPoses(poses);
     }

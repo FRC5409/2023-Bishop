@@ -30,6 +30,7 @@ import frc.robot.subsystems.Telescope;
 public class OneConeOnePickupConeAuto extends SequentialCommandGroup implements AutoCommand {
 
     private final List<PathPlannerTrajectory> m_pathGroup;
+    private final String m_pathName;
 
     public OneConeOnePickupConeAuto(
             Drivetrain sys_drivetrain,
@@ -37,9 +38,11 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup implements 
             Telescope sys_telescope,
             Claw sys_claw,
             Candle sys_LEDs,
-            List<PathPlannerTrajectory> pathGroup) {
+            List<PathPlannerTrajectory> pathGroup,
+            String pathName) {
 
         m_pathGroup = pathGroup;
+        m_pathName = pathName;
 
         addCommands(
                 Commands.runOnce(() -> sys_drivetrain.resetOdometry(pathGroup.get(0).getInitialPose())), // Reset odometry
@@ -78,9 +81,13 @@ public class OneConeOnePickupConeAuto extends SequentialCommandGroup implements 
 
         list.add(new AutoAction(m_pathGroup.get(0).getInitialPose(), kActions.ConeScore));
         list.add(new AutoAction(m_pathGroup.get(1).getInitialPose(), kActions.ConePickup));
-        list.add(new AutoAction(m_pathGroup.get(1).getEndState().poseMeters, kActions.ConeScore));
 
 
         return list;
+    }
+
+    @Override
+    public String getPathName() {
+        return m_pathName;
     }
 }

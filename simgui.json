@@ -7,6 +7,11 @@
       "/Shuffleboard/Drive team/Field": "Field2d"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/Drive team/Choose auto routine": {
         "window": {
           "visible": true
@@ -46,5 +51,8 @@
         "open": true
       }
     }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }
