@@ -15,10 +15,13 @@ import edu.wpi.first.cscore.VideoException;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -126,7 +129,9 @@ public class RobotContainer {
     private Field2d sb_field;
     private Trajectory m_trajectory;
     private String lastPathName;
+    private GenericEntry sb_previewSwitch;
 
+    private int previewState = 0;
     private int rumbleTime = 0;
 
     /**
@@ -179,6 +184,12 @@ public class RobotContainer {
         sb_field = new Field2d();
 
         sb_driveteam.add("Field", sb_field);
+
+        sb_previewSwitch = sb_driveteam.add("Preview", true)
+            .withWidget(BuiltInWidgets.kToggleSwitch)
+            .getEntry();
+
+            System.out.println(sb_previewSwitch.exists());
 
         addAutoRoutinesToShuffleboard();
 
@@ -520,6 +531,7 @@ public class RobotContainer {
     public void updateShuffleboard() {
         AutoCommand selected = sc_chooseAutoRoutine.getSelected();
         if (lastPathName != selected.getPathName()) {
+            previewState = 0;
             lastPathName = selected.getPathName();
             m_trajectory = selected.getTrajectory();
 
@@ -530,7 +542,7 @@ public class RobotContainer {
             sb_field.getObject("CubeScore").setPoses();
             sb_field.getObject("Invalid").setPoses();
 
-            sb_field.getObject("Auto Pose").setTrajectory(m_trajectory);
+            getField2dTrajectory().setTrajectory(m_trajectory);
             for (int i = 0; i < selected.getActions().size(); i++) {
                 AutoAction index = selected.getActions().get(i);
 
@@ -557,6 +569,36 @@ public class RobotContainer {
                 }
             }
         }
+
+        if (getPreviewEnabled()) {
+            if (previewState >= 0)
+              setRobotPose(getField2dTrajectory().getPoses().get(previewState));
+      
+            previewState += 2;
+            if (previewState >= getField2dTrajectory().getPoses().size()) {
+              previewState = -50;
+            }
+          } else {
+            previewState = 0;
+            //update robot pose using april tags
+            setRobotPose(getField2dTrajectory().getPoses().get(0));
+          }
+    }
+
+    public void setRobotPose(Pose2d pose) {
+        sb_field.setRobotPose(pose);
+    }
+
+    public Field2d getField2d() {
+        return sb_field;
+    }
+
+    public FieldObject2d getField2dTrajectory() {
+        return sb_field.getObject("Auto Pose");
+    }
+
+    public boolean getPreviewEnabled() {
+        return sb_previewSwitch.getBoolean(false);
     }
 
     public void manageShuffleBoardIcons(String name, AutoAction action) {
