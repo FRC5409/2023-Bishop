@@ -382,7 +382,7 @@ public class RobotContainer {
             .onTrue(
                 new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
             )
-        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kConeAboveNew) < .1)
+        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kConeAboveNew) < .1) // might have to remove this and make a new command
             .onTrue(
                 new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope)
             );

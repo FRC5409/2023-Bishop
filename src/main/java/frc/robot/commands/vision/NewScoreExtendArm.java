@@ -85,13 +85,12 @@ public class NewScoreExtendArm extends CommandBase {
 
     if (!sys_Limelight.isOn())
       sys_Limelight.turnOn();
-
-    setTargetMode(cropMode);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    setTargetMode(cropMode);
     sys_Telescope.extend(getDistance());
     sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
   }
