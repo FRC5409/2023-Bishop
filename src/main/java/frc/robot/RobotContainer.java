@@ -38,6 +38,7 @@ import frc.robot.Util.Color;
 import frc.robot.Constants.kOperator;
 import frc.robot.Constants.kTelescope;
 import frc.robot.commands.StallDriveOnChargeStation;
+import frc.robot.commands.TestDrive;
 import frc.robot.commands.LEDs.BlinkLEDs;
 import frc.robot.commands.LEDs.SetLEDColor;
 import frc.robot.commands.arm.MoveAndRetract;
@@ -60,6 +61,7 @@ import frc.robot.commands.vision.ConeNodeAim;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Telescope;
@@ -103,6 +105,8 @@ public class RobotContainer {
     private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
+
+    private final TestDrive cmd_testDrive;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -155,8 +159,11 @@ public class RobotContainer {
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
 
+        cmd_testDrive = new TestDrive(Drive.getInstance());
+
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);
+        Drive.getInstance().setDefaultCommand(cmd_testDrive);
 
         // Add auto routines to Shuffleboard
         sb_driveteam = Shuffleboard.getTab("Drive team");
