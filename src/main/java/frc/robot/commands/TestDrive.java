@@ -28,5 +28,7 @@ public class TestDrive extends CommandBase {
     @Override
     public void execute() {
         double xSpeed = controller.getRightTriggerAxis() - controller.getLeftTriggerAxis();
+        double zRot = controller.getLeftX();
+        drive.arcadeDrive(xSpeed, zRot);
     }
 }
