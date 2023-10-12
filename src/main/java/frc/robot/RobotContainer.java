@@ -52,6 +52,7 @@ import frc.robot.commands.claw.ClawMovement;
 import frc.robot.commands.claw.DetectGamepiece;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.commands.drive.GearShift;
+import frc.robot.commands.drive.ToggleBreakModeWhileHeld;
 import frc.robot.commands.intake.IntakeHandoffSequence;
 import frc.robot.commands.intake.IntakePickupSequence;
 import frc.robot.commands.intake.PivotMove;
@@ -345,6 +346,10 @@ public class RobotContainer {
         joystickMain.start()
             .whileTrue(new StallDriveOnChargeStation(sys_drivetrain))
             .onFalse(Commands.runOnce(() -> sys_drivetrain.arcadeDrive(0, 0)));
+
+        // Coast & Brake mode in disabled
+        joystickMain.back()
+            .whileTrue(new ToggleBreakModeWhileHeld(sys_drivetrain, true).ignoringDisable(true));
 
         /*--------------------------------------------------------------------------------------*/
 
