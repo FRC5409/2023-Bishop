@@ -5,11 +5,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.kOperator;;
+import frc.robot.Constants.kOperator;
 import frc.robot.subsystems.Drive;
 
 /**
- * @author 
+ * @author Add name here
  */
 public class TestDrive extends CommandBase {
     private final CommandXboxController controller;
@@ -18,7 +18,10 @@ public class TestDrive extends CommandBase {
 
     public TestDrive(Drive drive) {
         this.drive = drive;
+        // Instead of passing in Drive, we can do this.drive = Drive.getInstance(); if you wanted
         this.controller = new CommandXboxController(kOperator.port_joystickMain);
+        // Don't need to create an already existing CommandXboxController, pass it in the command through robotContainer.java
+        // Could also look into creating a subsystem for controllers and using a singleton method to get them anywhere
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(this.drive);

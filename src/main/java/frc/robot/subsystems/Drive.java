@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
+//remove space here (clean)
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 // 5409: The Chargers
@@ -33,7 +33,7 @@ public class Drive extends SubsystemBase {
         rightFrontMotor = new WPI_TalonFX(kMotor.id_rightFrontDrive);
         rightBackMotor = new WPI_TalonFX(kMotor.id_rightRearDrive);
 
-        diffDrive = new DifferentialDrive(rightFrontMotor, leftFrontMotor);
+        diffDrive = new DifferentialDrive(rightFrontMotor, leftFrontMotor); // do after initMotor();
 
         initMotor(leftBackMotor, null, true);
         initMotor(rightBackMotor, null, false);
@@ -47,6 +47,8 @@ public class Drive extends SubsystemBase {
         SupplyCurrentLimitConfiguration _config = new SupplyCurrentLimitConfiguration();
         _config.currentLimit = kMotor.currentLimit;
         _config.enable = true;
+        //
+
         leader.configSupplyCurrentLimit(_config);
 
         leader.setInverted(invert);
@@ -63,6 +65,11 @@ public class Drive extends SubsystemBase {
         return instance;
     }
 
+    /**
+     * Add comments
+     * @param xSpeed
+     * @param zRot
+     */
     public void arcadeDrive(double xSpeed, double zRot) {
         diffDrive.arcadeDrive(xSpeed, zRot);
     }
