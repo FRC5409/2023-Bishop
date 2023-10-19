@@ -371,20 +371,15 @@ public class RobotContainer {
         joystickSecondary.y()
             .onTrue(
                 new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop)
-            )
-        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kToTop) < .1)
-            .onTrue(
-                new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope)
-            );
+            .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope) 
+        ));
+  
 
           // Move arm and retract ABOVE mid cone node position
         joystickSecondary.b()
             .onTrue(
                 new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
-            )
-        .and(() -> Math.abs(sys_arm.getMeasurement()-kSetpoints.kConeAboveNew) < .1)
-            .onTrue(
-                new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope)
+            .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))
             );
         
         // Move arm and retract to cone low position

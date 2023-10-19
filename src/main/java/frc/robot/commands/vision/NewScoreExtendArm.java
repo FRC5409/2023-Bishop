@@ -28,6 +28,7 @@ public class NewScoreExtendArm extends CommandBase {
     sys_Limelight = limelight;
     sys_Telescope = telescope;
     cropMode = crop;
+  System.out.println("CONSTRUCTOR");
 
     addRequirements(sys_Limelight, sys_Telescope);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -82,18 +83,26 @@ public class NewScoreExtendArm extends CommandBase {
   @Override
   public void initialize() {
     sys_Limelight.setData("pipeline", 1);
+   // System.out.println("working");
 
+
+    sys_Limelight.turnOn();
+
+    /* 
     if (!sys_Limelight.isOn())
       sys_Limelight.turnOn();
 
+    */
     setTargetMode(cropMode);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if ()
     sys_Telescope.extend(getDistance());
     sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
+ //   System.out.println("LANAEXECUTE");
   }
 
   // Called once the command ends or is interrupted.
@@ -101,11 +110,13 @@ public class NewScoreExtendArm extends CommandBase {
   public void end(boolean interrupted) {
     sys_Limelight.turnOff();
     sys_Telescope.stopExtending();
+   // System.out.println("LANAEND");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    System.out.println("EXTEND FINISH");
     return false;
   }
 

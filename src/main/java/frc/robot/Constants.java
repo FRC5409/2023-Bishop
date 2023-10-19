@@ -319,7 +319,7 @@ public final class Constants {
             public final static double kToTop                   = 0.67; // 41.75 inches
             public final static double kConeMid                 = 0.62; // 36 inches
             public final static double kConeAbove               = 0.67;  // 43.75 inches
-            public final static double kConeAboveNew            = 0.66;  // 43.75 inches
+            public final static double kConeAboveNew            = 0.66;  // 43.75 inches,
             public final static double kToMid                   = 0.63; // 28.75 inches
  
             public final static double kToGroundFront           = 0.0; //placeholder
@@ -475,7 +475,7 @@ public final class Constants {
             public static final double kConeHeight = 5;
             public static final double kMountingAngle = 13;
             public static final double kArmLength = 31.5; // arms length is 27cm and claws length is 9cm
-            public static final double kDistanceTolerance = 0;
+            public static final double kDistanceTolerance =     0;
             public static final double kExtendingConversion = (1.25/13.5); // the arm can extend by 13.5 cm, max on entendion is 1.25
             public static final double khighmode = 1;
             public static final double klowmode = 0;
