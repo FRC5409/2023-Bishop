@@ -44,6 +44,7 @@ import frc.robot.commands.arm.MoveAndRetract;
 import frc.robot.commands.arm.MoveArmManual;
 import frc.robot.commands.arm.MoveThenExtend;
 import frc.robot.commands.arm.TelescopeTo;
+import frc.robot.commands.arm.test.ArmMoveCommand;
 import frc.robot.commands.auto.ConePlacePickupPlaceAuto;
 import frc.robot.commands.auto.OneConeAuto;
 import frc.robot.commands.auto.OneConeOnePickupConeAuto;
@@ -66,6 +67,7 @@ import frc.robot.subsystems.Telescope;
 import frc.robot.subsystems.intake.IntakePivot;
 import frc.robot.subsystems.intake.IntakeRoller;
 import frc.robot.subsystems.intake.IntakeWrist;
+import frc.robot.subsystems.test.ArmTest;
 
 
 /**
@@ -95,6 +97,7 @@ public class RobotContainer {
     public final IntakeWrist sys_intakeWrist;
     public final IntakeRoller sys_intakeRoller;
     private final UsbCamera sys_camera;
+    private final ArmTest sys_armTest;
 
     // Commands
     private final DefaultDrive cmd_defaultDrive;
@@ -103,6 +106,8 @@ public class RobotContainer {
     private final ConeNodeAim cmd_coneNodeAim;
     private final PivotMove cmd_pivotTestA;
     private final PivotMove cmd_pivotTestB;
+    private final ArmMoveCommand cmd_armScore;
+    private final ArmMoveCommand cmd_armReturn;
 
     // Sequential commands
     private final IntakePickupSequence seq_intakePickup;
@@ -138,6 +143,7 @@ public class RobotContainer {
         sys_arm = new Arm();
         sys_telescope = new Telescope();
         // sys_limelight = new Limelight(joystickMain);
+        sys_armTest = new ArmTest();
 
         // Sequential commands
         seq_intakePickup = new IntakePickupSequence(sys_intakePivot, sys_intakeWrist, sys_intakeRoller);
@@ -154,6 +160,9 @@ public class RobotContainer {
         cmd_coneNodeAim = new ConeNodeAim(sys_limelight, sys_telescope, sys_drivetrain, joystickMain);
         cmd_pivotTestA = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestA);
         cmd_pivotTestB = new PivotMove(sys_intakePivot, kPivotSetpoints.kPivotTestB);
+
+        cmd_armScore = new ArmMoveCommand(sys_armTest, 30);
+        cmd_armReturn = new ArmMoveCommand(sys_armTest, -30);
 
         // Set default drive as drivetrain's default command
         sys_drivetrain.setDefaultCommand(cmd_defaultDrive);

@@ -452,4 +452,16 @@ public final class Constants {
         public static final double kForwardSpeed                = 0.345;
         public static final double kBackwardSpeed               = -0.34;
     }
+    
+    public static class kArmTest {
+        public static final int kCAN1 = 22;
+        public static final int kCAN2 = 23;
+
+        public final static double kP = 0;
+        public final static double kI = 0;
+        public final static double kD = 0;
+        public final static double kF = 0;
+
+        public static final double kEncoderCoefficient = 112.5;
+    }
 }
