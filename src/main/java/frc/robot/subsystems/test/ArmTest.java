@@ -91,7 +91,6 @@ public class ArmTest extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        sb_kp.setDouble(controller.getP());
         setPIDF(sb_kp.getDouble(0), kArmTest.kI, kArmTest.kD, kArmTest.kF);
     }
 }
