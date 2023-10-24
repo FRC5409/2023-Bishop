@@ -84,6 +84,7 @@ public class RobotContainer {
     // Driver controllers
     private final CommandXboxController joystickMain;
     private final CommandXboxController joystickSecondary;
+    private final CommandXboxController joystickTertiary; // for arm test subsys
 
     // Subsystems
     public final Drivetrain sys_drivetrain;
@@ -132,6 +133,7 @@ public class RobotContainer {
         // Driver controllers
         joystickMain = new CommandXboxController(kOperator.port_joystickMain);
         joystickSecondary = new CommandXboxController(kOperator.port_joystickSecondary);
+        joystickTertiary = new CommandXboxController(2);
 
         // Subsystems
         sys_drivetrain = new Drivetrain();
@@ -465,7 +467,9 @@ public class RobotContainer {
                 )
             );
             
-                   
+        // ArmTest button bindings
+        joystickTertiary.x().onTrue(cmd_armScore);
+        joystickTertiary.b().onTrue(cmd_armReturn);
     }
 
     
