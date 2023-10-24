@@ -99,7 +99,6 @@ public class NewScoreExtendArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if ()
     sys_Telescope.extend(getDistance());
     sys_Telescope.setPrevPos(Constants.kTelescope.kDestinations.kExtended);
  //   System.out.println("LANAEXECUTE");

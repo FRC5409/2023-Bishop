@@ -138,6 +138,10 @@ public class Arm extends PIDSubsystem {
     return prevPos;
   }
 
+  public boolean atSetpoint(double setpoint) {
+    return  Math.abs(getMeasurement() - setpoint) < .1;
+  }
+
   public void setPrevPos(double prevPos) {
     this.prevPos = prevPos;
   }

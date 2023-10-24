@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -368,19 +369,33 @@ public class RobotContainer {
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
         
         // Move arm and extend to top cube position
+        // joystickSecondary.y()
+        //     .onTrue(
+        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop)
+        //     .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope) 
+        // ));
+
         joystickSecondary.y()
-            .onTrue(
-                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop)
-            .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope) 
-        ));
+            .onTrue(new ParallelCommandGroup(
+                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop),
+                Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kToTop))
+                .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope))));
+
+            
   
 
           // Move arm and retract ABOVE mid cone node position
-        joystickSecondary.b()
-            .onTrue(
-                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
-            .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))
-            );
+        // joystickSecondary.b()
+        //     .onTrue(
+        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
+        //     .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))
+        //     );
+
+        joystickSecondary.b() 
+        .onTrue(new ParallelCommandGroup(
+                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew),
+                Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kConeAboveNew))
+                .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))));
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
