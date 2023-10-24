@@ -40,7 +40,7 @@ public class ArmMoveCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return arm.isAtAngle(setPoint);
+        return arm.getAngle() >= 90;
     }
 
 }

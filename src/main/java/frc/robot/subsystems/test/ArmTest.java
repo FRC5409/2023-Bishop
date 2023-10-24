@@ -76,8 +76,8 @@ public class ArmTest extends SubsystemBase {
         controller.setReference(setPoint, ControlType.kPosition);
     }
     
-    public boolean isAtAngle(double angle) {
-        return encoder.getPosition() == angle;
+    public double getAngle() {
+        return encoder.getPosition();
     }
 
     // Get subsystem
