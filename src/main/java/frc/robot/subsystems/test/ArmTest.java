@@ -43,13 +43,14 @@ public class ArmTest extends SubsystemBase {
         encoder.setPositionConversionFactor(kArmTest.kEncoderCoefficient);
 
         controller = motor1.getPIDController();
-        setPIDF();
 
         motor1.burnFlash();
         motor2.burnFlash();
 
         sb_tab = Shuffleboard.getTab("Arm");
         sb_kp = sb_tab.add("P", controller.getP()).getEntry();
+
+        setPIDF(sb_kp.getDouble(0), kArmTest.kI, kArmTest.kD, kArmTest.kF);
     }
 
     // Make sure to call CANSparkMax#burnMoter, this method does not do that
@@ -65,11 +66,11 @@ public class ArmTest extends SubsystemBase {
     /**
      * Sets controller PIDF to values in Constants.kArmTest
      */
-    public void setPIDF() {
-        controller.setP(kArmTest.kP);
-        controller.setI(kArmTest.kI);
-        controller.setD(kArmTest.kD);
-        controller.setFF(kArmTest.kF);
+    public void setPIDF(double p, double i, double d, double ff) {
+        controller.setP(p);
+        controller.setI(i);
+        controller.setD(d);
+        controller.setFF(ff);
     }
 
     public void rotateTo(double setPoint) {
@@ -91,5 +92,6 @@ public class ArmTest extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
         sb_kp.setDouble(controller.getP());
+        setPIDF(sb_kp.getDouble(0), kArmTest.kI, kArmTest.kD, kArmTest.kF);
     }
 }
