@@ -454,8 +454,8 @@ public final class Constants {
     }
     
     public static class kArmTest {
-        public static final int kCAN1 = 22;
-        public static final int kCAN2 = 23;
+        public static final int kCAN1 = 32;
+        public static final int kCAN2 = 33;
 
         public final static double kP = 0;
         public final static double kI = 0;
