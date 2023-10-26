@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -57,6 +58,8 @@ public class ArmTest extends SubsystemBase {
     private void initMotor(CANSparkMax motor) {
         motor.restoreFactoryDefaults();
         motor.setSmartCurrentLimit(30);
+        motor.setIdleMode(IdleMode.kBrake);
+        controller.setOutputRange(-(4/12), 4/12);
     }
 
     public void zeroEncoder() {
@@ -65,7 +68,7 @@ public class ArmTest extends SubsystemBase {
 
     /**
      * Sets controller PIDF to values in Constants.kArmTest
-     */
+     */ 
     public void setPIDF(double p, double i, double d, double ff) {
         controller.setP(p);
         controller.setI(i);
