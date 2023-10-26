@@ -12,12 +12,10 @@ import frc.robot.subsystems.test.ArmTest;
 public class ArmMoveCommand extends CommandBase {
     private final ArmTest arm;
     private final double setPoint;
-    private final double initPoint;
 
     public ArmMoveCommand(ArmTest arm, double setPoint) {
         this.arm = arm;
         this.setPoint = setPoint;
-        this.initPoint = arm.getAngle();
 
         addRequirements(this.arm);
     }
