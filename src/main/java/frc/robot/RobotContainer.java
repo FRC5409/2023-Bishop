@@ -367,66 +367,35 @@ public class RobotContainer {
             
         joystickSecondary.povDown()
             .onTrue(new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted));
-        
-        // Move arm and extend to top cube position
-        // joystickSecondary.y()
-        //     .onTrue(
-        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop)
-        //     .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope) 
-        // ));
 
+        // move the arm, limelight, extend to top cone
         joystickSecondary.y()
-            .onTrue(new ParallelCommandGroup(
-                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop),
-                Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kToTop))
-                .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope))));
+            .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kToTop,cropMode.kHigh));
 
-            
-  
-
-          // Move arm and retract ABOVE mid cone node position
-        // joystickSecondary.b()
-        //     .onTrue(
-        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew)
-        //     .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))
-        //     );
-
-        joystickSecondary.b() 
-        .onTrue(new ParallelCommandGroup(
-                new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew),
-                Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kConeAboveNew))
-                .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))));
+        // move the arm, limelight, extend to mid cone
+        joystickSecondary.b()
+            .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kConeAboveNew,cropMode.kMid));
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
-            .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kConeLow, sys_telescope)
-            );
+                .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kConeLow));
 
-        // Move arm and retract to mid cube position
+         // Move arm and retract to mid cube position
         joystickSecondary.a()
-            .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToMid, sys_telescope)
-            );
+            .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kToMid));
 
         // Move arm and retract to double substation
         joystickSecondary.rightBumper()
-            .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kToLoadingshoulder, sys_telescope)
-            ); // pickup from loading station
-            
+            .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kToLoadingshoulder));
+
         // Move arm and retract to idling position
         joystickSecondary.leftBumper()
-            .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kIdling, sys_telescope)
-            );
+            .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kIdling));    
                     
         // Move arm and retract to ground pickup (resting on intake) position
         joystickSecondary.back()
-            .onTrue(
-                new MoveAndRetract(sys_arm, kArmSubsystem.kSetpoints.kGroundPickupCone, sys_telescope)
-            );
-                    
+            .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kGroundPickupCone));      
+
         // Manual arm movement
         joystickSecondary.rightTrigger()
             .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
@@ -526,6 +495,21 @@ public class RobotContainer {
         } else {
             rumbleTime--;
         }
+    }
+
+    // arm Commands
+    public Command armVision(double setpoint, cropMode cropmode) {
+        return new ParallelCommandGroup(
+                new ArmRotation(sys_arm, setpoint),
+                Commands.waitUntil(() -> sys_arm.atSetpoint(setpoint))
+                .andThen(new NewScoreExtendArm(sys_limelight, cropmode, sys_telescope)));
+
+    }
+
+    public Command armMoveAndRetract (double armSetpoint){
+        return new SequentialCommandGroup(
+            new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted),
+            new ArmRotation(sys_arm, armSetpoint));
     }
 
 }

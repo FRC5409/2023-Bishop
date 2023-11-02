@@ -39,7 +39,6 @@ public class ArmRotation extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println("ARMEND");
     return sys_arm.getController().atSetpoint();
   }
 }
