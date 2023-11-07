@@ -371,10 +371,25 @@ public class RobotContainer {
         // move the arm, limelight, extend to top cone
         joystickSecondary.y()
             .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kToTop,cropMode.kHigh));
+        
+        // before
+        // joystickSecondary.y()
+        //     .onTrue(new ParallelCommandGroup(
+        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop),
+        //         Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kToTop))
+        //         .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope))));
+
 
         // move the arm, limelight, extend to mid cone
         joystickSecondary.b()
             .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kConeAboveNew,cropMode.kMid));
+        
+        // before 
+        // joystickSecondary.b() 
+        //     .onTrue(new ParallelCommandGroup(
+        //             new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew),
+        //             Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kConeAboveNew))
+        //             .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kMid, sys_telescope))));
         
         // Move arm and retract to cone low position
         joystickSecondary.x()
@@ -500,7 +515,7 @@ public class RobotContainer {
     // arm Commands
     public Command armVision(double setpoint, cropMode cropmode) {
         return new ParallelCommandGroup(
-                new ArmRotation(sys_arm, setpoint),
+                sys_arm.armRotation(setpoint),
                 Commands.waitUntil(() -> sys_arm.atSetpoint(setpoint))
                 .andThen(new NewScoreExtendArm(sys_limelight, cropmode, sys_telescope)));
 
@@ -509,7 +524,9 @@ public class RobotContainer {
     public Command armMoveAndRetract (double armSetpoint){
         return new SequentialCommandGroup(
             new TelescopeTo(sys_telescope, Constants.kTelescope.kDestinations.kRetracted),
-            new ArmRotation(sys_arm, armSetpoint));
+            sys_arm.armRotation(armSetpoint));
     }
 
 }
+// changed complicated ontrue to command 
+//

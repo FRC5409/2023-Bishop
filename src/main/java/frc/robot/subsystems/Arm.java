@@ -8,13 +8,18 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+//import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 
 public class Arm extends PIDSubsystem {
@@ -151,6 +156,33 @@ public class Arm extends PIDSubsystem {
   public void moveVolts(double volts) {
     m_motor1.setVoltage(volts);
   }
+
+  public Command armRotation (double setpoint) {
+    return new ParallelCommandGroup(
+      run(
+        () -> {
+          this.setSetpoint(setpoint);
+          this.enable();
+        }),
+        waitUntil(() -> this.getController().atSetpoint())
+        .andThen(() -> this.setPrevPos(setpoint))
+    );
+  }
+
+  // public Command armManual(double voltage) {
+  //   return new ParallelCommandGroup(
+  //     runOnce(
+  //       () -> this.disable();
+  //       )
+  //     .runEnd(
+  //       () -> thi
+  //       , null)
+
+  //   )
+  // }
+
+
+
 
   @Override
   public void periodic() { 
