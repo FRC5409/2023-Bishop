@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 //import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants;
 
@@ -169,20 +170,21 @@ public class Arm extends PIDSubsystem {
     );
   }
 
-  // public Command armManual(double voltage) {
-  //   return new ParallelCommandGroup(
-  //     runOnce(
-  //       () -> this.disable();
-  //       )
-  //     .runEnd(
-  //       () -> thi
-  //       , null)
-
-  //   )
-  // }
-
-
-
+  public Command armManual (double voltage) {
+    return new SequentialCommandGroup(
+      runEnd(
+        () -> {
+          this.disable();
+          this.moveVolts(voltage);
+        }
+        ,
+         () -> {
+          double newSetpoint = this.getMeasurement();
+          this.setSetpoint(newSetpoint);
+          this.enable();
+         })
+    );
+  }
 
   @Override
   public void periodic() { 

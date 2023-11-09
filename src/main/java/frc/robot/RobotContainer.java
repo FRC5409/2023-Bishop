@@ -372,19 +372,19 @@ public class RobotContainer {
         joystickSecondary.y()
             .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kToTop,cropMode.kHigh));
         
-        // before
-        // joystickSecondary.y()
-        //     .onTrue(new ParallelCommandGroup(
-        //         new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop),
-        //         Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kToTop))
-        //         .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope))));
+    //  before
+    //     joystickSecondary.y()
+    //         .onTrue(new ParallelCommandGroup(
+    //             new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kToTop),
+    //             Commands.waitUntil(() -> sys_arm.atSetpoint(kSetpoints.kToTop))
+    //             .andThen(new NewScoreExtendArm(sys_limelight, cropMode.kHigh, sys_telescope))));
 
 
         // move the arm, limelight, extend to mid cone
         joystickSecondary.b()
             .onTrue(armVision(Constants.kArmSubsystem.kSetpoints.kConeAboveNew,cropMode.kMid));
-        
-        // before 
+
+        //   before 
         // joystickSecondary.b() 
         //     .onTrue(new ParallelCommandGroup(
         //             new ArmRotation(sys_arm, Constants.kArmSubsystem.kSetpoints.kConeAboveNew),
@@ -412,16 +412,27 @@ public class RobotContainer {
             .onTrue(armMoveAndRetract(kArmSubsystem.kSetpoints.kGroundPickupCone));      
 
         // Manual arm movement
+        // joystickSecondary.rightTrigger()
+        //     .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
+        //         new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+        //         )
+        //     );
+        
         joystickSecondary.rightTrigger()
-            .whileTrue(new MoveArmManual(sys_arm, kArmSubsystem.kVoltageManual).alongWith(
+            .whileTrue(sys_arm.armManual(kArmSubsystem.kVoltageManual).alongWith(
                 new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
-                )
-            );
+            ));
+        
+        // joystickSecondary.leftTrigger()
+        //     .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
+        //         new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
+        //         ));    
+        
+        
         joystickSecondary.leftTrigger()
-            .whileTrue(new MoveArmManual(sys_arm, -kArmSubsystem.kVoltageManual).alongWith(
+            .whileTrue(sys_arm.armManual(-kArmSubsystem.kVoltageManual).alongWith(
                 new BlinkLEDs(sys_candle, 255, 255, 255, kCANdle.kColors.blinkSpeed, -1)
-                )
-            );             
+            ));
 
         // Set LED to cone (yellow)
         joystickSecondary.leftStick()
@@ -528,5 +539,3 @@ public class RobotContainer {
     }
 
 }
-// changed complicated ontrue to command 
-//
